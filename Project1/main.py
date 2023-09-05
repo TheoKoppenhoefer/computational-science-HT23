@@ -54,10 +54,6 @@ class Potts:
         with open(filename, 'w') as f:
             wr = csv.writer(f)
             wr.writerow(self.E)
-    
-    def write_state(self):
-        pass
-
 
     def plot_state(self):
         # Theo
@@ -75,6 +71,11 @@ def plot_energies(self):
 if __name__ == '__main__':
     # main starts here
     # designing experiments: Anna, Theo, Carmen
-    model = Potts(4)
-    model.write_E()
+
+
+    if 1:
+        # Test the function write_E
+        model = Potts(4)
+        model.E = [13,14,2,5,6]
+        model.write_E()
 

@@ -1,0 +1,3 @@
+[submodule "Project1/Report_Theo/Latex_Templates"]
+	path = Project1/Report_Theo/Latex_Templates
+	url = https://github.com/TheoKoppenhoefer/latex-templates.git
