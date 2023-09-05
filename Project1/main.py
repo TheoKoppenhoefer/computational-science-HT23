@@ -1,7 +1,6 @@
 import csv
-from xml.dom.expatbuilder import parseFragmentString
 import tikzplotlib
-
+import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
 
@@ -66,9 +65,19 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self):
+    def plot_state(self, show_plt=True, filename=None):
         # Theo
-        pass
+        # plt.style.use('_mpl-gallery-nogrid')
+        fig, ax = plt.subplots()
+        ax.imshow(self.s, cmap='Set1')
+        ax.set(xlabel=r'x', ylabel=r'y')
+
+        if filename:
+            tikzplotlib.save(filename)
+
+        if show_plt:
+            plt.show()
+
 
 
 
@@ -89,9 +98,4 @@ if __name__ == '__main__':
         model = Potts(4)
         model.MC_step()
 
-    if 0:
-        # Test the function write_E
-        model = Potts(4)
-        model.E = [13,14,2,5,6]
-        model.write_E()
 
