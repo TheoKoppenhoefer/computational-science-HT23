@@ -1,5 +1,5 @@
 import csv
-import tikzplotlib
+#import tikzplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
@@ -24,6 +24,7 @@ class Potts:
         self.L = L
         self.T = 1
         self.q = 2
+        self.Q = 3  #Number of possible states 
         self.J = 1
         self.s = np.ones((L,L))# initialise this somehow
         # s = [[1,2,1],[1,3,1],...] 2D-matrix os spin states, reading order
@@ -34,15 +35,30 @@ class Potts:
         # Anna
         T = self.T
         L = self.L
+        s = self.s
+        Q = self.Q
         # steps 1-3 p.12
 
-        c = [1,3] # tuple of the chosen coordinate; here e.g. set to (1,3)
-        s_old = self.s[tuple(c)]
-        s_new = 2 # set this to the new value of s[c]
+        # step 1: choose random spin
+        # pick random coordinates
+        rng = np.random.default_rng()
+        cx = rng.choice(len(s[0]))      ## UNIFORMLY CHOOSEN? (I would say yes)
+        cy = rng.choice(len(s[:,0]))
+        c = [cx,cy]
+
+        # step 2: propose state and calculate enrgy change
+        s_new = rng.choice(Q) 
+        s_old = s[tuple(c)]
         neighbours = np.array([[0,1],[1,0],[-1,0],[0,-1]])
         neighbours = np.mod(c+neighbours, np.array([L,L]))
-        s_neighbours = self.s[tuple(map(tuple,neighbours.T))]
+        s_neighbours = s[tuple(map(tuple,neighbours.T))]
         delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))
+
+        # Acceopt or deny change 
+        if delta_E <= 0:
+            s[tuple(c)] = s_new
+        elif rd.random() < np.exp(-delta_E/ T):
+            s[tuple(c)] = s_new  
 
     def nearest_neighbours():
         # returns a stencil given a coordinate
@@ -72,8 +88,8 @@ class Potts:
         ax.imshow(self.s, cmap='Set1')
         ax.set(xlabel=r'x', ylabel=r'y')
 
-        if filename:
-            tikzplotlib.save(filename)
+       # if filename:
+       #     tikzplotlib.save(filename)
 
         if show_plt:
             plt.show()
@@ -97,5 +113,6 @@ if __name__ == '__main__':
         # Test the function MC_step
         model = Potts(4)
         model.MC_step()
+
 
 
