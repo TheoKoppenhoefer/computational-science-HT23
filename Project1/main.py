@@ -49,7 +49,7 @@ class Potts:
         pass
 
     def run_simulation(self):
-        # Anna
+        # Anna part
         # initialise
         pass
 
