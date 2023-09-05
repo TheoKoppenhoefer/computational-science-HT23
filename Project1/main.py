@@ -1,5 +1,5 @@
 import numpy as np
-import random as rd
+#import random as rd
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -12,17 +12,15 @@ import random as rd
 
 class Irsing():
     # Carmen: class structure
-    def __init__(self):
+    def __init__(self, L, T, q):
         # parameters
-        self.N
-        self.L
-        self.T
-        self.q
+        self.L = L #number of lattice sites per side
+        self.N = L * L #TOTAL number of lattice sites
+        self.T = T #temperature
+        self.q = q #number of different spin values, integer >=2
         self.J_p = 1
-        self.s # initialise this somehow
-        # s = [[1,2,1],[1,3,1],...] 2D-matrix os spin states, reading order
-        self.E # list of energies
-
+        self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
+        self.E = np.empty(0) # list of energies
 
     def MC_step(self, s):
         # Anna
