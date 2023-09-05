@@ -1,5 +1,7 @@
 import csv
 from xml.dom.expatbuilder import parseFragmentString
+import tikzplotlib
+
 import numpy as np
 import random as rd
 
@@ -29,10 +31,19 @@ class Potts:
         self.E = [] # list of energies
 
 
-    def MC_step(self, s):
+    def MC_step(self):
         # Anna
         T = self.T
+        L = self.L
         # steps 1-3 p.12
+
+        c = [1,3] # tuple of the chosen coordinate; here e.g. set to (1,3)
+        s_old = self.s[tuple(c)]
+        s_new = 2 # set this to the new value of s[c]
+        neighbours = np.array([[0,1],[1,0],[-1,0],[0,-1]])
+        neighbours = np.mod(c+neighbours, np.array([L,L]))
+        s_neighbours = self.s[tuple(map(tuple,neighbours.T))]
+        delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))
 
     def nearest_neighbours():
         # returns a stencil given a coordinate
@@ -74,6 +85,11 @@ if __name__ == '__main__':
 
 
     if 1:
+        # Test the function MC_step
+        model = Potts(4)
+        model.MC_step()
+
+    if 0:
         # Test the function write_E
         model = Potts(4)
         model.E = [13,14,2,5,6]
