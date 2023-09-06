@@ -3,6 +3,7 @@ import tikzplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
+import time
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -61,14 +62,12 @@ class Potts:
             self.s[tuple(c)] = s_new
 
     def run_simulation(self):
-
-        # initialise s
-        s = self.s
         for i in range(self.M):
             self.MC_step()
             print(self.s)
-            if i % 10 == 0:
-                self.plot_state()
+            if not i % (self.M//3):
+                self.plot_state(plotnumber=1)
+                time.sleep(1)
 
     def get_E(self):
         # Carmen
@@ -82,12 +81,12 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self, show_plt=True, filename=None):
+    def plot_state(self, show_plt=True, filename=None, plotnumber=None):
         # Theo
         # plt.style.use('_mpl-gallery-nogrid')
-        fig, ax = plt.subplots()
-        ax.imshow(self.s, cmap='Set1')
-        ax.set(xlabel=r'x', ylabel=r'y')
+        plt.imshow(self.s, cmap='Set1')
+        plt.xlabel('x')
+        plt.ylabel('y')
 
         if filename:
             tikzplotlib.save(filename)
@@ -96,7 +95,6 @@ class Potts:
             plt.show()
 
 # Wann pass, wann kein pass
-# Warum sind alle funktionen in der Klasse (VOrteil)
 
 
 def plot_energies(self):
@@ -113,6 +111,6 @@ if __name__ == '__main__':
 
     if 1:
         # Test the function MC_step
-        model = Potts(10)
+        model = Potts(10, q=10)
         model.run_simulation()
         print(model.s)
