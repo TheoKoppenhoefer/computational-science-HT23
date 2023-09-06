@@ -24,7 +24,6 @@ class Potts:
         self.L = L
         self.T = 0.002
         self.q = 2
-        self.Q = 3  #Number of possible states 
         self.J = 1
         self.s = 10*np.ones((L,L))# initialise this somehow
         # s = [[1,2,1],[1,3,1],...] 2D-matrix os spin states, reading order
@@ -37,7 +36,7 @@ class Potts:
         T = self.T
         L = self.L
         s = self.s
-        Q = self.Q
+        q = self.q
         # steps 1-3 p.12
 
         # step 1: choose random spin
@@ -48,7 +47,7 @@ class Potts:
         c = [cx,cy]
 
         # step 2: propose state and calculate enrgy change
-        s_new = rng.choice(Q) 
+        s_new = rng.choice(q) 
         s_old = s[tuple(c)]
 
         print('s_new:', s_new, 's_old:', s_old)
