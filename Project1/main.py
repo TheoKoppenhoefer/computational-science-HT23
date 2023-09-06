@@ -17,11 +17,7 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-<<<<<<< HEAD
-    def __init__(self, L=2, T=4, q=2, J=1, e = 0):
-=======
-    def __init__(self, L=2, T=1, q=2, J=1, M=100):
->>>>>>> ff4a6d3bdb81f003c06adb80f331fc589b2b734e
+    def __init__(self, L=2, T=1, q=2, J=1, M=100, e =0):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
@@ -30,12 +26,9 @@ class Potts:
         self.J = J
         self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
         self.E = np.empty(0) # list of energies
-<<<<<<< HEAD
-        self.M = 100 # Number of simulation runs
-        self.e = e # total energy with with adding delta_E each time
-=======
         self.M = M # Number of simulation runs
->>>>>>> ff4a6d3bdb81f003c06adb80f331fc589b2b734e
+        self.e = e # total energy with with adding delta_E each time
+
 
     def MC_step(self):
         # Anna
@@ -72,13 +65,14 @@ class Potts:
 
         # Calculate total Energy
         self.E = np.append(self.E,self.e)
+
+        #plots
         ax = plt.subplot()
         plt.ion()
 
         for i in range(self.M):
             self.MC_step()
-            # get enery
-            print(self.s)
+            #print(self.s)
             #if i % 100 == 0:
                 # get_E total energy comparison with total enery calculated in marcov step
             if not i % 10:
@@ -100,17 +94,16 @@ class Potts:
 
     def plot_state(self, show_plt=True, filename=None, ax=None):
         # Theo
-        # plt.style.use('_mpl-gallery-nogrid')
+        #plt.style.use('_mpl-gallery-nogrid')
         if not ax:
             fig, ax = plt.subplot()
         ax.imshow(self.s, cmap='Set1')
 
-        if filename:
-            tikzplotlib.save(filename)
+        #if filename:
+          #  tikzplotlib.save(filename)
 
         if show_plt:
             plt.show()
-
 
 
 def plot_energies(self):
@@ -127,6 +120,6 @@ if __name__ == '__main__':
 
     if 1:
         # Test the function MC_step
-        model = Potts(24, q=10, M=1000)
+        model = Potts(24, q=10, M=100)
         model.run_simulation()
-        print(model.s)
+        #print(model.s)
