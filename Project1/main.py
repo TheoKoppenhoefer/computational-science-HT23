@@ -8,17 +8,15 @@ import random as rd
 # - avoid loops (vectorise, use numpy, stencils)
 # - avoid function calls
 
-
 # Extensions:
 # - magnetisation
-
 
 class Potts:
     """
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2, T=1, q=2, J=1):
+    def __init__(self, L=2, T=4, q=2, J=1, e = 0):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
@@ -28,6 +26,7 @@ class Potts:
         self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
         self.E = np.empty(0) # list of energies
         self.M = 100 # Number of simulation runs
+        self.e = e # total energy with with adding delta_E each time
 
     def MC_step(self):
         # Anna
@@ -55,17 +54,24 @@ class Potts:
         # Accept or deny change 
         if rd.random() < np.exp(-delta_E/ T):
             self.s[tuple(c)] = s_new
+            # calculate new total energy from older energy 
+            self.e = self.e + delta_E
+  
+        self.E = np.append(self.E, self.e)
 
     def run_simulation(self):
 
-        # initialise s
-        s = self.s
+        # Calculate total Energy
+        self.E = np.append(self.E,self.e)
+
         for i in range(self.M):
             self.MC_step()
-            print(self.s)
+            # get enery
             if i % 10 == 0:
                 self.plot_state()
-
+            #if i % 100 == 0:
+                # get_E total energy comparison with total enery calculated in marcov step
+        
     def get_E(self):
         # Carmen
         # calculate the energy
