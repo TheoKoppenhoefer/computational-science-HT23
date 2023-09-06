@@ -2,7 +2,7 @@ import csv
 #import tikzplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import random as rd
+#import random as rd
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -18,19 +18,16 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2):
+    def __init__(self, L=2, T=0.002, q=2, J=1):
         # parameters
-        self.N = L*L
-        self.L = L
-        self.T = 0.002
-        self.q = 2
-        self.Q = 3  #Number of possible states 
-        self.J = 1
-        self.s = 10*np.ones((L,L))# initialise this somehow
-        # s = [[1,2,1],[1,3,1],...] 2D-matrix os spin states, reading order
-        self.E = [] # list of energies
+        self.L = L #number of lattice sites per side
+        self.N = L * L #TOTAL number of lattice sites
+        self.T = T #temperature
+        self.q = q #number of different spin values, integer >=2
+        self.J = J
+        self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
+        self.E = np.empty(0) # list of energies
         self.M = 100 # Number of simulation runs
-
 
     def MC_step(self):
         # Anna
