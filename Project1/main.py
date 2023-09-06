@@ -19,7 +19,7 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2, T=1, q=2, J=1):
+    def __init__(self, L=2, T=1, q=2, J=1, M=100):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
@@ -28,7 +28,7 @@ class Potts:
         self.J = J
         self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
         self.E = np.empty(0) # list of energies
-        self.M = 100 # Number of simulation runs
+        self.M = M # Number of simulation runs
 
     def MC_step(self):
         # Anna
@@ -58,12 +58,15 @@ class Potts:
             self.s[tuple(c)] = s_new
 
     def run_simulation(self):
+        ax = plt.subplot()
+        plt.ion()
         for i in range(self.M):
             self.MC_step()
             print(self.s)
-            if not i % (self.M//3):
-                self.plot_state(plotnumber=1)
-                time.sleep(1)
+            if not i % 10:
+                self.plot_state(ax=ax)
+                #time.sleep(1)
+                plt.pause(0.0001)
 
     def get_E(self):
         # Carmen
@@ -77,12 +80,12 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self, show_plt=True, filename=None, plotnumber=None):
+    def plot_state(self, show_plt=True, filename=None, ax=None):
         # Theo
         # plt.style.use('_mpl-gallery-nogrid')
-        plt.imshow(self.s, cmap='Set1')
-        plt.xlabel('x')
-        plt.ylabel('y')
+        if not ax:
+            fig, ax = plt.subplot()
+        ax.imshow(self.s, cmap='Set1')
 
         if filename:
             tikzplotlib.save(filename)
@@ -107,6 +110,6 @@ if __name__ == '__main__':
 
     if 1:
         # Test the function MC_step
-        model = Potts(10, q=10)
+        model = Potts(24, q=10, M=1000)
         model.run_simulation()
         print(model.s)
