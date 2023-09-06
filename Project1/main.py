@@ -17,7 +17,11 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
+<<<<<<< HEAD
     def __init__(self, L=2, T=4, q=2, J=1, e = 0):
+=======
+    def __init__(self, L=2, T=1, q=2, J=1, M=100):
+>>>>>>> ff4a6d3bdb81f003c06adb80f331fc589b2b734e
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
@@ -26,8 +30,12 @@ class Potts:
         self.J = J
         self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
         self.E = np.empty(0) # list of energies
+<<<<<<< HEAD
         self.M = 100 # Number of simulation runs
         self.e = e # total energy with with adding delta_E each time
+=======
+        self.M = M # Number of simulation runs
+>>>>>>> ff4a6d3bdb81f003c06adb80f331fc589b2b734e
 
     def MC_step(self):
         # Anna
@@ -64,16 +72,20 @@ class Potts:
 
         # Calculate total Energy
         self.E = np.append(self.E,self.e)
+        ax = plt.subplot()
+        plt.ion()
 
         for i in range(self.M):
             self.MC_step()
             # get enery
             print(self.s)
-            if not i % (self.M//3):
-                self.plot_state(plotnumber=1)
-                time.sleep(1)
             #if i % 100 == 0:
                 # get_E total energy comparison with total enery calculated in marcov step
+            if not i % 10:
+                self.plot_state(ax=ax)
+                #time.sleep(1)
+                plt.pause(0.0001)
+
     def get_E(self):
         # Carmen
         # calculate the energy
@@ -86,12 +98,12 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self, show_plt=True, filename=None, plotnumber=None):
+    def plot_state(self, show_plt=True, filename=None, ax=None):
         # Theo
         # plt.style.use('_mpl-gallery-nogrid')
-        plt.imshow(self.s, cmap='Set1')
-        plt.xlabel('x')
-        plt.ylabel('y')
+        if not ax:
+            fig, ax = plt.subplot()
+        ax.imshow(self.s, cmap='Set1')
 
         if filename:
             tikzplotlib.save(filename)
@@ -99,7 +111,6 @@ class Potts:
         if show_plt:
             plt.show()
 
-# Wann pass, wann kein pass
 
 
 def plot_energies(self):
@@ -116,6 +127,6 @@ if __name__ == '__main__':
 
     if 1:
         # Test the function MC_step
-        model = Potts(10, q=10)
+        model = Potts(24, q=10, M=1000)
         model.run_simulation()
         print(model.s)
