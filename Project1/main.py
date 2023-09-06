@@ -22,13 +22,14 @@ class Potts:
         # parameters
         self.N = L*L
         self.L = L
-        self.T = 1
+        self.T = 0.002
         self.q = 2
         self.Q = 3  #Number of possible states 
         self.J = 1
-        self.s = np.ones((L,L))# initialise this somehow
+        self.s = 10*np.ones((L,L))# initialise this somehow
         # s = [[1,2,1],[1,3,1],...] 2D-matrix os spin states, reading order
         self.E = [] # list of energies
+        self.M = 100 # Number of simulation runs
 
 
     def MC_step(self):
@@ -49,24 +50,38 @@ class Potts:
         # step 2: propose state and calculate enrgy change
         s_new = rng.choice(Q) 
         s_old = s[tuple(c)]
+
+        print('s_new:', s_new, 's_old:', s_old)
         neighbours = np.array([[0,1],[1,0],[-1,0],[0,-1]])
         neighbours = np.mod(c+neighbours, np.array([L,L]))
+        print('c:',c ,'neighbours:', neighbours)
         s_neighbours = s[tuple(map(tuple,neighbours.T))]
-        delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))
+        print('s_neighb:', s_neighbours)
+
+        delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
+        print('delta_E:', delta_E)
 
         # Acceopt or deny change 
         if delta_E <= 0:
             s[tuple(c)] = s_new
         elif rd.random() < np.exp(-delta_E/ T):
             s[tuple(c)] = s_new  
+        
+        return s
 
     def nearest_neighbours():
         # returns a stencil given a coordinate
         pass
 
     def run_simulation(self):
-        # Anna part
-        # initialise
+
+        # initialise s
+        s = self.s
+        while i < self.M:
+            s = Potts.MC_step()
+            print(s)
+            i+=1
+        
         pass
 
     def get_E(self):
@@ -94,7 +109,8 @@ class Potts:
         if show_plt:
             plt.show()
 
-
+# Wann pass, wann kein pass
+# Warum sind alle funktionen in der Klasse (VOrteil)
 
 
 def plot_energies(self):
@@ -113,6 +129,4 @@ if __name__ == '__main__':
         # Test the function MC_step
         model = Potts(4)
         model.MC_step()
-
-
-
+        print(model.s)
