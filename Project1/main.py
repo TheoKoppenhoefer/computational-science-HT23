@@ -23,7 +23,7 @@ class Potts:
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
-        self.T = T #temperature
+        self.T = T # temperature
         self.q = q #number of different spin values, integer >=2
         self.J = J
         self.s =  np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
@@ -47,15 +47,11 @@ class Potts:
         s_new = 1+rng.choice(self.q)
         s_old = self.s[tuple(c)]
 
-        print('s_new:', s_new, 's_old:', s_old)
         neighbours = np.array([[0,1],[1,0],[-1,0],[0,-1]])
         neighbours = np.mod(c+neighbours, np.array([L,L]))
-        print('c:',c ,'neighbours:', neighbours)
         s_neighbours = self.s[tuple(map(tuple,neighbours.T))]
-        print('s_neighb:', s_neighbours)
 
         delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
-        print('delta_E:', delta_E)
 
         # Accept or deny change 
         if rd.random() < np.exp(-delta_E/ T):
