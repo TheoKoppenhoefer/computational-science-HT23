@@ -3,7 +3,6 @@ import tikzplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
-import time
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -61,7 +60,7 @@ class Potts:
   
         self.E = np.append(self.E, self.e)
 
-    def run_simulation(self):
+    def run_simulation(self, show_state=[]):
 
         # Calculate total Energy
         self.E = np.append(self.E,self.e)
@@ -69,15 +68,13 @@ class Potts:
         #plots
         ax = plt.subplot()
         plt.ion()
-
         for i in range(self.M):
             self.MC_step()
             #print(self.s)
             #if i % 100 == 0:
                 # get_E total energy comparison with total enery calculated in marcov step
-            if not i % 10:
+            if i in show_state:
                 self.plot_state(ax=ax)
-                #time.sleep(1)
                 plt.pause(0.0001)
 
     def get_E(self, s, J_p):
@@ -99,13 +96,12 @@ class Potts:
 
     def plot_state(self, show_plt=True, filename=None, ax=None):
         # Theo
-        #plt.style.use('_mpl-gallery-nogrid')
         if not ax:
             fig, ax = plt.subplot()
         ax.imshow(self.s, cmap='Set1')
 
-        #if filename:
-          #  tikzplotlib.save(filename)
+        if filename:
+            tikzplotlib.save(filename)
 
         if show_plt:
             plt.show()
@@ -122,9 +118,19 @@ if __name__ == '__main__':
     # main starts here
     # designing experiments: Anna, Theo, Carmen
 
-
-    if 1:
-        # Test the function MC_step
-        model = Potts(24, q=10, M=100)
+    if False:
+        # Create a time series of the temperature
+        model = Potts(20, q=10, M=1000)
         model.run_simulation()
-        #print(model.s)
+        model.write_E(filename='Data/Energy_step_M1000_L20_q10.csv')
+
+
+    if False:
+        # Show a nice plot for high temperature
+        model = Potts(10, T=1E5, q=5, M=10000)
+        model.run_simulation(show_state=range(1,10000,200))
+
+    if True:
+        # and for low temperature
+        model = Potts(10, T=1E-5, q=5, M=10000)
+        model.run_simulation(show_state=range(1,10000,200))
