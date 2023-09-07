@@ -80,10 +80,15 @@ class Potts:
                 #time.sleep(1)
                 plt.pause(0.0001)
 
-    def get_E(self):
+    def get_E(self, s, J_p):
         # Carmen
         # calculate the energy
-        pass
+        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
+        lr = np.sum((s[:,0:-1] == s[:,1:]).astype(int)) + 2 * np.sum((s[:,0] == s[:,-1]).astype(int))
+        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
+        tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + 2 * np.sum((s[0,:] == s[-1,:]).astype(int)) 
+        
+        return -J_p * (lr + tb)
 
     def write_E(self, filename='Data/Energies.csv'):
         # write self.E to a file
