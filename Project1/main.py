@@ -17,17 +17,33 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2, T=1, q=2, M=100, J=1, e=0):
+    def __init__(self, L=2, T=1, q=2, M=100, J=1, cs=False):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
         self.T = T # temperature
+        #TODO: check that the user gives a valid q value
         self.q = q #number of different spin values, integer >=2
+        
         self.J = J
-        self.s = np.random.randint(1, q+1, (L,L), int) #initial state, 2D-matrix of spin states, reading order
+        
+        self.s = np.empty((L,L)) #spin state of the system
+        #TODO: check that cs makes sense with respect to q
+        if cs != False: #cold start
+            self.s.fill(cs) 
+        else: #hot start
+            self.s = np.random.randint(1, q+1, (L,L), int) 
+        
         self.M = int(M) # Number of simulation runs
-        self.E = np.empty(self.M) # list of energies
-        self.e = e # total energy with with adding delta_E each time
+        self.E = np.empty(self.M) # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
+        
+        # calculate the TOTAL energy
+        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
+        lr = np.sum((self.s[:,0:-1] == self.s[:,1:]).astype(int)) + 2 * np.sum((self.s[:,0] == self.s[:,-1]).astype(int))
+        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
+        tb = np.sum((self.s[0:-1,:] == self.s[1:,:]).astype(int)) + 2 * np.sum((self.s[0,:] == self.s[-1,:]).astype(int))
+        self.e = -self.J * (lr + tb) # total energy with with adding delta_E each time
+        self.E[0] = self.e
 
         self.neighbours = np.empty((L,L), dtype=np.dtype('(2,4)int'))
         for c_x in range(L):
@@ -66,9 +82,6 @@ class Potts:
 
     def run_simulation(self, show_state=[]):
 
-        # Calculate total Energy
-        self.E[0] = self.e
-
         #plots
         ax = plt.subplot()
         plt.ion()
@@ -76,7 +89,7 @@ class Potts:
             self.MC_step(i)
             #print(self.s)
             #if i % 100 == 0:
-                # get_E total energy comparison with total enery calculated in marcov step
+                # TODO: get_E total energy comparison with total enery calculated in marcov step
             if i in show_state:
                 self.plot_state(ax=ax)
                 plt.pause(0.0001)
@@ -112,11 +125,21 @@ class Potts:
             plt.show()
 
 
-def plot_energies():
+def plot_energies(filename, show_plt=True): #dont understand the ax thing in plot_state
     # Carmen
-    # taking averages, etc.
-    pass
-
+    # read filename (total energy per iteration) and plot it 
+    data = pd.read_csv(filename, header=None).T
+    ax = data.plot(legend=False, figsize = (8,7), fontsize=12)
+    ax.set_xlabel('Iterations', fontsize=15)
+    ax.set_ylabel('Energy', fontsize=15)
+    ax.set_title('Total Energy vs Iterations', fontsize=15)
+    
+    if show_plt:
+        plt.show()
+    
+    ax.figure.savefig(filename[0:-3] + 'png')
+    
+    
 def analyse_energy(E):
     # determine time t_0 where the energy plateaus off by taking two moving averages
     # ma_1 and ma_2 and determining when ma_1<ma_2
@@ -147,19 +170,20 @@ def analyse_energy(E):
 if __name__ == '__main__':
     # main starts here
     # designing experiments: Anna, Theo, Carmen
-
+        
+    # TODO: compare hot start - cold start final results
+    
     if False:
         # Create a time series of the temperature
         model = Potts(20, q=10, M=1000)
         model.run_simulation()
         model.write_E(filename='Data/Energy_step_M1000_L20_q10.csv')
-
-
+    
     if False:
         # Show a nice plot for high temperature
         model = Potts(10, T=1E5, q=5, M=10000)
         model.run_simulation(show_state=range(1,10000,200))
-
+    
     if False:
         # and for low temperature
         model = Potts(10, T=1E-5, q=5, M=10000)
@@ -184,7 +208,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     # convert this to dataframes
     
-    if True:
+    if False:
         # analyse E for various T and q
         for q in qs:
             for T in Ts:
