@@ -56,7 +56,6 @@ class Potts:
         
         self.rng = np.random.default_rng()
 
-    # @nb.jit()
     def MC_step(self):
         # Anna
         # steps 1-3 p.12
@@ -81,8 +80,9 @@ class Potts:
   
         self.E += [self.e] # append energy to the list
 
+    def run_simulation_fast(self, M=100, M_sampling=5000):
+        run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling)
 
-    # @nb.njit()
     def run_simulation(self, M=100, M_sampling=5000, show_state=[]):
         """
         M: number of simulation steps. If M<0 then run until energy flattens off
@@ -95,16 +95,9 @@ class Potts:
         # ma_1 and ma_2 of length -M of the energies and determining when ma_1<=ma_2
         ma_1 = 0
         ma_2 = 0
-        if M >= 0:
-            t_end = M
-        else:
-            t_end = np.inf
-        # t_end = M if M>=0 else np.inf
+        t_end = M if M>=0 else np.inf
 
-        # i = 0
         for i in count(0):
-        # while True:
-        #     i += 1
             self.e = MC_step_fast(self.s, self.neighbours, 
                                           self.J, self.e, self.L, self.q, self.T)
             self.E += [self.e] # append energy to the list
@@ -161,6 +154,41 @@ class Potts:
         if show_plt:
             plt.show()
 
+
+@nb.njit()
+def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000):
+    """
+    M: number of simulation steps. If M<0 then run until energy flattens off
+    """
+    # determine time when the energy plateaus off by taking two moving averages
+    # ma_1 and ma_2 of length -M of the energies and determining when ma_1<=ma_2
+    ma_1 = 0
+    ma_2 = 0
+    t_end = M if M>=0 else np.inf
+
+    i = 0
+    while True:
+        e = MC_step_fast(s, neighbours, 
+                                        J, e, L, q, T)
+        E += [e] # append energy to the list
+
+        # compute the moving averages of the energy
+        if M<0:
+            if i+2*M >= 0:
+                ma_1 -= E[i+2*M]
+            if i+M >= 0:
+                ma_1 += E[i+M]
+                ma_2 -= E[i+M]
+            ma_2 += E[i]
+        if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
+            t_end = i+M_sampling
+
+        #print(s)
+        #if i % 100 == 0:
+            # TODO: get_E total energy comparison with total enery calculated in marcov step
+        if i >= t_end:
+            break
+        i += 1
 
 @nb.njit()
 def MC_step_fast(s, neighbours, J, e, L, q, T):
@@ -250,20 +278,20 @@ if __name__ == '__main__':
 
 
     # Define the parameters for the experiments
-    qs = [2]# range(2,10,3)
+    qs = [3]# range(2,10,3)
     Ts = np.linspace(1E-2,2,30)
     M = -1000
     M_sampling = 5000
     L = 100
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
                 model = Potts(L, T, q)
                 print(f'running model for L={L}, T={T}, q={q}')
                 t1 = time.perf_counter()
-                model.run_simulation(M, M_sampling)
+                model.run_simulation_fast(M, M_sampling)
                 print(f'it took {time.perf_counter()-t1}.')
                 model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}.csv')
 
@@ -271,7 +299,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     # convert this to dataframes
     
-    if False:
+    if True:
         # analyse E for various T and q
         for q in qs:
             for T in Ts:
