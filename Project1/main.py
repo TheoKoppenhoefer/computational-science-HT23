@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random as rd
 import pandas as pd
+from itertools import count
+import numba as nb
+import time
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -17,14 +20,13 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2, T=1, q=2, M=100, J=1, cs=False):
+    def __init__(self, L=2, T=1, q=2, J=1, cs=False):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #TOTAL number of lattice sites
         self.T = T # temperature
         #TODO: check that the user gives a valid q value
         self.q = q #number of different spin values, integer >=2
-        
         self.J = J
         
         self.s = np.empty((L,L)) #spin state of the system
@@ -34,8 +36,6 @@ class Potts:
         else: #hot start
             self.s = np.random.randint(1, q+1, (L,L), int) 
         
-        self.M = int(M) # Number of simulation runs
-        self.E = np.empty(self.M) # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
         
         # calculate the TOTAL energy
         #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
@@ -43,7 +43,8 @@ class Potts:
         #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
         tb = np.sum((self.s[0:-1,:] == self.s[1:,:]).astype(int)) + 2 * np.sum((self.s[0,:] == self.s[-1,:]).astype(int))
         self.e = -self.J * (lr + tb) # total energy with with adding delta_E each time
-        self.E[0] = self.e
+        # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
+        self.E = [self.e]
 
         self.neighbours = np.empty((L,L), dtype=np.dtype('(2,4)int'))
         for c_x in range(L):
@@ -55,8 +56,8 @@ class Potts:
         
         self.rng = np.random.default_rng()
 
-
-    def MC_step(self, step):
+    # @nb.jit()
+    def MC_step(self):
         # Anna
         # steps 1-3 p.12
 
@@ -76,23 +77,59 @@ class Potts:
         if self.rng.random() < np.exp(-delta_E/self.T):
             self.s[c] = s_new
             # calculate new total energy from older energy 
-            self.e = self.e + delta_E
+            self.e += delta_E
   
-        self.E[step] = self.e
+        self.E += [self.e] # append energy to the list
 
-    def run_simulation(self, show_state=[]):
 
-        #plots
-        ax = plt.subplot()
-        plt.ion()
-        for i in range(self.M):
-            self.MC_step(i)
+    # @nb.njit()
+    def run_simulation(self, M=100, M_sampling=5000, show_state=[]):
+        """
+        M: number of simulation steps. If M<0 then run until energy flattens off
+        """
+        if show_state:
+            #plots
+            fig, ax = plt.subplots()
+            plt.ion()
+        # determine time when the energy plateaus off by taking two moving averages
+        # ma_1 and ma_2 of length -M of the energies and determining when ma_1<=ma_2
+        ma_1 = 0
+        ma_2 = 0
+        if M >= 0:
+            t_end = M
+        else:
+            t_end = np.inf
+        # t_end = M if M>=0 else np.inf
+
+        # i = 0
+        for i in count(0):
+        # while True:
+        #     i += 1
+            self.e = MC_step_fast(self.s, self.neighbours, 
+                                          self.J, self.e, self.L, self.q, self.T)
+            self.E += [self.e] # append energy to the list
+
+            # compute the moving averages of the energy
+            if M<0:
+                if i+2*M >= 0:
+                    ma_1 -= self.E[i+2*M]
+                if i+M >= 0:
+                    ma_1 += self.E[i+M]
+                    ma_2 -= self.E[i+M]
+                ma_2 += self.E[i]
+            if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
+                t_end = i+M_sampling
+
             #print(self.s)
             #if i % 100 == 0:
                 # TODO: get_E total energy comparison with total enery calculated in marcov step
+            
             if i in show_state:
                 self.plot_state(ax=ax)
                 plt.pause(0.0001)
+
+            if i >= t_end:
+                break
         plt.ioff()
 
     def get_E(self, s, J_p):
@@ -125,6 +162,30 @@ class Potts:
             plt.show()
 
 
+@nb.njit()
+def MC_step_fast(s, neighbours, J, e, L, q, T):
+    # Anna
+    # steps 1-3 p.12
+
+    # step 1: choose random spin
+    # pick random coordinates
+    c = (np.random.randint(L),np.random.randint(L))
+
+    # step 2: propose state and calculate enrgy change
+    s_new = 1+np.random.randint(q)
+    s_old = s[c]
+    s_neighbours = np.empty((4,2))
+    for i, neighbour in enumerate(neighbours[c].T):
+        s_neighbours[i,:] = s[neighbour[0],neighbour[1]]
+    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
+
+    # Accept or deny change 
+    if np.random.random() < np.exp(-delta_E/T):
+        s[c] = s_new
+        # calculate new total energy from older energy 
+        e += delta_E
+    return e
+
 def plot_energies(filename, show_plt=True): #dont understand the ax thing in plot_state
     # Carmen
     # read filename (total energy per iteration) and plot it 
@@ -139,29 +200,27 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     
     ax.figure.savefig(filename[0:-3] + 'png')
     
-    
-def analyse_energy(E):
+
+def analyse_energy(E, n=1000):
     # determine time t_0 where the energy plateaus off by taking two moving averages
     # ma_1 and ma_2 and determining when ma_1<ma_2
     M = len(E)
     t_0 = M
-    ma_1 = np.sum(E[0:100]) # calculate 100*moving average of first 100 terms
-    ma_2 = np.sum(E[100:200])
-    for i in range(M-200):
+    n2 = 2*n
+    ma_1 = np.sum(E[0:n]) # calculate 100*moving average of first 100 terms
+    ma_2 = np.sum(E[n:n2])
+    for i in range(M-n2):
         if ma_1 <= ma_2:
-            t_0 = i
-            break
+            return i
         ma_1 -= E[i]
-        ma_1 += E[i+100]
-        ma_2 -= E[i+100]
-        ma_2 += E[i+200]
+        ma_1 += E[i+n]
+        ma_2 -= E[i+n]
+        ma_2 += E[i+n2]
 
     # Notify if E does not plateau off
     if t_0 == M:
         print(f'in analyse_energy(): t_0 could not be determined.')
-    
-    # return the mean and variance
-    return np.mean(E[t_0:]), np.var(E[t_0:])
+    return np.inf
 
 
     
@@ -191,18 +250,22 @@ if __name__ == '__main__':
 
 
     # Define the parameters for the experiments
-    qs = range(2,10,5)
-    Ts = np.linspace(1E-2,1E2,10)
-    M = int(1E4)
-    L = 10
+    qs = [2]# range(2,10,3)
+    Ts = np.linspace(1E-2,2,30)
+    M = -1000
+    M_sampling = 5000
+    L = 100
 
     if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
-                model = Potts(L, T, q, M)
-                model.run_simulation()
-                model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}_M{M}.csv')
+                model = Potts(L, T, q)
+                print(f'running model for L={L}, T={T}, q={q}')
+                t1 = time.perf_counter()
+                model.run_simulation(M, M_sampling)
+                print(f'it took {time.perf_counter()-t1}.')
+                model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}.csv')
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
@@ -213,14 +276,19 @@ if __name__ == '__main__':
         for q in qs:
             for T in Ts:
                 # load the list of energies from the file
-                E = np.loadtxt(f'Data/Energy_step_L{L}_T{T}_q{q}_M{M}.csv', delimiter=',')
-                means.loc[q][T], variances.loc[q][T] = analyse_energy(E)
-        
-        # TODO: print means, variances to file
-        # TODO: read means, variances from file
+                E = np.loadtxt(f'Data/Energy_step_L{L}_T{T}_q{q}.csv', delimiter=',')
+
+                # get the time t_0 when the energy plateaus off
+                t_0 = analyse_energy(E)
+                # t_0 = len(E)-M_sampling
+
+                # return the mean and variance
+                means.loc[q][T] = np.mean(E[t_0:])
+                variances.loc[q][T] = np.var(E[t_0:])
+                
 
         # plot results nicely
-        ax = plt.subplot()
+        fig, ax = plt.subplots()
         for q in qs:
             # plot the values in dependence of the temperature
             ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
