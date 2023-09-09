@@ -134,6 +134,11 @@ class Potts:
         tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + 2 * np.sum((s[0,:] == s[-1,:]).astype(int)) 
         
         return -J_p * (lr + tb)
+    
+    def get_stats(self):
+        # return mean and variance
+        t_0 = analyse_energy(self.E)
+        return np.mean(self.E[t_0:]), np.var(self.E[t_0:])
 
     def write_E(self, filename='Data/Energies.csv'):
         # write self.E to a file
@@ -278,11 +283,14 @@ if __name__ == '__main__':
 
 
     # Define the parameters for the experiments
-    qs = [3]# range(2,10,3)
+    qs = [2,10]# range(2,10,3)
     Ts = np.linspace(1E-2,2,30)
     M = -1000
     M_sampling = 5000
-    L = 100
+    L = 300
+
+    means = pd.DataFrame(columns=Ts, index=qs)
+    variances = pd.DataFrame(columns=Ts, index=qs)
 
     if True:
         # Run the simulation for various T and q
@@ -293,13 +301,13 @@ if __name__ == '__main__':
                 t1 = time.perf_counter()
                 model.run_simulation_fast(M, M_sampling)
                 print(f'it took {time.perf_counter()-t1}.')
-                model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}.csv')
-
-    means = pd.DataFrame(columns=Ts, index=qs)
-    variances = pd.DataFrame(columns=Ts, index=qs)
-    # convert this to dataframes
+                # model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}.csv')
+                means.loc[q][T], variances.loc[q][T] = model.get_stats()
+    means.to_pickle(f'Data/means_L{L}.pkl')
+    variances.to_pickle(f'Data/variances_L{L}.pkl')
     
     if True:
+        """
         # analyse E for various T and q
         for q in qs:
             for T in Ts:
@@ -313,8 +321,11 @@ if __name__ == '__main__':
                 # return the mean and variance
                 means.loc[q][T] = np.mean(E[t_0:])
                 variances.loc[q][T] = np.var(E[t_0:])
+        """
                 
 
+        means.read_pickle(f'Data/means_L{L}.pkl')
+        variances.read_pickle(f'Data/variances_L{L}.pkl')
         # plot results nicely
         fig, ax = plt.subplots()
         for q in qs:
