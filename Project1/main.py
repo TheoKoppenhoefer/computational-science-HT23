@@ -179,15 +179,15 @@ if __name__ == '__main__':
         model.run_simulation()
         model.write_E(filename='Data/Energy_step_M1000_L20_q10.csv')
     
-    if False:
+    if True:
         # Show a nice plot for high temperature
-        model = Potts(10, T=1E5, q=5, M=10000)
-        model.run_simulation(show_state=range(1,10000,200))
+        model = Potts(10, T=1E5, q=5, M=10)
+        model.run_simulation(show_state=range(1,10,200))
     
-    if False:
+    if True:
         # and for low temperature
-        model = Potts(10, T=1E-5, q=5, M=10000)
-        model.run_simulation(show_state=range(1,10000,200))
+        model = Potts(10, T=1E-5, q=5, M=10)
+        model.run_simulation(show_state=range(1,10,200))
 
 
     # Define the parameters for the experiments
@@ -196,7 +196,7 @@ if __name__ == '__main__':
     M = int(1E4)
     L = 10
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -208,7 +208,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     # convert this to dataframes
     
-    if False:
+    if True:
         # analyse E for various T and q
         for q in qs:
             for T in Ts:
