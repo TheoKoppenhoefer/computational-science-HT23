@@ -6,6 +6,7 @@ import random as rd
 import pandas as pd
 from itertools import count
 import numba as nb
+from scipy.stats import maxwell
 import time
 plt.style.use('rc.mplstyle')
 
@@ -96,7 +97,7 @@ class Potts:
                 self.plot_state(True, ax, i)
                 plt.pause(0.0001)
             if i in save_state:
-                self.plot_state(frame_nbr=i, filename=f'{filename}_{i}.')
+                self.plot_state(frame_nbr=i, filename=f'{filename}_{i}')
             if i >= t_end:
                 break
         plt.ioff()
@@ -128,13 +129,9 @@ class Potts:
         if not ax: ax = plt.subplot()
         ax.clear()
         ax.imshow(self.s, cmap='Set1')
+        if filename: tikzplotlib.save(f'{filename}.pgf')
         if frame_nbr: ax.set_title(f"frame {frame_nbr}")
-
-        if filename:
-            tikzplotlib.save(filename)
-
-        if show_plt:
-            plt.show()
+        if show_plt: plt.show()
 
 @nb.njit()
 def initialise_neighbours_fast(L, neighbours):
@@ -218,22 +215,30 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     
     ax.figure.savefig(filename[0:-3] + 'png')
 
-def plot_energies_distr(E, show_plt=True, filename=None):
+def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
+    plt.style.use('rc.mplstyle')
     fig, ax = plt.subplots()
-    ax.hist(E, bins=40)
+    ax.hist(E, bins=150, density=True, label='Data')
     ax.set_xlabel('Energy $E$')
-    ax.set_ylabel('Number of states')
-    if filename: tikzplotlib.save(filename)
+    ax.set_ylabel('Share of states')
+    if fit_maxwell:
+        # fit a maxwell distribution to the data
+        params = maxwell.fit(E[::100], loc=min(E))
+        x = np.linspace(min(E), max(E), 1000)
+        ax.plot(x, maxwell.pdf(x, *params), label='Maxwell distribution')
+    if filename: tikzplotlib.save(f'{filename}.pgf')
     ax.set_title('Distribution of the energy in equilibrium')
+    ax.legend()
     if show_plt: plt.show()
 
 def plot_energies_t0(E, t_0, show_plt=True, filename=None):
+    plt.style.use('rc.mplstyle')
     fig, ax = plt.subplots()
     ax.plot(E)
     ax.axvline(t_0, label='$t_0$')
     ax.set_xlabel('Iteration $i$')
     ax.set_ylabel('Energy $E$')
-    if filename: tikzplotlib.save(filename)
+    if filename: tikzplotlib.save(f'{filename}.pgf')
     ax.set_title('Energy evolution')
     if show_plt: plt.show()
 
@@ -268,28 +273,33 @@ if __name__ == '__main__':
         
     # TODO: compare hot start - cold start final results
     
-    if True:
-        # Create a time series of the temperature
-        model = Potts(300, q=10, T=1E2)
-        M = -5000
-        M_sampling = int(1E6)
-        model.run_simulation(M, M_sampling)
-        E = model.E
-        t_0 = len(E)-M_sampling
-        plot_energies_distr(E[t_0:])
-        plot_energies_t0(E, t_0)
-        # filename = 'Data/Energy_step_M1000_L20_q10.csv'
-        # model.write_E(filename)
-        # plot_energies(filename)
-    
+    # Create a time series of the temperature with Bolzmann
+    M = -5000
+    M_sampling = int(1E6)
+    filename = 'Data/Energies_Boltzmann_Distribution.csv'
     if False:
+        # run the simulation
+        model = Potts(300, q=10, T=1E2)
+        model.run_simulation(M, M_sampling)
+        model.write_E(filename)
+    if True:
+        # and plot it
+        E = np.loadtxt(filename, delimiter=',')
+        t_0 = len(E)-M_sampling
+        plot_energies_distr(E[t_0:], filename='Plots/Energies_Boltzmann_Distribution', fit_maxwell=True)
+        # plot_energies_t0(E, t_0)
+
+    
+    if True:
         # Show a nice animation for high temperature
-        model = Potts(10, T=1E5, q=5)
-        model.run_simulation(10000, show_state=range(0,10000,200))
+        model = Potts(20, T=1E5, q=5)
+        model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename='Plots/High_temp_state')
+        # E = model.E
+        # plot_energies_t0(E, 0)
     
     if False:
         # and for low temperature
-        model = Potts(10, T=1E-5, q=5)
+        model = Potts(20, T=1E-5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
 
 
@@ -342,8 +352,4 @@ if __name__ == '__main__':
         ax.legend(title='parameter $q$', labels=qs)
         ax.set_xlabel('temperature $T$')
         ax.set_ylabel('time $t_0$')
-<<<<<<< HEAD
         plt.show()
-=======
-        plt.show()
->>>>>>> ead12b9b3cc3120c5a546f4116e39a89d7d68597
