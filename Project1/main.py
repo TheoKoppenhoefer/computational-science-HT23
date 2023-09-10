@@ -216,7 +216,25 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
         plt.show()
     
     ax.figure.savefig(filename[0:-3] + 'png')
-    
+
+def plot_energies_distr(E, show_plt=True, filename=None):
+    fig, ax = plt.subplots()
+    ax.hist(E, bins=40)
+    ax.set_xlabel('Energy $E$')
+    ax.set_ylabel('Number of states')
+    if filename: tikzplotlib.save(filename)
+    ax.set_title('Distribution of the energy in equilibrium')
+    if show_plt: plt.show()
+
+def plot_energies_t0(E, t_0, show_plt=True, filename=None):
+    fig, ax = plt.subplots()
+    ax.plot(E)
+    ax.axvline(t_0, label='$t_0$')
+    ax.set_xlabel('Iteration $i$')
+    ax.set_ylabel('Energy $E$')
+    if filename: tikzplotlib.save(filename)
+    ax.set_title('Energy evolution')
+    if show_plt: plt.show()
 
 def analyse_energy(E, n=1000):
     # determine time t_0 where the energy plateaus off by taking two moving averages
@@ -249,13 +267,19 @@ if __name__ == '__main__':
         
     # TODO: compare hot start - cold start final results
     
-    if False:
+    if True:
         # Create a time series of the temperature
-        model = Potts(20, q=10)
-        model.run_simulation(1000)
-        filename = 'Data/Energy_step_M1000_L20_q10.csv'
-        model.write_E(filename)
-        plot_energies(filename)
+        model = Potts(300, q=10, T=1E2)
+        M = -5000
+        M_sampling = int(1E6)
+        model.run_simulation(M, M_sampling)
+        E = model.E
+        t_0 = len(E)-M_sampling
+        plot_energies_distr(E[t_0:])
+        plot_energies_t0(E, t_0)
+        # filename = 'Data/Energy_step_M1000_L20_q10.csv'
+        # model.write_E(filename)
+        # plot_energies(filename)
     
     if False:
         # Show a nice animation for high temperature
@@ -279,7 +303,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -295,7 +319,7 @@ if __name__ == '__main__':
         variances.to_pickle(f'Data/variances_L{L}.pkl')
         t_0s.to_pickle(f'Data/t0s_L{L}.pkl')
     
-    if True:
+    if False:
         # plot variances and means
         means = pd.read_pickle(f'Data/means_L{L}.pkl')
         variances = pd.read_pickle(f'Data/variances_L{L}.pkl')
@@ -313,7 +337,7 @@ if __name__ == '__main__':
 
         fig, ax = plt.subplots()
         for q in qs:
-            ax.plt(t_0s.loc[q], label=f'{q}')
+            ax.plot(t_0s.loc[q], label=f'{q}')
         ax.legend(title='parameter $q$', labels=qs)
         ax.set_xlabel('temperature $T$')
         ax.set_ylabel('time $t_0$')
