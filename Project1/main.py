@@ -28,31 +28,25 @@ class Potts:
         #TODO: check that the user gives a valid q value
         self.q = q #number of different spin values, integer >=2
         self.J = J
-        
+
         self.s = np.empty((L,L)) #spin state of the system
         #TODO: check that cs makes sense with respect to q
         if cs != False: #cold start
             self.s.fill(cs) 
         else: #hot start
-            self.s = np.random.randint(1, q+1, (L,L), int) 
-        
+            self.s = np.random.randint(1, q+1, (L,L))
         
         # calculate the TOTAL energy
         #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
-        lr = np.sum((self.s[:,0:-1] == self.s[:,1:]).astype(int)) + 2 * np.sum((self.s[:,0] == self.s[:,-1]).astype(int))
+        lr = np.sum(self.s[:,:-1] == self.s[:,1:]) + 2 * np.sum(self.s[:,0] == self.s[:,-1])
         #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
-        tb = np.sum((self.s[0:-1,:] == self.s[1:,:]).astype(int)) + 2 * np.sum((self.s[0,:] == self.s[-1,:]).astype(int))
-        self.e = -self.J * (lr + tb) # total energy with with adding delta_E each time
+        tb = np.sum(self.s[:-1,:] == self.s[1:,:]) + 2 * np.sum(self.s[0,:] == self.s[-1,:])
+        self.e = -J * (lr + tb) # total energy with with adding delta_E each time
         # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
         self.E = [self.e]
-
+        
         self.neighbours = np.empty((L,L), dtype=np.dtype('(2,4)int'))
-        for c_x in range(L):
-            for c_y in range(L):
-                neighbourhood = np.array([[0,1],[1,0],[-1,0],[0,-1]])
-                neighbourhood = np.mod(np.array([c_x,c_y])+neighbourhood, np.array([L,L]))
-                self.neighbours[c_x, c_y] = neighbourhood.T
-
+        self.neighbours = initialise_neighbours_fast(L, self.neighbours)
         
         self.rng = np.random.default_rng()
 
@@ -135,9 +129,9 @@ class Potts:
         
         return -J_p * (lr + tb)
     
-    def get_stats(self):
+    def get_stats(self, M_sampling=0):
         # return mean and variance
-        t_0 = analyse_energy(self.E)
+        t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E)
         return np.mean(self.E[t_0:]), np.var(self.E[t_0:])
 
     def write_E(self, filename='Data/Energies.csv'):
@@ -159,6 +153,14 @@ class Potts:
         if show_plt:
             plt.show()
 
+@nb.njit()
+def initialise_neighbours_fast(L, neighbours):
+    for c_x in range(L):
+        for c_y in range(L):
+            neighbourhood = np.array([[0,1],[1,0],[-1,0],[0,-1]])
+            neighbourhood = np.mod(np.array([c_x,c_y])+neighbourhood, np.array([L,L]))
+            neighbours[c_x, c_y] = neighbourhood.T
+    return neighbours
 
 @nb.njit()
 def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000):
@@ -287,45 +289,30 @@ if __name__ == '__main__':
     Ts = np.linspace(1E-2,2,30)
     M = -1000
     M_sampling = 5000
-    L = 300
+    L = 500
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
-                model = Potts(L, T, q)
                 print(f'running model for L={L}, T={T}, q={q}')
-                t1 = time.perf_counter()
+                # pf = time.perf_counter()
+                model = Potts(L, T, q)
+                # print(f'setup {time.perf_counter()-pf}.')
+                # pf = time.perf_counter()
                 model.run_simulation_fast(M, M_sampling)
-                print(f'it took {time.perf_counter()-t1}.')
-                # model.write_E(filename=f'Data/Energy_step_L{L}_T{T}_q{q}.csv')
-                means.loc[q][T], variances.loc[q][T] = model.get_stats()
-    means.to_pickle(f'Data/means_L{L}.pkl')
-    variances.to_pickle(f'Data/variances_L{L}.pkl')
+                # print(f'running {time.perf_counter()-pf}.')
+                means.loc[q][T], variances.loc[q][T] = model.get_stats(M_sampling)
+        means.to_pickle(f'Data/means_L{L}.pkl')
+        variances.to_pickle(f'Data/variances_L{L}.pkl')
     
     if True:
-        """
-        # analyse E for various T and q
-        for q in qs:
-            for T in Ts:
-                # load the list of energies from the file
-                E = np.loadtxt(f'Data/Energy_step_L{L}_T{T}_q{q}.csv', delimiter=',')
 
-                # get the time t_0 when the energy plateaus off
-                t_0 = analyse_energy(E)
-                # t_0 = len(E)-M_sampling
-
-                # return the mean and variance
-                means.loc[q][T] = np.mean(E[t_0:])
-                variances.loc[q][T] = np.var(E[t_0:])
-        """
-                
-
-        means.read_pickle(f'Data/means_L{L}.pkl')
-        variances.read_pickle(f'Data/variances_L{L}.pkl')
+        means = pd.read_pickle(f'Data/means_L{L}.pkl')
+        variances = pd.read_pickle(f'Data/variances_L{L}.pkl')
         # plot results nicely
         fig, ax = plt.subplots()
         for q in qs:
