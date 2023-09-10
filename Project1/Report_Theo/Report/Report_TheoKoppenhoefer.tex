@@ -37,9 +37,9 @@ A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a ma
 \end{align*}
 One assigns this state an energy via
 \begin{align*}
-	E = \sum_{\substack{i, j\text{ neighbouring}\\ \text{grid points}}}\delta\brk*{s_i,s_j}
+	E = -J\sum_{\substack{i, j\text{ neighbouring}\\ \text{grid points}}}\delta\brk*{s_i,s_j}
 \end{align*}
-where $\delta$ denotes the Kronecker-delta.
+where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid.
 
 \section{The implementation}
 
@@ -60,6 +60,18 @@ to determine $t_0$. If on the other hand we start in cold state the energy will 
 
 \subsubsection{Improving performance}
 While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features.
+
+
+\begin{figure}
+\centering
+\input{../../Plots/Energies_Boltzmann_Distribution.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/High_temp_state_10000.pgf}
+\end{figure}
 
 
 \newpage
