@@ -342,4 +342,8 @@ if __name__ == '__main__':
         ax.legend(title='parameter $q$', labels=qs)
         ax.set_xlabel('temperature $T$')
         ax.set_ylabel('time $t_0$')
+<<<<<<< HEAD
         plt.show()
+=======
+        plt.show()
+>>>>>>> ead12b9b3cc3120c5a546f4116e39a89d7d68597

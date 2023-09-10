@@ -13,6 +13,9 @@
 
 \addbibresource{bibliography.bib}
 
+\usepackage{pythonhighlight}
+\graphicspath{{../Figures/}}
+
 %%%%% The content starts here %%%%%%%%%%%%%
 
 
@@ -22,15 +25,49 @@
 
 \section{Introduction}
 
+The following report is part of the first project of the Modelling in Computational Science course at Lund University, HT2023.
+In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model.
+The report and the Python implementation can be found online under \cite{Repository}
+
+\section{The Potts model}
+
+A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping
+\begin{align*}
+	s\colon \brk[c]{1,\dots,L}\times\brk[c]{1,\dots,L}\to\brk[c]{1,\dots,L}\,.
+\end{align*}
+One assigns this state an energy via
+\begin{align*}
+	E = \sum_{\substack{i, j\text{ neighbouring}\\ \text{grid points}}}\delta\brk*{s_i,s_j}
+\end{align*}
+where $\delta$ denotes the Kronecker-delta.
+
+\section{The implementation}
+
+\subsubsection{Determining when the Energy has plateaued}
+
+The energy of the system takes some time $t_0$ to reach an equilibrium state. To determine $t_0$ we calculate in every step $i$ moving averages $\text{ma}_1$ and $\text{ma}_2$ over $n$ energies. The construction is shown in figure \ref{fi:movingAverages}. If we start in the hot state then the energy will tend to shrink until we reach an equilibrium. Hence we can use the condition
+\begin{align}
+	\text{ma}_2 \leq \text{ma}_1 \label{eq:equilCondition}
+\end{align}
+to determine $t_0$. If on the other hand we start in cold state the energy will in general increase and we have to reverse the inequality in equation \eqref{eq:equilCondition}. After reaching an equilibrium the simulation runs for a further \pyth{M_sampling=5000} steps. It is over these samples we take the mean and the variance.
+
+\begin{figure}
+\centering
+\input{../Figures/explanationMovingAverages.pdf_tex}
+\caption{Explanation of the moving averages.}
+\label{fi:movingAverages}
+\end{figure}
+
+\subsubsection{Improving performance}
+While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features.
 
 
-
-%\newpage
-%\section*{Bibliography}
+\newpage
+\section*{Bibliography}
 %\nocite{*}
 %Main source
 %\printbibliography[heading=none, keyword={main}]
 %\noindent Other sources
-%\printbibliography[heading=none, keyword={secondary}]
+\printbibliography[heading=none, keyword={secondary}]
 
 \end{document}
