@@ -289,16 +289,6 @@ if __name__ == '__main__':
         plot_energies_distr(E[t_0:], filename='Plots/Energies_Boltzmann_Distribution', fit_maxwell=True)
         # plot_energies_t0(E, t_0)
 
-    if False:
-        # Create a time series to show the cutoff
-        model = Potts(300, q=10, T=1E2)
-        M = -5000
-        M_sampling = int(1E6)
-        model.run_simulation(M, M_sampling)
-        E = model.E
-        t_0 = len(E)-M_sampling
-        plot_energies_distr(E[t_0:])
-        plot_energies_t0(E, t_0)
     
     if True:
         # Show a nice animation for high temperature
@@ -362,8 +352,4 @@ if __name__ == '__main__':
         ax.legend(title='parameter $q$', labels=qs)
         ax.set_xlabel('temperature $T$')
         ax.set_ylabel('time $t_0$')
-<<<<<<< HEAD
         plt.show()
-=======
-        plt.show()
->>>>>>> ead12b9b3cc3120c5a546f4116e39a89d7d68597
