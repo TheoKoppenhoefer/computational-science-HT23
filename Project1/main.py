@@ -50,30 +50,6 @@ class Potts:
         
         self.rng = np.random.default_rng()
 
-    def MC_step(self):
-        # Anna
-        # steps 1-3 p.12
-
-        # step 1: choose random spin
-        # pick random coordinates
-        c = tuple(self.rng.choice(self.L, size=2))
-
-        # step 2: propose state and calculate enrgy change
-        s_new = 1+self.rng.choice(self.q)
-        s_old = self.s[c]
-
-        s_neighbours = self.s[tuple(map(tuple,self.neighbours[c]))]
-
-        delta_E = -self.J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
-
-        # Accept or deny change 
-        if self.rng.random() < np.exp(-delta_E/self.T):
-            self.s[c] = s_new
-            # calculate new total energy from older energy 
-            self.e += delta_E
-  
-        self.E += [self.e] # append energy to the list
-
     def run_simulation_fast(self, M=100, M_sampling=5000):
         run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling)
 
@@ -112,7 +88,7 @@ class Potts:
                 # TODO: get_E total energy comparison with total enery calculated in marcov step
             
             if i in show_state:
-                self.plot_state(ax=ax)
+                self.plot_state(ax=ax, frame_nbr=i)
                 plt.pause(0.0001)
 
             if i >= t_end:
@@ -141,11 +117,12 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self, show_plt=True, filename=None, ax=None):
+    def plot_state(self, show_plt=True, filename=None, ax=None, frame_nbr=None):
         # Theo
-        if not ax:
-            ax = plt.subplot()
+        if not ax: ax = plt.subplot()
+        ax.clear()
         ax.imshow(self.s, cmap='Set1')
+        if frame_nbr: ax.set_title(f"frame {frame_nbr}")
 
         if filename:
             tikzplotlib.save(filename)
@@ -269,19 +246,21 @@ if __name__ == '__main__':
     
     if False:
         # Create a time series of the temperature
-        model = Potts(20, q=10, M=1000)
-        model.run_simulation()
-        model.write_E(filename='Data/Energy_step_M1000_L20_q10.csv')
+        model = Potts(20, q=10)
+        model.run_simulation(1000)
+        filename = 'Data/Energy_step_M1000_L20_q10.csv'
+        model.write_E(filename)
+        plot_energies(filename)
     
     if False:
         # Show a nice plot for high temperature
-        model = Potts(10, T=1E5, q=5, M=10000)
-        model.run_simulation(show_state=range(1,10000,200))
+        model = Potts(10, T=1E5, q=5)
+        model.run_simulation(10000, show_state=range(0,10000,200))
     
     if False:
         # and for low temperature
-        model = Potts(10, T=1E-5, q=5, M=10000)
-        model.run_simulation(show_state=range(1,10000,200))
+        model = Potts(10, T=1E-5, q=5)
+        model.run_simulation(10000, show_state=range(0,10000,200))
 
 
     # Define the parameters for the experiments
@@ -309,11 +288,11 @@ if __name__ == '__main__':
         means.to_pickle(f'Data/means_L{L}.pkl')
         variances.to_pickle(f'Data/variances_L{L}.pkl')
     
-    if True:
+    if False:
+        # plot simulation results nicely
 
         means = pd.read_pickle(f'Data/means_L{L}.pkl')
         variances = pd.read_pickle(f'Data/variances_L{L}.pkl')
-        # plot results nicely
         fig, ax = plt.subplots()
         for q in qs:
             # plot the values in dependence of the temperature
