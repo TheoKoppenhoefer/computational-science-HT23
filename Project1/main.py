@@ -53,9 +53,13 @@ class Potts:
     def run_simulation_fast(self, M=100, M_sampling=5000):
         run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling)
 
-    def run_simulation(self, M=100, M_sampling=5000, show_state=[]):
+    def run_simulation(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename=''):
         """
         M: number of simulation steps. If M<0 then run until energy flattens off
+        M_sampling: number of steps to take after equilibrium was reached
+        show_state: frames in which to plot the state
+        save_state: frames in which to save the state
+        filename: location to store the states
         """
         if show_state:
             #plots
@@ -88,9 +92,10 @@ class Potts:
                 # TODO: get_E total energy comparison with total enery calculated in marcov step
             
             if i in show_state:
-                self.plot_state(ax=ax, frame_nbr=i)
+                self.plot_state(True, ax, i)
                 plt.pause(0.0001)
-
+            if i in save_state:
+                self.plot_state(frame_nbr=i, filename=f'{filename}_{i}.')
             if i >= t_end:
                 break
         plt.ioff()
@@ -108,7 +113,7 @@ class Potts:
     def get_stats(self, M_sampling=0):
         # return mean and variance
         t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E)
-        return np.mean(self.E[t_0:]), np.var(self.E[t_0:])
+        return np.mean(self.E[t_0:]), np.var(self.E[t_0:]), t_0
 
     def write_E(self, filename='Data/Energies.csv'):
         # write self.E to a file
@@ -117,7 +122,7 @@ class Potts:
             wr = csv.writer(f)
             wr.writerow(self.E)
 
-    def plot_state(self, show_plt=True, filename=None, ax=None, frame_nbr=None):
+    def plot_state(self, show_plt=False, ax=None, frame_nbr=None, filename=None):
         # Theo
         if not ax: ax = plt.subplot()
         ax.clear()
@@ -253,7 +258,7 @@ if __name__ == '__main__':
         plot_energies(filename)
     
     if False:
-        # Show a nice plot for high temperature
+        # Show a nice animation for high temperature
         model = Potts(10, T=1E5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
     
@@ -265,15 +270,16 @@ if __name__ == '__main__':
 
     # Define the parameters for the experiments
     qs = [2,10]# range(2,10,3)
-    Ts = np.linspace(1E-2,2,30)
+    Ts = np.linspace(1E-2,2,10)
     M = -1000
     M_sampling = 5000
     L = 500
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
+    t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -284,13 +290,13 @@ if __name__ == '__main__':
                 # pf = time.perf_counter()
                 model.run_simulation_fast(M, M_sampling)
                 # print(f'running {time.perf_counter()-pf}.')
-                means.loc[q][T], variances.loc[q][T] = model.get_stats(M_sampling)
+                means.loc[q][T], variances.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
         means.to_pickle(f'Data/means_L{L}.pkl')
         variances.to_pickle(f'Data/variances_L{L}.pkl')
+        t_0s.to_pickle(f'Data/t0s_L{L}.pkl')
     
-    if False:
-        # plot simulation results nicely
-
+    if True:
+        # plot variances and means
         means = pd.read_pickle(f'Data/means_L{L}.pkl')
         variances = pd.read_pickle(f'Data/variances_L{L}.pkl')
         fig, ax = plt.subplots()
@@ -300,4 +306,15 @@ if __name__ == '__main__':
         ax.legend(title='parameter $q$', labels=qs)
         ax.set_xlabel('temperature $T$')
         ax.set_ylabel('energy $E$')
+        plt.show()
+
+        # plot t_0s 
+        t_0s = pd.read_pickle(f'Data/t0s_L{L}.pkl')
+
+        fig, ax = plt.subplots()
+        for q in qs:
+            ax.plt(t_0s.loc[q], label=f'{q}')
+        ax.legend(title='parameter $q$', labels=qs)
+        ax.set_xlabel('temperature $T$')
+        ax.set_ylabel('time $t_0$')
         plt.show()
