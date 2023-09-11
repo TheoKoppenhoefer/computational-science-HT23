@@ -8,7 +8,7 @@ from itertools import count
 import numba as nb
 from scipy.stats import maxwell
 import time
-plt.style.use('rc.mplstyle')
+#plt.style.use('rc.mplstyle')
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -39,10 +39,10 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # calculate the TOTAL energy
-        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
-        lr = np.sum(self.s[:,:-1] == self.s[:,1:]) + 2 * np.sum(self.s[:,0] == self.s[:,-1])
-        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
-        tb = np.sum(self.s[:-1,:] == self.s[1:,:]) + 2 * np.sum(self.s[0,:] == self.s[-1,:])
+        #left and right comparisons
+        lr = np.sum(self.s[:,:-1] == self.s[:,1:]) + np.sum(self.s[:,0] == self.s[:,-1])
+        #top and bottom comparisons
+        tb = np.sum(self.s[:-1,:] == self.s[1:,:]) + np.sum(self.s[0,:] == self.s[-1,:])
         self.e = -J * (lr + tb) # total energy with with adding delta_E each time
         # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
         self.E = [self.e]
@@ -88,11 +88,13 @@ class Potts:
                 ma_2 += self.E[i]
             if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
                 t_end = i+M_sampling
-
-            #print(self.s)
-            #if i % 100 == 0:
-                # TODO: get_E total energy comparison with total enery calculated in marcov step
             
+            #making sure that deltaE works by comparing get_E with e
+            if i % 50 == 0:
+                getE = get_E(self.s, self.J)
+                if getE != self.e:
+                    print('get_E: ',getE, 'e: ', self.e)
+                    
             if i in show_state:
                 self.plot_state(True, ax, i)
                 plt.pause(0.0001)
@@ -101,16 +103,6 @@ class Potts:
             if i >= t_end:
                 break
         plt.ioff()
-
-    def get_E(self, s, J_p):
-        # Carmen
-        # calculate the energy
-        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
-        lr = np.sum((s[:,0:-1] == s[:,1:]).astype(int)) + 2 * np.sum((s[:,0] == s[:,-1]).astype(int))
-        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
-        tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + 2 * np.sum((s[0,:] == s[-1,:]).astype(int)) 
-        
-        return -J_p * (lr + tb)
     
     def get_stats(self, M_sampling=0):
         # return mean and variance
@@ -169,13 +161,28 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
             ma_2 += E[i]
         if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
             t_end = i+M_sampling
-
-        #print(s)
-        #if i % 100 == 0:
-            # TODO: get_E total energy comparison with total enery calculated in marcov step
+        
+        #making sure that deltaE works by comparing get_E with e
+        print('get_E', 'e')
+        if i % 50 == 0:
+            getE = get_E(s, J)
+            if getE != e:
+                print('get_E: ', getE, 'e: ', e)
+                
         if i >= t_end:
             break
         i += 1
+
+def get_E(s, J_p):
+    # Carmen
+    # calculate the energy
+    #left and right comparisons
+    lr = np.sum((s[:,0:-1] == s[:,1:]).astype(int)) + np.sum((s[:,0] == s[:,-1]).astype(int))
+    #top and bottom comparisons
+    tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + np.sum((s[0,:] == s[-1,:]).astype(int)) 
+            
+    return -J_p * (lr + tb)
+
 
 @nb.njit()
 def MC_step_fast(s, neighbours, J, e, L, q, T):
@@ -282,7 +289,7 @@ if __name__ == '__main__':
         model = Potts(300, q=10, T=1E2)
         model.run_simulation(M, M_sampling)
         model.write_E(filename)
-    if True:
+    if False:
         # and plot it
         E = np.loadtxt(filename, delimiter=',')
         t_0 = len(E)-M_sampling
