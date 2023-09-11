@@ -200,8 +200,8 @@ def Props_fun(s_neighbours, q, T):
     Props = np.empty(q)
     for i in np.arange(1,q+1):
         Props[i-1] = np.exp(1/T*np.sum(i == s_neighbours))
-        Props = 1/(np.sum(Props))*Props
-        Props[np.isnan(Props)] = 0
+    Props = 1/(np.sum(Props))*Props
+    Props[np.isnan(Props)] = 0
     return Props
 
 @nb.njit()   
@@ -220,7 +220,7 @@ def Gibbs_step(s, neighbours, J, e, L, q, T):
     # find neighbours and calculate Propabilities
     s_neighbours = s_neighbours_fun(s, neighbours, c)
     Props = Props_fun(s_neighbours, q, T)
-
+    #print(Props)
     s_new =  np.random.choice(np.arange(1, q+1), p = Props)
     s[c] = s_new
 
