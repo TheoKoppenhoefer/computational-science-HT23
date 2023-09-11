@@ -89,7 +89,7 @@ class Potts:
             if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
                 t_end = i+M_sampling
             
-            #making sure that deltaE works by comparing get_E with e
+            #comparing get_E with e
             if i % 50 == 0:
                 getE = get_E(self.s, self.J)
                 if getE != self.e:
@@ -162,8 +162,7 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
         if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
             t_end = i+M_sampling
         
-        #making sure that deltaE works by comparing get_E with e
-        print('get_E', 'e')
+        #comparing get_E with e
         if i % 50 == 0:
             getE = get_E(s, J)
             if getE != e:
