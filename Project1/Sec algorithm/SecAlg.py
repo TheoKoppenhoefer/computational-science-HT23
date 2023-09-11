@@ -10,8 +10,9 @@ import time
 
 from pathlib import Path
 pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
+pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
 
-plt.style.use(Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")/'rc.mplstyle')
+plt.style.use(pathname_gen/'rc.mplstyle')
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -149,7 +150,7 @@ def initialise_neighbours_fast(L, neighbours):
             neighbours[c_x, c_y] = neighbourhood.T
     return neighbours
 
-@nb.njit()
+#@nb.njit()
 def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000):
     """
     M: number of simulation steps. If M<0 then run until energy flattens off
@@ -184,35 +185,51 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
             break
         i += 1
 
-@nb.njit()
-def Gibbs_step(s, neighbours, J, e, L, q, T):
-    
-    # step 1: choose random spin
-    # pick random coordinates
-    c = (np.random.randint(L),np.random.randint(L))
+################MC step
 
-    # step 2: propose state 
-    # find neighbours
-    s_neighbours = np.empty((4,2))
-    s_old = s[c]
+@nb.njit()    
+def s_neighbours_fun(s, neighbours,c):
     s_neighbours = np.empty((4,2))
     for i, neighbour in enumerate(neighbours[c].T):
         s_neighbours[i,:] = s[neighbour[0],neighbour[1]]
+    return s_neighbours
 
-    #Calculation of probabitilies for all values
+@nb.njit()   
+def Props_fun(s_neighbours, q, T):
+
     Props = np.empty(q)
-    
     for i in np.arange(1,q+1):
         Props[i-1] = np.exp(1/T*np.sum(i == s_neighbours))
+        Props = 1/(np.sum(Props))*Props
+        Props[np.isnan(Props)] = 0
+    return Props
 
-    Props = 1/(np.sum(Props))*Props
-
-    s_new =  np.random.choice(np.arange(1, q+1))  
-
+@nb.njit()   
+def energy(s_neighbours, J, e, s_new, s_old):
     delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         
     e += delta_E
-
     return e
+
+#@nb.njit()
+def Gibbs_step(s, neighbours, J, e, L, q, T):
+    
+    # choose random spin
+    c = (np.random.randint(L),np.random.randint(L))
+    s_old = s[c] 
+
+    # find neighbours and calculate Propabilities
+    s_neighbours = s_neighbours_fun(s, neighbours, c)
+    Props = Props_fun(s_neighbours, q, T)
+
+    s_new =  np.random.choice(np.arange(1, q+1), p = Props)
+    s[c] = s_new
+
+    #energy
+    e = energy(s_neighbours, J, e, s_new, s_old)
+    return e
+
+
+
 
 def plot_energies(filename, show_plt=True): #dont understand the ax thing in plot_state
     # Carmen
@@ -278,11 +295,11 @@ if __name__ == '__main__':
         
     # TODO: compare hot start - cold start final results
     
-    if True:
+    if False:
         # Create a time series of the temperature
-        model = Potts(300, q=10, T=1E2)
+        model = Potts(3, q=10, T=1E2)
         M = -5000
-        M_sampling = int(1E6)
+        M_sampling =  int(1E6)
         model.run_simulation(M, M_sampling)
         E = model.E
         t_0 = len(E)-M_sampling
@@ -292,29 +309,29 @@ if __name__ == '__main__':
         # model.write_E(filename)
         # plot_energies(filename)
     
-    if True:
+    if False:
         # Show a nice animation for high temperature
         model = Potts(10, T=1E5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
     
-    if True:
+    if False:
         # and for low temperature
-        model = Potts(10, T=1E-5, q=5)
+        model = Potts(200, T=1E-1, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
 
 
     # Define the parameters for the experiments
     qs = [2,10]# range(2,10,3)
-    Ts = np.linspace(1E-2,2,10)
+    Ts = np.linspace(1E-1,2.5,30)
     M = -1000
-    M_sampling = 5000
-    L = 500
+    M_sampling = 100
+    L = 50
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -330,7 +347,7 @@ if __name__ == '__main__':
         variances.to_pickle(pathname/f'variances_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if False:
+    if True:
         # plot variances and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
         variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')
