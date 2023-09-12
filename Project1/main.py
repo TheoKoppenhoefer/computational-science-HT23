@@ -39,11 +39,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # calculate the TOTAL energy
-        #left and right comparisons
-        lr = np.sum(self.s[:,:-1] == self.s[:,1:]) + np.sum(self.s[:,0] == self.s[:,-1])
-        #top and bottom comparisons
-        tb = np.sum(self.s[:-1,:] == self.s[1:,:]) + np.sum(self.s[0,:] == self.s[-1,:])
-        self.e = -J * (lr + tb) # total energy with with adding delta_E each time
+        self.e = get_E(self.s, J)
         # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
         self.E = [self.e]
         
@@ -172,15 +168,15 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
             break
         i += 1
 
-def get_E(s, J_p):
+@nb.njit()
+def get_E(s, J):
     # Carmen
     # calculate the energy
     #left and right comparisons
-    lr = np.sum((s[:,0:-1] == s[:,1:]).astype(int)) + np.sum((s[:,0] == s[:,-1]).astype(int))
+    lr = np.sum(s[:,0:-1] == s[:,1:]) + np.sum(s[:,0] == s[:,-1])
     #top and bottom comparisons
-    tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + np.sum((s[0,:] == s[-1,:]).astype(int)) 
-            
-    return -J_p * (lr + tb)
+    tb = np.sum(s[0:-1,:] == s[1:,:]) + np.sum(s[0,:] == s[-1,:]) 
+    return -J * (lr + tb)
 
 
 @nb.njit()
@@ -195,9 +191,9 @@ def MC_step_fast(s, neighbours, J, e, L, q, T):
     # step 2: propose state and calculate enrgy change
     s_new = 1+np.random.randint(q)
     s_old = s[c]
-    s_neighbours = np.empty((4,2))
+    s_neighbours = np.empty(4)
     for i, neighbour in enumerate(neighbours[c].T):
-        s_neighbours[i,:] = s[neighbour[0],neighbour[1]]
+        s_neighbours[i] = s[neighbour[0],neighbour[1]]
     delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
 
     # Accept or deny change 
@@ -296,7 +292,7 @@ if __name__ == '__main__':
         # plot_energies_t0(E, t_0)
 
     
-    if True:
+    if False:
         # Show a nice animation for high temperature
         model = Potts(20, T=1E5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename='Plots/High_temp_state')
