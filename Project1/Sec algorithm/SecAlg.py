@@ -10,9 +10,14 @@ import time
 from scipy.stats import maxwell
 
 from pathlib import Path
-pathname_data = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
-pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
-pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
+#pathname_data = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
+#pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
+#pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
+
+pathname_data = Path("Data")
+pathname_gen = Path("")
+pathname_plots = Path("Plots")
+
 #plt.style.use('rc.mplstyle')
 plt.style.use(pathname_gen/'rc.mplstyle')
 

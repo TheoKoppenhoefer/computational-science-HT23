@@ -9,12 +9,15 @@ import numba as nb
 from scipy.stats import maxwell
 import time
 
-
 from pathlib import Path
-pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Data")
-pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1")
-pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
-#plt.style.use('rc.mplstyle')
+from pathlib import Path
+#pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Data")
+#pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1")
+#pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
+
+pathname_data = Path("Data")
+pathname_gen = Path("")
+pathname_plots = Path("Plots")
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -283,14 +286,14 @@ if __name__ == '__main__':
     
     # Create a time series of the temperature with Bolzmann
     M = -5000
-    M_sampling = int(1E6)
+    M_sampling = 10 # int(1E6)
     filename = pathname/'Energies_Boltzmann_Distribution.csv'
-    if False:
+    if True:
         # run the simulation
         model = Potts(300, q=10, T=1E2)
         model.run_simulation(M, M_sampling)
         model.write_E(filename)
-    if False:
+    if True:
         # and plot it
         E = np.loadtxt(filename, delimiter=',')
         t_0 = len(E)-M_sampling
@@ -298,14 +301,14 @@ if __name__ == '__main__':
         # plot_energies_t0(E, t_0)
 
     
-    if False:
+    if True:
         # Show a nice animation for high temperature
         model = Potts(20, T=1E5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=pathname_plots/'High_temp_state')
         # E = model.E
         # plot_energies_t0(E, 0)
     
-    if False:
+    if True:
         # and for low temperature
         model = Potts(20, T=1E-5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
@@ -346,9 +349,9 @@ if __name__ == '__main__':
         for q in qs:
             # plot the values in dependence of the temperature
             ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
-        ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('energy $E$')
+        ax.legend(title='Parameter $q$', labels=qs)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Energy $E$')
         plt.show()
 
         # plot t_0s 
@@ -357,7 +360,7 @@ if __name__ == '__main__':
         fig, ax = plt.subplots()
         for q in qs:
             ax.plot(t_0s.loc[q], label=f'{q}')
-        ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('time $t_0$')
+        ax.legend(title='Parameter $q$', labels=qs)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Time $t_0$')
         plt.show()
