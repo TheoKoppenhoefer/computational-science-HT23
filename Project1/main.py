@@ -8,7 +8,12 @@ from itertools import count
 import numba as nb
 from scipy.stats import maxwell
 import time
-#plt.style.use('rc.mplstyle')
+from pathlib import Path
+
+plt.style.use('rc.mplstyle')
+pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
+pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
+
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -16,6 +21,83 @@ import time
 
 # Extensions:
 # - magnetisation
+
+@nb.njit()
+def get_E(s, J):
+    # Carmen
+    # calculate the energy
+    #left and right comparisons
+    lr = np.sum(s[:,0:-1] == s[:,1:]) + np.sum(s[:,0] == s[:,-1])
+    #top and bottom comparisons
+    tb = np.sum(s[0:-1,:] == s[1:,:]) + np.sum(s[0,:] == s[-1,:]) 
+    return -J * (lr + tb)
+
+
+@nb.njit()
+def MC_step_fast(s, neighbours, J, e, L, q, T):
+    # Anna
+    # steps 1-3 p.12
+
+    # step 1: choose random spin
+    # pick random coordinates
+    c = (np.random.randint(L),np.random.randint(L))
+
+    # step 2: propose state and calculate enrgy change
+    s_new = 1+np.random.randint(q)
+    s_old = s[c]
+    s_neighbours = np.empty(4)
+    for i, neighbour in enumerate(neighbours[c].T):
+        s_neighbours[i] = s[neighbour[0],neighbour[1]]
+    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
+
+    # Accept or deny change 
+    if np.random.random() < np.exp(-delta_E/T):
+        s[c] = s_new
+        # calculate new total energy from older energy 
+        e += delta_E
+    return e
+
+
+@nb.njit()    
+def s_neighbours_fun(s, neighbours,c):
+    s_neighbours = np.empty(4)
+    for i, neighbour in enumerate(neighbours[c].T):
+        s_neighbours[i] = s[neighbour[0],neighbour[1]]
+    return s_neighbours
+
+@nb.njit()   
+def Props_fun(s_neighbours, q, T):
+
+    Props = np.empty(q)
+    for i in np.arange(1,q+1):
+        Props[i-1] = np.exp(1/T*np.sum(i == s_neighbours))
+    Props = 1/(np.sum(Props))*Props
+    Props[np.isnan(Props)] = 0
+    return Props
+
+@nb.njit()   
+def energy(s_neighbours, J, e, s_new, s_old):
+    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         
+    e += delta_E
+    return e
+
+#@nb.njit()
+def Gibbs_step(s, neighbours, J, e, L, q, T):
+    
+    # choose random spin
+    c = (np.random.randint(L),np.random.randint(L))
+    s_old = s[c] 
+
+    # find neighbours and calculate Propabilities
+    s_neighbours = s_neighbours_fun(s, neighbours, c)
+    Props = Props_fun(s_neighbours, q, T)
+    #print(Props)
+    s_new =  np.random.choice(np.arange(1, q+1), p = Props)
+    s[c] = s_new
+
+    #energy
+    e = energy(s_neighbours, J, e, s_new, s_old)
+    return e
 
 class Potts:
     """
@@ -48,10 +130,13 @@ class Potts:
         
         self.rng = np.random.default_rng()
 
-    def run_simulation_fast(self, M=100, M_sampling=5000):
-        run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling)
+    def run_simulation(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename='', method=MC_step_fast):
+        if show_state or save_state or method != MC_step_fast:
+            self.run_simulation_slow(M, M_sampling, show_state, save_state, filename, method)
+        else:
+            run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling, method)
 
-    def run_simulation(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename=''):
+    def run_simulation_slow(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename='', method=MC_step_fast):
         """
         M: number of simulation steps. If M<0 then run until energy flattens off
         M_sampling: number of steps to take after equilibrium was reached
@@ -70,7 +155,7 @@ class Potts:
         t_end = M if M>=0 else np.inf
 
         for i in count(0):
-            self.e = MC_step_fast(self.s, self.neighbours, 
+            self.e = method(self.s, self.neighbours, 
                                           self.J, self.e, self.L, self.q, self.T)
             self.E += [self.e] # append energy to the list
 
@@ -131,7 +216,7 @@ def initialise_neighbours_fast(L, neighbours):
     return neighbours
 
 @nb.njit()
-def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000):
+def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000, method=MC_step_fast):
     """
     M: number of simulation steps. If M<0 then run until energy flattens off
     """
@@ -143,8 +228,7 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
 
     i = 0
     while True:
-        e = MC_step_fast(s, neighbours, 
-                                        J, e, L, q, T)
+        e = method(s, neighbours, J, e, L, q, T)
         E += [e] # append energy to the list
 
         # compute the moving averages of the energy
@@ -167,41 +251,6 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
         if i >= t_end:
             break
         i += 1
-
-@nb.njit()
-def get_E(s, J):
-    # Carmen
-    # calculate the energy
-    #left and right comparisons
-    lr = np.sum(s[:,0:-1] == s[:,1:]) + np.sum(s[:,0] == s[:,-1])
-    #top and bottom comparisons
-    tb = np.sum(s[0:-1,:] == s[1:,:]) + np.sum(s[0,:] == s[-1,:]) 
-    return -J * (lr + tb)
-
-
-@nb.njit()
-def MC_step_fast(s, neighbours, J, e, L, q, T):
-    # Anna
-    # steps 1-3 p.12
-
-    # step 1: choose random spin
-    # pick random coordinates
-    c = (np.random.randint(L),np.random.randint(L))
-
-    # step 2: propose state and calculate enrgy change
-    s_new = 1+np.random.randint(q)
-    s_old = s[c]
-    s_neighbours = np.empty(4)
-    for i, neighbour in enumerate(neighbours[c].T):
-        s_neighbours[i] = s[neighbour[0],neighbour[1]]
-    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         # What is the sum doing?
-
-    # Accept or deny change 
-    if np.random.random() < np.exp(-delta_E/T):
-        s[c] = s_new
-        # calculate new total energy from older energy 
-        e += delta_E
-    return e
 
 def plot_energies(filename, show_plt=True): #dont understand the ax thing in plot_state
     # Carmen
@@ -278,11 +327,11 @@ if __name__ == '__main__':
     # Create a time series of the temperature with Bolzmann
     M = -5000
     M_sampling = int(1E6)
-    filename = 'Data/Energies_Boltzmann_Distribution.csv'
-    if False:
+    filename = 'Data/Energies5_Boltzmann_Distribution.csv'
+    if True:
         # run the simulation
         model = Potts(300, q=10, T=1E2)
-        model.run_simulation(M, M_sampling)
+        model.run_simulation(M, M_sampling, method=Gibbs_step)
         model.write_E(filename)
     if False:
         # and plot it
@@ -325,7 +374,7 @@ if __name__ == '__main__':
                 model = Potts(L, T, q)
                 # print(f'setup {time.perf_counter()-pf}.')
                 # pf = time.perf_counter()
-                model.run_simulation_fast(M, M_sampling)
+                model.run_simulation(M, M_sampling)
                 # print(f'running {time.perf_counter()-pf}.')
                 means.loc[q][T], variances.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
         means.to_pickle(f'Data/means_L{L}.pkl')
