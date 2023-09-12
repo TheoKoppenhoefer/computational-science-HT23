@@ -10,10 +10,13 @@ from scipy.stats import maxwell
 import time
 from pathlib import Path
 
-plt.style.use('rc.mplstyle')
-pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
-pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
+#pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Data")
+#pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1")
+#pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
 
+pathname = Path("Data")
+pathname_gen = Path("")
+pathname_plots = Path("Plots")
 
 # good programming practice in python
 # - avoid loops (vectorise, use numpy, stencils)
@@ -178,7 +181,7 @@ class Potts:
                     
             if i in show_state:
                 self.plot_state(True, ax, i)
-                plt.pause(0.0001)
+                plt.pause(0.003)
             if i in save_state:
                 self.plot_state(frame_nbr=i, filename=f'{filename}_{i}')
             if i >= t_end:
@@ -190,7 +193,7 @@ class Potts:
         t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E)
         return np.mean(self.E[t_0:]), np.var(self.E[t_0:]), t_0
 
-    def write_E(self, filename='Data/Energies.csv'):
+    def write_E(self,  filename=pathname_gen/'Energies.csv'):
         # write self.E to a file
         # Theo
         with open(filename, 'w') as f:
@@ -267,7 +270,7 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     ax.figure.savefig(filename[0:-3] + 'png')
 
 def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
-    plt.style.use('rc.mplstyle')
+    plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
     ax.hist(E, bins=150, density=True, label='Data')
     ax.set_xlabel('Energy $E$')
@@ -283,7 +286,7 @@ def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
     if show_plt: plt.show()
 
 def plot_energies_t0(E, t_0, show_plt=True, filename=None):
-    plt.style.use('rc.mplstyle')
+    plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
     ax.plot(E)
     ax.axvline(t_0, label='$t_0$')
@@ -327,28 +330,28 @@ if __name__ == '__main__':
     # Create a time series of the temperature with Bolzmann
     M = -5000
     M_sampling = int(1E6)
-    filename = 'Data/Energies5_Boltzmann_Distribution.csv'
+    filename = pathname/'Energies_Boltzmann_Distribution.csv'
     if True:
         # run the simulation
         model = Potts(300, q=10, T=1E2)
         model.run_simulation(M, M_sampling, method=Gibbs_step)
         model.write_E(filename)
-    if False:
+    if True:
         # and plot it
         E = np.loadtxt(filename, delimiter=',')
         t_0 = len(E)-M_sampling
-        plot_energies_distr(E[t_0:], filename='Plots/Energies_Boltzmann_Distribution', fit_maxwell=True)
+        plot_energies_distr(E[t_0:], filename= pathname_plots/'Energies_Boltzmann_Distribution', fit_maxwell=True)
         # plot_energies_t0(E, t_0)
 
     
-    if False:
+    if True:
         # Show a nice animation for high temperature
         model = Potts(20, T=1E5, q=5)
-        model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename='Plots/High_temp_state')
+        model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=pathname_plots/'High_temp_state')
         # E = model.E
         # plot_energies_t0(E, 0)
     
-    if False:
+    if True:
         # and for low temperature
         model = Potts(20, T=1E-5, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
@@ -358,14 +361,14 @@ if __name__ == '__main__':
     qs = [2,10]# range(2,10,3)
     Ts = np.linspace(1E-2,2,10)
     M = -1000
-    M_sampling = 5000
-    L = 500
+    M_sampling = 1#5000
+    L = 10 #500
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -377,30 +380,30 @@ if __name__ == '__main__':
                 model.run_simulation(M, M_sampling)
                 # print(f'running {time.perf_counter()-pf}.')
                 means.loc[q][T], variances.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
-        means.to_pickle(f'Data/means_L{L}.pkl')
-        variances.to_pickle(f'Data/variances_L{L}.pkl')
-        t_0s.to_pickle(f'Data/t0s_L{L}.pkl')
+        means.to_pickle(pathname/f'means_L{L}.pkl')
+        variances.to_pickle(pathname/f'variances_L{L}.pkl')
+        t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if False:
+    if True:
         # plot variances and means
-        means = pd.read_pickle(f'Data/means_L{L}.pkl')
-        variances = pd.read_pickle(f'Data/variances_L{L}.pkl')
+        means = pd.read_pickle(pathname/f'means_L{L}.pkl')
+        variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')
         fig, ax = plt.subplots()
         for q in qs:
             # plot the values in dependence of the temperature
             ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
-        ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('energy $E$')
+        ax.legend(title='Parameter $q$', labels=qs)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Energy $E$')
         plt.show()
 
         # plot t_0s 
-        t_0s = pd.read_pickle(f'Data/t0s_L{L}.pkl')
+        t_0s = pd.read_pickle(pathname/f't0s_L{L}.pkl')
 
         fig, ax = plt.subplots()
         for q in qs:
             ax.plot(t_0s.loc[q], label=f'{q}')
-        ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('time $t_0$')
+        ax.legend(title='Parameter $q$', labels=qs)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Time $t_0$')
         plt.show()

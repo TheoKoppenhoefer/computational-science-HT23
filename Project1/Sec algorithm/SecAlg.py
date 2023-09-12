@@ -7,11 +7,18 @@ import pandas as pd
 from itertools import count
 import numba as nb
 import time
+from scipy.stats import maxwell
 
 from pathlib import Path
-pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
-pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
+#pathname_data = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm/Data")
+#pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Sec algorithm")
+#pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
 
+pathname_data = Path("Data")
+pathname_gen = Path("")
+pathname_plots = Path("Plots")
+
+#plt.style.use('rc.mplstyle')
 plt.style.use(pathname_gen/'rc.mplstyle')
 
 # good programming practice in python
@@ -43,11 +50,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # calculate the TOTAL energy
-        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
-        lr = np.sum(self.s[:,:-1] == self.s[:,1:]) + 2 * np.sum(self.s[:,0] == self.s[:,-1])
-        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
-        tb = np.sum(self.s[:-1,:] == self.s[1:,:]) + 2 * np.sum(self.s[0,:] == self.s[-1,:])
-        self.e = -J * (lr + tb) # total energy with with adding delta_E each time
+        self.e = get_E(self.s, J)
         # list of energies, one TOTAL energy of the system per iteration, NOT delta_E !
         self.E = [self.e]
         
@@ -101,20 +104,10 @@ class Potts:
                 self.plot_state(True, ax, i)
                 plt.pause(0.03)
             if i in save_state:
-                self.plot_state(frame_nbr=i, filename=pathname/f'{filename}_{i}.')
+                self.plot_state(frame_nbr=i, filename=pathname_data/f'{filename}_{i}.')
             if i >= t_end:
                 break
         plt.ioff()
-
-    def get_E(self, s, J_p):
-        # Carmen
-        # calculate the energy
-        #left and right comparisons, "2 * ..." accounts for the periodic boundary conditions
-        lr = np.sum((s[:,0:-1] == s[:,1:]).astype(int)) + 2 * np.sum((s[:,0] == s[:,-1]).astype(int))
-        #top and bottom comparisons, "2 * ..." accounts for the periodic boundary conditions
-        tb = np.sum((s[0:-1,:] == s[1:,:]).astype(int)) + 2 * np.sum((s[0,:] == s[-1,:]).astype(int)) 
-        
-        return -J_p * (lr + tb)
     
     def get_stats(self, M_sampling=0):
         # return mean and variance
@@ -178,20 +171,34 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000)
         if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
             t_end = i+M_sampling
 
-        #print(s)
-        #if i % 100 == 0:
-            # TODO: get_E total energy comparison with total enery calculated in marcov step
+        #comparing get_E with e
+        if i % 50 == 0:
+            getE = get_E(s, J)
+            if getE != e:
+                print('get_E: ', getE, 'e: ', e)
+                
         if i >= t_end:
             break
         i += 1
+
+
+@nb.njit()
+def get_E(s, J):
+    # Carmen
+    # calculate the energy
+    #left and right comparisons
+    lr = np.sum(s[:,0:-1] == s[:,1:]) + np.sum(s[:,0] == s[:,-1])
+    #top and bottom comparisons
+    tb = np.sum(s[0:-1,:] == s[1:,:]) + np.sum(s[0,:] == s[-1,:]) 
+    return -J * (lr + tb)
 
 ################MC step
 
 @nb.njit()    
 def s_neighbours_fun(s, neighbours,c):
-    s_neighbours = np.empty((4,2))
+    s_neighbours = np.empty(4)
     for i, neighbour in enumerate(neighbours[c].T):
-        s_neighbours[i,:] = s[neighbour[0],neighbour[1]]
+        s_neighbours[i] = s[neighbour[0],neighbour[1]]
     return s_neighbours
 
 @nb.njit()   
@@ -245,13 +252,20 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     
     ax.figure.savefig('EnergyVsInterations.png')
 
-def plot_energies_distr(E, show_plt=True, filename=None):
+def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
+    plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
-    ax.hist(E, bins=40)
+    ax.hist(E, bins=150, density=True, label='Data')
     ax.set_xlabel('Energy $E$')
-    ax.set_ylabel('Number of states')
-    if filename: tikzplotlib.save(filename)
+    ax.set_ylabel('Share of states')
+    if fit_maxwell:
+        # fit a maxwell distribution to the data
+        params = maxwell.fit(E[::100], loc=min(E))
+        x = np.linspace(min(E), max(E), 1000)
+        ax.plot(x, maxwell.pdf(x, *params), label='Maxwell distribution')
+    if filename: tikzplotlib.save(f'{filename}.pgf')
     ax.set_title('Distribution of the energy in equilibrium')
+    ax.legend()
     if show_plt: plt.show()
 
 def plot_energies_t0(E, t_0, show_plt=True, filename=None):
@@ -294,38 +308,42 @@ if __name__ == '__main__':
     # designing experiments: Anna, Theo, Carmen
         
     # TODO: compare hot start - cold start final results
-    
-    if False:
-        # Create a time series of the temperature
-        model = Potts(3, q=10, T=1E2)
-        M = -5000
-        M_sampling =  int(1E6)
+    # Create a time series of the temperature with Bolzmann
+    M = -5000
+    M_sampling = 10 # int(1E6)
+    filename = pathname_data/'Energies_Boltzmann_Distribution.csv'
+    if True:
+        # run the simulation
+        model = Potts(300, q=10, T=1E2)
         model.run_simulation(M, M_sampling)
-        E = model.E
+        model.write_E(filename)
+    if True:
+        # and plot it
+        E = np.loadtxt(filename, delimiter=',')
         t_0 = len(E)-M_sampling
-        plot_energies_distr(E[t_0:])
-        plot_energies_t0(E, t_0)
-        # filename = 'Data/Energy_step_M1000_L20_q10.csv'
-        # model.write_E(filename)
-        # plot_energies(filename)
+        plot_energies_distr(E[t_0:], filename= pathname_plots/'Energies_Boltzmann_Distribution', fit_maxwell=True)
+        # plot_energies_t0(E, t_0)
+
     
-    if False:
+    if True:
         # Show a nice animation for high temperature
-        model = Potts(10, T=1E5, q=5)
-        model.run_simulation(10000, show_state=range(0,10000,200))
+        model = Potts(20, T=1E5, q=5)
+        model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=pathname_plots/'High_temp_state')
+        # E = model.E
+        # plot_energies_t0(E, 0)
     
-    if False:
+    if True:
         # and for low temperature
-        model = Potts(200, T=1E-1, q=5)
+        model = Potts(20, T=1E-1, q=5)
         model.run_simulation(10000, show_state=range(0,10000,200))
 
 
     # Define the parameters for the experiments
     qs = [2,10]# range(2,10,3)
-    Ts = np.linspace(1E-1,2.5,30)
+    Ts = np.linspace(1E-1,2,10)
     M = -1000
-    M_sampling = 100
-    L = 50
+    M_sampling = 1#5000
+    L = 10 #500
 
     means = pd.DataFrame(columns=Ts, index=qs)
     variances = pd.DataFrame(columns=Ts, index=qs)
@@ -343,30 +361,30 @@ if __name__ == '__main__':
                 model.run_simulation_fast(M, M_sampling)
                 # print(f'running {time.perf_counter()-pf}.')
                 means.loc[q][T], variances.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
-        means.to_pickle(pathname/f'means_L{L}.pkl')
-        variances.to_pickle(pathname/f'variances_L{L}.pkl')
-        t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
+        means.to_pickle(pathname_data/f'means_L{L}.pkl')
+        variances.to_pickle(pathname_data/f'variances_L{L}.pkl')
+        t_0s.to_pickle(pathname_data/f't0s_L{L}.pkl')
     
     if True:
         # plot variances and means
-        means = pd.read_pickle(pathname/f'means_L{L}.pkl')
-        variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')
+        means = pd.read_pickle(pathname_data/f'means_L{L}.pkl')
+        variances = pd.read_pickle(pathname_data/f'variances_L{L}.pkl')
         fig, ax = plt.subplots()
         for q in qs:
             # plot the values in dependence of the temperature
             ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
         ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('energy $E$')
+        ax.set_xlabel('Eemperature $T$')
+        ax.set_ylabel('Energy $E$')
         plt.show()
 
         # plot t_0s 
-        t_0s = pd.read_pickle(pathname/f't0s_L{L}.pkl')
+        t_0s = pd.read_pickle(pathname_data/f't0s_L{L}.pkl')
 
         fig, ax = plt.subplots()
         for q in qs:
             ax.plot(t_0s.loc[q], label=f'{q}')
-        ax.legend(title='parameter $q$', labels=qs)
-        ax.set_xlabel('temperature $T$')
-        ax.set_ylabel('time $t_0$')
+        ax.legend(title='Parameter $q$', labels=qs)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Time $t_0$')
         plt.show()
