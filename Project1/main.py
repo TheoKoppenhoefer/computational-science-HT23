@@ -78,13 +78,7 @@ def Props_fun(s_neighbours, q, T):
     Props[np.isnan(Props)] = 0
     return Props
 
-@nb.njit()   
-def energy(s_neighbours, J, e, s_new, s_old):
-    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         
-    e += delta_E
-    return e
-
-#@nb.njit()
+@nb.njit()
 def Gibbs_step(s, neighbours, J, e, L, q, T):
     
     # choose random spin
@@ -95,11 +89,15 @@ def Gibbs_step(s, neighbours, J, e, L, q, T):
     s_neighbours = s_neighbours_fun(s, neighbours, c)
     Props = Props_fun(s_neighbours, q, T)
     #print(Props)
-    s_new =  np.random.choice(np.arange(1, q+1), p = Props)
+    # s_new = rd.choices(range(1,q+1), Props)
+    # s_new =  np.random.choice(np.arange(1, q+1), p = Props)
+    t = np.random.random()
+    s_new = np.where(np.cumsum(Props) < t)[0][-1]+1
     s[c] = s_new
 
     #energy
-    e = energy(s_neighbours, J, e, s_new, s_old)
+    delta_E = -J*(np.sum(s_new == s_neighbours)-np.sum(s_old == s_neighbours))         
+    e += delta_E
     return e
 
 class Potts:
