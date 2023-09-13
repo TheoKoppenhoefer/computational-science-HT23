@@ -113,10 +113,12 @@ class Potts:
         else: #hot start
             self.s = np.random.randint(1, q+1, (L,L))
         
-        # calculate the total energy
-        self.e = get_E(self.s, J)
         # list of total energies of the system
-        self.E = [self.e]
+        self.E = np.empty(int(1E9)) # allocate a huge amount of virtual memory for the energies
+        self.i = 0 # the current step
+        # calculate the total energy
+        self.E[0] = get_E(self.s, J)
+        self.e = self.E[0]
         
         self.neighbours = np.empty((L,L), dtype=np.dtype('(4,2)int'))
         self.neighbours = initialise_neighbours_fast(L, self.neighbours)
@@ -127,7 +129,7 @@ class Potts:
         if show_state or save_state or method != MC_step_fast:
             self.run_simulation_slow(M, M_sampling, show_state, save_state, filename, method)
         else:
-            self.E, self.e, self.s = run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, M, M_sampling, method)
+            self.E, self.e, self.s, self.i = run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, self.i, M, M_sampling, method)
 
     def run_simulation_slow(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename='', method=MC_step_fast):
         """
@@ -145,12 +147,13 @@ class Potts:
         # ma_1 and ma_2 of length -M of the energies and determining when ma_1<=ma_2
         ma_1 = 0
         ma_2 = 0
-        t_end = M if M>=0 else np.inf
+        t_end = M+self.i if M>=0 else np.inf
 
-        for i in count(0):
+        while True:
+            i = self.i
             self.e = method(self.s, self.neighbours, 
                                           self.J, self.e, self.L, self.q, self.T)
-            self.E += [self.e] # append energy to the list
+            self.E[self.i+1] = self.e # append energy to the list
 
             # compute the moving averages of the energy
             if M<0:
@@ -162,7 +165,8 @@ class Potts:
                 ma_2 += self.E[i]
             if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
                 t_end = i+M_sampling
-                    
+
+            self.i += 1
             if i in show_state:
                 self.plot_state(True, ax, i)
                 plt.pause(0.003)
@@ -174,15 +178,15 @@ class Potts:
     
     def get_stats(self, M_sampling=0):
         # return mean and variance
-        t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E)
-        return np.mean(self.E[t_0:]), np.var(self.E[t_0:]), t_0
+        t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
+        return np.mean(self.E[t_0:self.i]), np.var(self.E[t_0:self.i]), t_0
 
     def write_E(self,  filename=pathname_gen/'Energies.csv'):
         # write self.E to a file
         # Theo
         with open(filename, 'w') as f:
             wr = csv.writer(f)
-            wr.writerow(self.E)
+            wr.writerow(self.E[:self.i])
 
     def plot_state(self, show_plt=False, ax=None, frame_nbr=None, filename=None):
         # Theo
@@ -214,7 +218,7 @@ def initialise_neighbours_fast(L, neighbours):
     return neighbours
 
 @nb.njit()
-def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000, method=MC_step_fast):
+def run_simulation_fast(s, neighbours, J, e, E, L, q, T, i, M=100, M_sampling=5000, method=MC_step_fast):
     """
     M: number of simulation steps. If M<0 then run until energy flattens off
     """
@@ -222,12 +226,11 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000,
     # ma_1 and ma_2 of length -M of the energies and determining when ma_1<=ma_2
     ma_1 = 0
     ma_2 = 0
-    t_end = M if M>=0 else np.inf
+    t_end = M+i if M>=0 else np.inf
 
-    i = 0
     while True:
         e = method(s, neighbours, J, e, L, q, T)
-        E += [e] # append energy to the list
+        E[i+1] += e # append energy to the list
 
         # compute the moving averages of the energy
         if M<0:
@@ -239,11 +242,11 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, M=100, M_sampling=5000,
             ma_2 += E[i]
         if -2*M<i and t_end==np.inf and ma_1 <= ma_2:
             t_end = i+M_sampling
-                
+       
+        i += 1
         if i >= t_end:
             break
-        i += 1
-    return E, e, s
+    return E, e, s, i
 
 def plot_energies(filename, show_plt=True): #dont understand the ax thing in plot_state
     # Carmen
@@ -324,21 +327,24 @@ if __name__ == '__main__':
     M_sampling = int(1E6)
     # filename = pathname/'Energies_Boltzmann_Distribution.csv'
     methods = [MC_step_fast, Gibbs_step]
+    n_runs = 4
     for method in methods:
-        if True:
-            # run the simulation
-            model = Potts(300, q=10, T=1E2)
-            pf = time.perf_counter()
-            model.run_simulation(M, M_sampling, method=method)
-            print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
-            model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}.csv')
-            model.test_energies()
-        if True:
-            # and plot the results
-            E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}.csv', delimiter=',')
-            t_0 = len(E)-M_sampling
-            plot_energies_distr(E[t_0:], filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}.pgf', fit_maxwell=True)
-            # plot_energies_t0(E, t_0)
+        model = Potts(300, q=10, T=1E2)
+        for i in range(n_runs):
+            if True:
+                # run the simulation
+                pf = time.perf_counter()
+                if not i: model.run_simulation(M, M_sampling, method=method)
+                else: model.run_simulation(M_sampling, method=method)
+                print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
+                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv')
+                model.test_energies()
+            if True:
+                # and plot the results
+                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv', delimiter=',')
+                if not i: t_0 = len(E)-M_sampling
+                plot_energies_distr(E[t_0:], filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', fit_maxwell=True)
+                if i==n_runs-1: plot_energies_t0(E, t_0)
 
     
     if False:
