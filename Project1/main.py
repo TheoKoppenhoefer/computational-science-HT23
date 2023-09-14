@@ -114,7 +114,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # list of total energies of the system
-        self.E = np.empty(int(1E9)) # allocate a huge amount of virtual memory for the energies
+        self.E = np.empty(int(1E7)) # allocate a huge amount of virtual memory for the energies
         self.i = 0 # the current step
         # calculate the total energy
         self.E[0] = get_E(self.s, J)
@@ -321,6 +321,22 @@ if __name__ == '__main__':
     # designing experiments: Anna, Theo, Carmen
         
     # TODO: compare hot start - cold start final results
+    if True: 
+        M = -5000
+        M_sampling = int(1E6)
+        methods = [MC_step_fast, Gibbs_step]
+        for method in methods:
+            hot = Potts(300, q=2, T=1E2)
+            hot.run_simulation(M, M_sampling, method=method)
+            
+            cold7 = Potts(300, q=2, T=1E2, cs = 2)
+            hot.run_simulation(M, M_sampling, method=method)
+    
+            print(method, 'hot start final total energy: ', hot.e, 'cold start 2: ', cold7.e)  
+            #for L = 100 everything agrees (give or take)
+            #for L = 300, cold7 final e is one order of magnitude smaller
+    
+    
     
     # Create a time series of the temperature with Bolzmann
     M = -5000
@@ -331,7 +347,7 @@ if __name__ == '__main__':
     for method in methods:
         model = Potts(300, q=10, T=1E2)
         for i in range(n_runs):
-            if True:
+            if False:
                 # run the simulation
                 pf = time.perf_counter()
                 if not i: model.run_simulation(M, M_sampling, method=method)
@@ -339,7 +355,7 @@ if __name__ == '__main__':
                 print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
                 model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv')
                 model.test_energies()
-            if True:
+            if False:
                 # and plot the results
                 E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv', delimiter=',')
                 if not i: t_0 = len(E)-M_sampling
