@@ -98,7 +98,7 @@ class Potts:
     Implementation of the Potts model
     """
     # Carmen: class structure
-    def __init__(self, L=2, T=1, q=2, J=1, cs=False):
+    def __init__(self, L=300, T=1, q=2, J=1, cs=False):
         # parameters
         self.L = L #number of lattice sites per side
         self.N = L * L #total number of lattice sites
@@ -130,7 +130,7 @@ class Potts:
         if show_state or save_state or method != MC_step_fast:
             self.run_simulation_slow(M, M_sampling, show_state, save_state, filename, method)
         else:
-            self.E, self.e, self.s, self.i = run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, self.i, M, M_sampling, method, self.cs)
+            self.E, self.e, self.s, self.i = run_simulation_fast(self.s, self.neighbours, self.J, self.e, self.E, self.L, self.q, self.T, self.i, int(M), int(M_sampling), method, self.cs)
 
     def run_simulation_slow(self, M=100, M_sampling=5000, show_state=[], save_state=[], filename='', method=MC_step_fast):
         """
@@ -182,12 +182,11 @@ class Potts:
         t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
         return np.mean(self.E[t_0:self.i])/self.N, np.var(self.E[t_0:self.i])/(self.N**2), t_0
 
-    def write_E(self,  filename=pathname_gen/'Energies.csv'):
-        # write self.E to a file
-        # Theo
+    def write_E(self,  filename=pathname_gen/'Energies.csv', max_length=int(1E7), t_0=0):
+        # write self.E to a file of maximum length given by max_length
         with open(filename, 'w') as f:
             wr = csv.writer(f)
-            wr.writerow(self.E[:self.i]/self.N)
+            wr.writerow(self.E[t_0:self.i:(len(self.E)//max_length+1)]/self.N)
 
     def plot_state(self, show_plt=False, ax=None, frame_nbr=None, filename=None):
         # Theo
@@ -241,7 +240,7 @@ def run_simulation_fast(s, neighbours, J, e, E, L, q, T, i, M=100, M_sampling=50
                 ma_1 += E[i+M]
                 ma_2 -= E[i+M]
             ma_2 += E[i]
-        if -2*M<i and t_end==np.inf and ((not cs and ma_1 <= ma_2) or (cs and ma_1 >= ma_2)):
+        if -2*M<i and t_end==np.inf and ((~cs and ma_1 <= ma_2) or (cs and ma_1 >= ma_2)):
             t_end = i+M_sampling
 
         i += 1
@@ -323,7 +322,7 @@ if __name__ == '__main__':
     
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
-    if True: 
+    if False: 
         M = -5000
         M_sampling = int(1E6)
         methods = [MC_step_fast, Gibbs_step]
@@ -345,41 +344,46 @@ if __name__ == '__main__':
         ax.set_xlabel('Iterations')
         ax.set_ylabel('Energy $E$')
         plt.show()
+
+    # Check if the energy calculations coincide
+    if False:
+        print('Testing energy calculation.')
+        model = Potts()
+        model.run_simulation()
+        model.test_energies()
             
     # Create a time series of the temperature with Bolzmann
-    M = -5000
-    M_sampling = int(4E6)
-    methods = [MC_step_fast, Gibbs_step]
-    n_runs = 4
-    for method in methods:
-        model = Potts(300, q=10, T=1E2)
-        for i in range(n_runs):
-            if False:
+    if False:
+        M_tots = np.array([1E5, 1E6, 4E6, 1E7])
+        Ms = M_tots.copy()
+        Ms[1:] -= M_tots[:-1]
+
+        methods = [MC_step_fast]
+        n_runs = 4
+        for method in methods:
+            model = Potts(300, q=10, T=1E2)
+            model.run_simulation(-5000, 0, method=method)
+            t_0 = model.i
+            for i, M in enumerate(Ms):
+                M_tot = int(M_tots[i])
                 # run the simulation
                 pf = time.perf_counter()
-                if not i: model.run_simulation(M, M_sampling, method=method)
-                else: model.run_simulation(M_sampling, method=method)
+                model.run_simulation(M, method=method)
                 print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
-                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv')
-                model.test_energies()
-            if False:
+                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', t_0=t_0)
                 # and plot the results
-                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv', delimiter=',')
-                if not i: t_0 = len(E)-M_sampling
-                plot_energies_distr(E[t_0:], filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', fit_maxwell=True)
-                if i==n_runs-1: plot_energies(pathname/f'Energies_maxwell_distribution_{method.__name__}_{i}.csv', filename=pathname_plots/f'Energies_maxwell_{method.__name__}')
+                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', delimiter=',')
+                plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
+            plot_energies(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tots[-1]}.csv')
 
     
-    if False:
-        # Show a nice animation for high temperature
-        model = Potts(20, T=1E5, q=5)
-        model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=pathname_plots/'High_temp_state')
-        # E = model.E
-    
-    if False:
-        # and for low temperature
-        model = Potts(20, T=1E-5, q=5)
-        model.run_simulation(10000, show_state=range(0,10000,200))
+    if True:
+        # Show nice animations for high, medium and low temperatures
+        Ts = [1E5, 1, 1E-1]
+        filenames = [pathname_plots/f'{state}_temp_state' for state in ['High', 'Medium', 'Low']]
+        for i in range(3):
+            model = Potts(20, T=Ts[i], q=5)
+            model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=filenames[i])
 
 
     # Define the parameters for the experiments
@@ -393,7 +397,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:

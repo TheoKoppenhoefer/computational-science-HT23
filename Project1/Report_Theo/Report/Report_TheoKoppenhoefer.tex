@@ -14,7 +14,23 @@
 \addbibresource{bibliography.bib}
 
 \usepackage{pythonhighlight}
+\usepackage{pgfplots}
 \graphicspath{{../Figures/}}
+
+\pgfplotsset{compat=newest,
+    width=6cm,
+    height=3cm,
+    scale only axis=true,
+    max space between ticks=25pt,
+    try min ticks=5,
+    every axis/.style={
+        axis y line=left,
+        axis x line=bottom,
+        axis line style={thick,->,>=latex, shorten >=-.4cm}
+    },
+    every axis plot/.append style={thick},
+    tick style={black, thick}
+}
 
 %%%%% The content starts here %%%%%%%%%%%%%
 
@@ -86,6 +102,18 @@ While simulating we run into performance issues due to the fact that Python is i
 \centering
 \graphicspath{{../../Plots/}}
 \input{../../Plots/High_temp_state_10000.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Medium_temp_state_10000.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Low_temp_state_10000.pgf}
 \end{figure}
 
 
