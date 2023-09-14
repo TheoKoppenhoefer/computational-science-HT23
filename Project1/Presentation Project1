@@ -11,7 +11,7 @@
 	[] Gibbs energy-states distribution is still mirrored - we first thought it should follow the Bolztman-Maxwell   distribution but now we are not so sure. (Anna pictures)
 
 2 Pictures (6 mins)
-	[] Carmen: Cold - Hot
+	[X] Carmen: Cold - Hot
 		[] all experiments of the same plot (temperature) lead to more or less the same energy
 			(different tests have different t0)
 		[] hot start seems to be closer to equilibrium compared to cold start
