@@ -11,1169 +11,1169 @@ tick pos=left,
 x grid style={lightgray},
 xlabel={Energy \(\displaystyle E\)},
 xmajorgrids,
-xmin=-18615.8, xmax=-17696.2,
+xmin=-18695.5, xmax=-17672.5,
 xtick style={color=black},
 y grid style={lightgray},
 ylabel={Share of states},
 ymajorgrids,
-ymin=0, ymax=0.00377698564593275,
+ymin=0, ymax=0.00397727016128986,
 ytick style={color=black}
 ]
-\draw[draw=none,fill=steelblue] (axis cs:-18574,0) rectangle (axis cs:-18568.4266666667,6.39952153110003e-06);
+\draw[draw=none,fill=steelblue] (axis cs:-18649,0) rectangle (axis cs:-18642.8,2.7822580645158e-06);
 \addlegendimage{ybar,ybar legend,draw=none,fill=steelblue}
 \addlegendentry{Data}
 
-\draw[draw=none,fill=steelblue] (axis cs:-18568.4266666667,0) rectangle (axis cs:-18562.8533333333,7.89473684210471e-06);
-\draw[draw=none,fill=steelblue] (axis cs:-18562.8533333333,0) rectangle (axis cs:-18557.28,4.84449760765517e-06);
-\draw[draw=none,fill=steelblue] (axis cs:-18557.28,0) rectangle (axis cs:-18551.7066666667,7.65550239234396e-06);
-\draw[draw=none,fill=steelblue] (axis cs:-18551.7066666667,0) rectangle (axis cs:-18546.1333333333,1.60885167464209e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18546.1333333333,0) rectangle (axis cs:-18540.56,3.58253588516721e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18540.56,0) rectangle (axis cs:-18534.9866666667,6.21411483253545e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18534.9866666667,0) rectangle (axis cs:-18529.4133333333,5.49641148325321e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18529.4133333333,0) rectangle (axis cs:-18523.84,6.53110047846844e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18523.84,0) rectangle (axis cs:-18518.2666666667,4.53947368421021e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18518.2666666667,0) rectangle (axis cs:-18512.6933333333,8.94138755980799e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18512.6933333333,0) rectangle (axis cs:-18507.12,4.99999999999965e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18507.12,0) rectangle (axis cs:-18501.5466666667,3.43301435406675e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18501.5466666667,0) rectangle (axis cs:-18495.9733333333,4.52153110047815e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18495.9733333333,0) rectangle (axis cs:-18490.4,7.28468899521956e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-18490.4,0) rectangle (axis cs:-18484.8266666667,0.000157715311004774);
-\draw[draw=none,fill=steelblue] (axis cs:-18484.8266666667,0) rectangle (axis cs:-18479.2533333333,0.00015974880382774);
-\draw[draw=none,fill=steelblue] (axis cs:-18479.2533333333,0) rectangle (axis cs:-18473.68,0.000172727272727261);
-\draw[draw=none,fill=steelblue] (axis cs:-18473.68,0) rectangle (axis cs:-18468.1066666667,0.00013086124401913);
-\draw[draw=none,fill=steelblue] (axis cs:-18468.1066666667,0) rectangle (axis cs:-18462.5333333333,0.000176136363636351);
-\draw[draw=none,fill=steelblue] (axis cs:-18462.5333333333,0) rectangle (axis cs:-18456.96,0.000154784688995205);
-\draw[draw=none,fill=steelblue] (axis cs:-18456.96,0) rectangle (axis cs:-18451.3866666667,0.000115251196172241);
-\draw[draw=none,fill=steelblue] (axis cs:-18451.3866666667,0) rectangle (axis cs:-18445.8133333333,0.000186423444976064);
-\draw[draw=none,fill=steelblue] (axis cs:-18445.8133333333,0) rectangle (axis cs:-18440.24,0.000198983253588633);
-\draw[draw=none,fill=steelblue] (axis cs:-18440.24,0) rectangle (axis cs:-18434.6666666667,0.000280980861244);
-\draw[draw=none,fill=steelblue] (axis cs:-18434.6666666667,0) rectangle (axis cs:-18429.0933333333,0.000330681818181795);
-\draw[draw=none,fill=steelblue] (axis cs:-18429.0933333333,0) rectangle (axis cs:-18423.52,0.000455801435406667);
-\draw[draw=none,fill=steelblue] (axis cs:-18423.52,0) rectangle (axis cs:-18417.9466666667,0.000583253588516706);
-\draw[draw=none,fill=steelblue] (axis cs:-18417.9466666667,0) rectangle (axis cs:-18412.3733333333,0.000651255980861199);
-\draw[draw=none,fill=steelblue] (axis cs:-18412.3733333333,0) rectangle (axis cs:-18406.8,0.000947667464114766);
-\draw[draw=none,fill=steelblue] (axis cs:-18406.8,0) rectangle (axis cs:-18401.2266666667,0.000902392344497545);
-\draw[draw=none,fill=steelblue] (axis cs:-18401.2266666667,0) rectangle (axis cs:-18395.6533333333,0.00123767942583723);
-\draw[draw=none,fill=steelblue] (axis cs:-18395.6533333333,0) rectangle (axis cs:-18390.08,0.00102057416268002);
-\draw[draw=none,fill=steelblue] (axis cs:-18390.08,0) rectangle (axis cs:-18384.5066666667,0.00124120813397121);
-\draw[draw=none,fill=steelblue] (axis cs:-18384.5066666667,0) rectangle (axis cs:-18378.9333333333,0.00121273923444968);
-\draw[draw=none,fill=steelblue] (axis cs:-18378.9333333333,0) rectangle (axis cs:-18373.36,0.00103564593301428);
-\draw[draw=none,fill=steelblue] (axis cs:-18373.36,0) rectangle (axis cs:-18367.7866666667,0.00129976076555015);
-\draw[draw=none,fill=steelblue] (axis cs:-18367.7866666667,0) rectangle (axis cs:-18362.2133333333,0.00103666267942577);
-\draw[draw=none,fill=steelblue] (axis cs:-18362.2133333333,0) rectangle (axis cs:-18356.64,0.00132679425837311);
-\draw[draw=none,fill=steelblue] (axis cs:-18356.64,0) rectangle (axis cs:-18351.0666666667,0.00104784688995208);
-\draw[draw=none,fill=steelblue] (axis cs:-18351.0666666667,0) rectangle (axis cs:-18345.4933333333,0.00126925837320565);
-\draw[draw=none,fill=steelblue] (axis cs:-18345.4933333333,0) rectangle (axis cs:-18339.92,0.00119216507177025);
-\draw[draw=none,fill=steelblue] (axis cs:-18339.92,0) rectangle (axis cs:-18334.3466666667,0.000918480861244555);
-\draw[draw=none,fill=steelblue] (axis cs:-18334.3466666667,0) rectangle (axis cs:-18328.7733333333,0.00119413875598078);
-\draw[draw=none,fill=steelblue] (axis cs:-18328.7733333333,0) rectangle (axis cs:-18323.2,0.00115005980861236);
-\draw[draw=none,fill=steelblue] (axis cs:-18323.2,0) rectangle (axis cs:-18317.6266666667,0.00156812200956927);
-\draw[draw=none,fill=steelblue] (axis cs:-18317.6266666667,0) rectangle (axis cs:-18312.0533333333,0.00141154306220086);
-\draw[draw=none,fill=steelblue] (axis cs:-18312.0533333333,0) rectangle (axis cs:-18306.48,0.00185657894736829);
-\draw[draw=none,fill=steelblue] (axis cs:-18306.48,0) rectangle (axis cs:-18300.9066666667,0.00179108851674629);
-\draw[draw=none,fill=steelblue] (axis cs:-18300.9066666667,0) rectangle (axis cs:-18295.3333333333,0.00151818181818171);
-\draw[draw=none,fill=steelblue] (axis cs:-18295.3333333333,0) rectangle (axis cs:-18289.76,0.00191501196172235);
-\draw[draw=none,fill=steelblue] (axis cs:-18289.76,0) rectangle (axis cs:-18284.1866666667,0.00163074162679521);
-\draw[draw=none,fill=steelblue] (axis cs:-18284.1866666667,0) rectangle (axis cs:-18278.6133333333,0.00193498803827738);
-\draw[draw=none,fill=steelblue] (axis cs:-18278.6133333333,0) rectangle (axis cs:-18273.04,0.00165311004784677);
-\draw[draw=none,fill=steelblue] (axis cs:-18273.04,0) rectangle (axis cs:-18267.4666666667,0.00213911483253574);
-\draw[draw=none,fill=steelblue] (axis cs:-18267.4666666667,0) rectangle (axis cs:-18261.8933333333,0.00221668660287066);
-\draw[draw=none,fill=steelblue] (axis cs:-18261.8933333333,0) rectangle (axis cs:-18256.32,0.00185741626794245);
-\draw[draw=none,fill=steelblue] (axis cs:-18256.32,0) rectangle (axis cs:-18250.7466666667,0.00225209330143525);
-\draw[draw=none,fill=steelblue] (axis cs:-18250.7466666667,0) rectangle (axis cs:-18245.1733333333,0.00214204545454531);
-\draw[draw=none,fill=steelblue] (axis cs:-18245.1733333333,0) rectangle (axis cs:-18239.6,0.0026757177033491);
-\draw[draw=none,fill=steelblue] (axis cs:-18239.6,0) rectangle (axis cs:-18234.0266666667,0.00219886363636492);
-\draw[draw=none,fill=steelblue] (axis cs:-18234.0266666667,0) rectangle (axis cs:-18228.4533333333,0.00279294258373186);
-\draw[draw=none,fill=steelblue] (axis cs:-18228.4533333333,0) rectangle (axis cs:-18222.88,0.00277721291866009);
-\draw[draw=none,fill=steelblue] (axis cs:-18222.88,0) rectangle (axis cs:-18217.3066666667,0.00273564593301416);
-\draw[draw=none,fill=steelblue] (axis cs:-18217.3066666667,0) rectangle (axis cs:-18211.7333333333,0.00334946172248781);
-\draw[draw=none,fill=steelblue] (axis cs:-18211.7333333333,0) rectangle (axis cs:-18206.16,0.00300442583732036);
-\draw[draw=none,fill=steelblue] (axis cs:-18206.16,0) rectangle (axis cs:-18200.5866666667,0.00359712918660262);
-\draw[draw=none,fill=steelblue] (axis cs:-18200.5866666667,0) rectangle (axis cs:-18195.0133333333,0.00279886363636344);
-\draw[draw=none,fill=steelblue] (axis cs:-18195.0133333333,0) rectangle (axis cs:-18189.44,0.0035131578947366);
-\draw[draw=none,fill=steelblue] (axis cs:-18189.44,0) rectangle (axis cs:-18183.8666666667,0.00334778708133948);
-\draw[draw=none,fill=steelblue] (axis cs:-18183.8666666667,0) rectangle (axis cs:-18178.2933333333,0.00246417464114976);
-\draw[draw=none,fill=steelblue] (axis cs:-18178.2933333333,0) rectangle (axis cs:-18172.72,0.00300861244019118);
-\draw[draw=none,fill=steelblue] (axis cs:-18172.72,0) rectangle (axis cs:-18167.1466666667,0.00260406698564575);
-\draw[draw=none,fill=steelblue] (axis cs:-18167.1466666667,0) rectangle (axis cs:-18161.5733333333,0.00309599282296629);
-\draw[draw=none,fill=steelblue] (axis cs:-18161.5733333333,0) rectangle (axis cs:-18156,0.00248630382775102);
-\draw[draw=none,fill=steelblue] (axis cs:-18156,0) rectangle (axis cs:-18150.4266666667,0.00329623205741604);
-\draw[draw=none,fill=steelblue] (axis cs:-18150.4266666667,0) rectangle (axis cs:-18144.8533333333,0.00327404306220073);
-\draw[draw=none,fill=steelblue] (axis cs:-18144.8533333333,0) rectangle (axis cs:-18139.28,0.00271184210526297);
-\draw[draw=none,fill=steelblue] (axis cs:-18139.28,0) rectangle (axis cs:-18133.7066666667,0.00326423444976054);
-\draw[draw=none,fill=steelblue] (axis cs:-18133.7066666667,0) rectangle (axis cs:-18128.1333333333,0.00261495215311157);
-\draw[draw=none,fill=steelblue] (axis cs:-18128.1333333333,0) rectangle (axis cs:-18122.56,0.00312476076555002);
-\draw[draw=none,fill=steelblue] (axis cs:-18122.56,0) rectangle (axis cs:-18116.9866666667,0.00322775119617202);
-\draw[draw=none,fill=steelblue] (axis cs:-18116.9866666667,0) rectangle (axis cs:-18111.4133333333,0.0026455143540668);
-\draw[draw=none,fill=steelblue] (axis cs:-18111.4133333333,0) rectangle (axis cs:-18105.84,0.00317332535885145);
-\draw[draw=none,fill=steelblue] (axis cs:-18105.84,0) rectangle (axis cs:-18100.2666666667,0.00254473684210509);
-\draw[draw=none,fill=steelblue] (axis cs:-18100.2666666667,0) rectangle (axis cs:-18094.6933333333,0.00290412679425817);
-\draw[draw=none,fill=steelblue] (axis cs:-18094.6933333333,0) rectangle (axis cs:-18089.12,0.00252470095693762);
-\draw[draw=none,fill=steelblue] (axis cs:-18089.12,0) rectangle (axis cs:-18083.5466666667,0.00309479665071749);
-\draw[draw=none,fill=steelblue] (axis cs:-18083.5466666667,0) rectangle (axis cs:-18077.9733333333,0.0032251794258392);
-\draw[draw=none,fill=steelblue] (axis cs:-18077.9733333333,0) rectangle (axis cs:-18072.4,0.00261662679425819);
-\draw[draw=none,fill=steelblue] (axis cs:-18072.4,0) rectangle (axis cs:-18066.8266666667,0.00295107655502372);
-\draw[draw=none,fill=steelblue] (axis cs:-18066.8266666667,0) rectangle (axis cs:-18061.2533333333,0.00234659090909075);
-\draw[draw=none,fill=steelblue] (axis cs:-18061.2533333333,0) rectangle (axis cs:-18055.68,0.00243181818181801);
-\draw[draw=none,fill=steelblue] (axis cs:-18055.68,0) rectangle (axis cs:-18050.1066666667,0.00201477272727259);
-\draw[draw=none,fill=steelblue] (axis cs:-18050.1066666667,0) rectangle (axis cs:-18044.5333333333,0.00222990430621994);
-\draw[draw=none,fill=steelblue] (axis cs:-18044.5333333333,0) rectangle (axis cs:-18038.96,0.00213319377990416);
-\draw[draw=none,fill=steelblue] (axis cs:-18038.96,0) rectangle (axis cs:-18033.3866666667,0.00161471291866017);
-\draw[draw=none,fill=steelblue] (axis cs:-18033.3866666667,0) rectangle (axis cs:-18027.8133333333,0.00180191387559796);
-\draw[draw=none,fill=steelblue] (axis cs:-18027.8133333333,0) rectangle (axis cs:-18022.24,0.00121034688995286);
-\draw[draw=none,fill=steelblue] (axis cs:-18022.24,0) rectangle (axis cs:-18016.6666666667,0.00128696172248795);
-\draw[draw=none,fill=steelblue] (axis cs:-18016.6666666667,0) rectangle (axis cs:-18011.0933333333,0.00101836124401907);
-\draw[draw=none,fill=steelblue] (axis cs:-18011.0933333333,0) rectangle (axis cs:-18005.52,0.00132679425837311);
-\draw[draw=none,fill=steelblue] (axis cs:-18005.52,0) rectangle (axis cs:-17999.9466666667,0.00120526315789465);
-\draw[draw=none,fill=steelblue] (axis cs:-17999.9466666667,0) rectangle (axis cs:-17994.3733333333,0.000797368421052576);
-\draw[draw=none,fill=steelblue] (axis cs:-17994.3733333333,0) rectangle (axis cs:-17988.8,0.000918361244019075);
-\draw[draw=none,fill=steelblue] (axis cs:-17988.8,0) rectangle (axis cs:-17983.2266666667,0.000799760765550184);
-\draw[draw=none,fill=steelblue] (axis cs:-17983.2266666667,0) rectangle (axis cs:-17977.6533333333,0.000949760765550173);
-\draw[draw=none,fill=steelblue] (axis cs:-17977.6533333333,0) rectangle (axis cs:-17972.08,0.000807715311005256);
-\draw[draw=none,fill=steelblue] (axis cs:-17972.08,0) rectangle (axis cs:-17966.5066666667,0.00101895933014347);
-\draw[draw=none,fill=steelblue] (axis cs:-17966.5066666667,0) rectangle (axis cs:-17960.9333333333,0.00108379186602863);
-\draw[draw=none,fill=steelblue] (axis cs:-17960.9333333333,0) rectangle (axis cs:-17955.36,0.000876196172248743);
-\draw[draw=none,fill=steelblue] (axis cs:-17955.36,0) rectangle (axis cs:-17949.7866666667,0.00088181818181812);
-\draw[draw=none,fill=steelblue] (axis cs:-17949.7866666667,0) rectangle (axis cs:-17944.2133333333,0.000658791866028662);
-\draw[draw=none,fill=steelblue] (axis cs:-17944.2133333333,0) rectangle (axis cs:-17938.64,0.000733791866028657);
-\draw[draw=none,fill=steelblue] (axis cs:-17938.64,0) rectangle (axis cs:-17933.0666666667,0.000603050239234408);
-\draw[draw=none,fill=steelblue] (axis cs:-17933.0666666667,0) rectangle (axis cs:-17927.4933333333,0.000620693779904263);
-\draw[draw=none,fill=steelblue] (axis cs:-17927.4933333333,0) rectangle (axis cs:-17921.92,0.000567404306220056);
-\draw[draw=none,fill=steelblue] (axis cs:-17921.92,0) rectangle (axis cs:-17916.3466666667,0.000449043062201219);
-\draw[draw=none,fill=steelblue] (axis cs:-17916.3466666667,0) rectangle (axis cs:-17910.7733333333,0.000515370813397093);
-\draw[draw=none,fill=steelblue] (axis cs:-17910.7733333333,0) rectangle (axis cs:-17905.2,0.000349043062200933);
-\draw[draw=none,fill=steelblue] (axis cs:-17905.2,0) rectangle (axis cs:-17899.6266666667,0.000363995215310979);
-\draw[draw=none,fill=steelblue] (axis cs:-17899.6266666667,0) rectangle (axis cs:-17894.0533333333,0.000283433014354047);
-\draw[draw=none,fill=steelblue] (axis cs:-17894.0533333333,0) rectangle (axis cs:-17888.48,0.000329306220095671);
-\draw[draw=none,fill=steelblue] (axis cs:-17888.48,0) rectangle (axis cs:-17882.9066666667,0.000371650717703323);
-\draw[draw=none,fill=steelblue] (axis cs:-17882.9066666667,0) rectangle (axis cs:-17877.3333333333,0.000308732057416246);
-\draw[draw=none,fill=steelblue] (axis cs:-17877.3333333333,0) rectangle (axis cs:-17871.76,0.000306040669856438);
-\draw[draw=none,fill=steelblue] (axis cs:-17871.76,0) rectangle (axis cs:-17866.1866666667,0.000237141148325497);
-\draw[draw=none,fill=steelblue] (axis cs:-17866.1866666667,0) rectangle (axis cs:-17860.6133333333,0.000237978468899505);
-\draw[draw=none,fill=steelblue] (axis cs:-17860.6133333333,0) rectangle (axis cs:-17855.04,0.000126315789473675);
-\draw[draw=none,fill=steelblue] (axis cs:-17855.04,0) rectangle (axis cs:-17849.4666666667,0.00016596889952152);
-\draw[draw=none,fill=steelblue] (axis cs:-17849.4666666667,0) rectangle (axis cs:-17843.8933333333,0.000153528708133961);
-\draw[draw=none,fill=steelblue] (axis cs:-17843.8933333333,0) rectangle (axis cs:-17838.32,0.000107296650717696);
-\draw[draw=none,fill=steelblue] (axis cs:-17838.32,0) rectangle (axis cs:-17832.7466666667,0.000111602870813389);
-\draw[draw=none,fill=steelblue] (axis cs:-17832.7466666667,0) rectangle (axis cs:-17827.1733333333,0.000123145933014345);
-\draw[draw=none,fill=steelblue] (axis cs:-17827.1733333333,0) rectangle (axis cs:-17821.6,0.00013092105263157);
-\draw[draw=none,fill=steelblue] (axis cs:-17821.6,0) rectangle (axis cs:-17816.0266666667,8.66028708133911e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17816.0266666667,0) rectangle (axis cs:-17810.4533333333,7.39234449761197e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17810.4533333333,0) rectangle (axis cs:-17804.88,8.23564593301378e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17804.88,0) rectangle (axis cs:-17799.3066666667,0.00010544258373205);
-\draw[draw=none,fill=steelblue] (axis cs:-17799.3066666667,0) rectangle (axis cs:-17793.7333333333,9.94019138755912e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17793.7333333333,0) rectangle (axis cs:-17788.16,5.7177033492819e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17788.16,0) rectangle (axis cs:-17782.5866666667,6.24999999999957e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17782.5866666667,0) rectangle (axis cs:-17777.0133333333,5.05980861243984e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17777.0133333333,0) rectangle (axis cs:-17771.44,7.32057416267892e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17771.44,0) rectangle (axis cs:-17765.8666666667,6.88397129186555e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17765.8666666667,0) rectangle (axis cs:-17760.2933333333,4.22248803827997e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17760.2933333333,0) rectangle (axis cs:-17754.72,5.00598086124367e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17754.72,0) rectangle (axis cs:-17749.1466666667,2.51196172248786e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17749.1466666667,0) rectangle (axis cs:-17743.5733333333,1.74641148325347e-05);
-\draw[draw=none,fill=steelblue] (axis cs:-17743.5733333333,0) rectangle (axis cs:-17738,5.32296650717666e-06);
+\draw[draw=none,fill=steelblue] (axis cs:-18642.8,0) rectangle (axis cs:-18636.6,6.97580645161208e-06);
+\draw[draw=none,fill=steelblue] (axis cs:-18636.6,0) rectangle (axis cs:-18630.4,1.23790322580703e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18630.4,0) rectangle (axis cs:-18624.2,1.60887096774175e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18624.2,0) rectangle (axis cs:-18618,9.74462365591284e-06);
+\draw[draw=none,fill=steelblue] (axis cs:-18618,0) rectangle (axis cs:-18611.8,1.58064516129014e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18611.8,0) rectangle (axis cs:-18605.6,1.81451612903205e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18605.6,0) rectangle (axis cs:-18599.4,2.34005376344196e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18599.4,0) rectangle (axis cs:-18593.2,2.78629032258032e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18593.2,0) rectangle (axis cs:-18587,3.70161290322537e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18587,0) rectangle (axis cs:-18580.8,3.27688172042972e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18580.8,0) rectangle (axis cs:-18574.6,3.30913978494585e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18574.6,0) rectangle (axis cs:-18568.4,3.6021505376361e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18568.4,0) rectangle (axis cs:-18562.2,3.90188172042965e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18562.2,0) rectangle (axis cs:-18556,5.63844086021439e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18556,0) rectangle (axis cs:-18549.8,6.13306451612831e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18549.8,0) rectangle (axis cs:-18543.6,4.65725806451558e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18543.6,0) rectangle (axis cs:-18537.4,5.20833333333578e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18537.4,0) rectangle (axis cs:-18531.2,5.20564516128971e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18531.2,0) rectangle (axis cs:-18525,6.67741935483793e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18525,0) rectangle (axis cs:-18518.8,6.90725806451532e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18518.8,0) rectangle (axis cs:-18512.6,4.71908602150482e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18512.6,0) rectangle (axis cs:-18506.4,4.21639784946434e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18506.4,0) rectangle (axis cs:-18500.2,3.74059139784902e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18500.2,0) rectangle (axis cs:-18494,4.57526881720376e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18494,0) rectangle (axis cs:-18487.8,7.56586021505288e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18487.8,0) rectangle (axis cs:-18481.6,6.75403225806372e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18481.6,0) rectangle (axis cs:-18475.4,8.13306451613285e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-18475.4,0) rectangle (axis cs:-18469.2,0.000121962365591384);
+\draw[draw=none,fill=steelblue] (axis cs:-18469.2,0) rectangle (axis cs:-18463,0.000126922043010738);
+\draw[draw=none,fill=steelblue] (axis cs:-18463,0) rectangle (axis cs:-18456.8,0.000163911290322561);
+\draw[draw=none,fill=steelblue] (axis cs:-18456.8,0) rectangle (axis cs:-18450.6,0.000155053763440842);
+\draw[draw=none,fill=steelblue] (axis cs:-18450.6,0) rectangle (axis cs:-18444.4,0.000198346774193641);
+\draw[draw=none,fill=steelblue] (axis cs:-18444.4,0) rectangle (axis cs:-18438.2,0.000261290322580615);
+\draw[draw=none,fill=steelblue] (axis cs:-18438.2,0) rectangle (axis cs:-18432,0.00032451612903222);
+\draw[draw=none,fill=steelblue] (axis cs:-18432,0) rectangle (axis cs:-18425.8,0.000401935483870921);
+\draw[draw=none,fill=steelblue] (axis cs:-18425.8,0) rectangle (axis cs:-18419.6,0.000387325268817159);
+\draw[draw=none,fill=steelblue] (axis cs:-18419.6,0) rectangle (axis cs:-18413.4,0.000471357526881942);
+\draw[draw=none,fill=steelblue] (axis cs:-18413.4,0) rectangle (axis cs:-18407.2,0.000520403225806391);
+\draw[draw=none,fill=steelblue] (axis cs:-18407.2,0) rectangle (axis cs:-18401,0.000597782258064446);
+\draw[draw=none,fill=steelblue] (axis cs:-18401,0) rectangle (axis cs:-18394.8,0.000724811827956904);
+\draw[draw=none,fill=steelblue] (axis cs:-18394.8,0) rectangle (axis cs:-18388.6,0.00060779569892466);
+\draw[draw=none,fill=steelblue] (axis cs:-18388.6,0) rectangle (axis cs:-18382.4,0.000643225806451915);
+\draw[draw=none,fill=steelblue] (axis cs:-18382.4,0) rectangle (axis cs:-18376.2,0.00066193548387089);
+\draw[draw=none,fill=steelblue] (axis cs:-18376.2,0) rectangle (axis cs:-18370,0.000653198924731106);
+\draw[draw=none,fill=steelblue] (axis cs:-18370,0) rectangle (axis cs:-18363.8,0.000807580645161196);
+\draw[draw=none,fill=steelblue] (axis cs:-18363.8,0) rectangle (axis cs:-18357.6,0.000739731182795612);
+\draw[draw=none,fill=steelblue] (axis cs:-18357.6,0) rectangle (axis cs:-18351.4,0.000794704301075642);
+\draw[draw=none,fill=steelblue] (axis cs:-18351.4,0) rectangle (axis cs:-18345.2,0.000862970430107426);
+\draw[draw=none,fill=steelblue] (axis cs:-18345.2,0) rectangle (axis cs:-18339,0.000897997311827852);
+\draw[draw=none,fill=steelblue] (axis cs:-18339,0) rectangle (axis cs:-18332.8,0.00117622311827943);
+\draw[draw=none,fill=steelblue] (axis cs:-18332.8,0) rectangle (axis cs:-18326.6,0.00107508064516116);
+\draw[draw=none,fill=steelblue] (axis cs:-18326.6,0) rectangle (axis cs:-18320.4,0.00111463709677472);
+\draw[draw=none,fill=steelblue] (axis cs:-18320.4,0) rectangle (axis cs:-18314.2,0.00119270161290309);
+\draw[draw=none,fill=steelblue] (axis cs:-18314.2,0) rectangle (axis cs:-18308,0.00129787634408587);
+\draw[draw=none,fill=steelblue] (axis cs:-18308,0) rectangle (axis cs:-18301.8,0.00171325268817184);
+\draw[draw=none,fill=steelblue] (axis cs:-18301.8,0) rectangle (axis cs:-18295.6,0.00162965053763422);
+\draw[draw=none,fill=steelblue] (axis cs:-18295.6,0) rectangle (axis cs:-18289.4,0.00177830645161374);
+\draw[draw=none,fill=steelblue] (axis cs:-18289.4,0) rectangle (axis cs:-18283.2,0.00186279569892451);
+\draw[draw=none,fill=steelblue] (axis cs:-18283.2,0) rectangle (axis cs:-18277,0.00200639784946213);
+\draw[draw=none,fill=steelblue] (axis cs:-18277,0) rectangle (axis cs:-18270.8,0.00252631720430078);
+\draw[draw=none,fill=steelblue] (axis cs:-18270.8,0) rectangle (axis cs:-18264.6,0.00224495967741909);
+\draw[draw=none,fill=steelblue] (axis cs:-18264.6,0) rectangle (axis cs:-18258.4,0.00224881720430213);
+\draw[draw=none,fill=steelblue] (axis cs:-18258.4,0) rectangle (axis cs:-18252.2,0.002284704301075);
+\draw[draw=none,fill=steelblue] (axis cs:-18252.2,0) rectangle (axis cs:-18246,0.00243744623655885);
+\draw[draw=none,fill=steelblue] (axis cs:-18246,0) rectangle (axis cs:-18239.8,0.00293357526881686);
+\draw[draw=none,fill=steelblue] (axis cs:-18239.8,0) rectangle (axis cs:-18233.6,0.00260822580645131);
+\draw[draw=none,fill=steelblue] (axis cs:-18233.6,0) rectangle (axis cs:-18227.4,0.00273629032258193);
+\draw[draw=none,fill=steelblue] (axis cs:-18227.4,0) rectangle (axis cs:-18221.2,0.00288336021505342);
+\draw[draw=none,fill=steelblue] (axis cs:-18221.2,0) rectangle (axis cs:-18215,0.00304819892473083);
+\draw[draw=none,fill=steelblue] (axis cs:-18215,0) rectangle (axis cs:-18208.8,0.00364107526881678);
+\draw[draw=none,fill=steelblue] (axis cs:-18208.8,0) rectangle (axis cs:-18202.6,0.00317740591397812);
+\draw[draw=none,fill=steelblue] (axis cs:-18202.6,0) rectangle (axis cs:-18196.4,0.00315211021505524);
+\draw[draw=none,fill=steelblue] (axis cs:-18196.4,0) rectangle (axis cs:-18190.2,0.00315352150537597);
+\draw[draw=none,fill=steelblue] (axis cs:-18190.2,0) rectangle (axis cs:-18184,0.00309724462365555);
+\draw[draw=none,fill=steelblue] (axis cs:-18184,0) rectangle (axis cs:-18177.8,0.00361771505376302);
+\draw[draw=none,fill=steelblue] (axis cs:-18177.8,0) rectangle (axis cs:-18171.6,0.00321954301075231);
+\draw[draw=none,fill=steelblue] (axis cs:-18171.6,0) rectangle (axis cs:-18165.4,0.00319783602150688);
+\draw[draw=none,fill=steelblue] (axis cs:-18165.4,0) rectangle (axis cs:-18159.2,0.0032814112903222);
+\draw[draw=none,fill=steelblue] (axis cs:-18159.2,0) rectangle (axis cs:-18153,0.00334104838709638);
+\draw[draw=none,fill=steelblue] (axis cs:-18153,0) rectangle (axis cs:-18146.8,0.00378787634408558);
+\draw[draw=none,fill=steelblue] (axis cs:-18146.8,0) rectangle (axis cs:-18140.6,0.00322056451612865);
+\draw[draw=none,fill=steelblue] (axis cs:-18140.6,0) rectangle (axis cs:-18134.4,0.00316668010752837);
+\draw[draw=none,fill=steelblue] (axis cs:-18134.4,0) rectangle (axis cs:-18128.2,0.00323397849462328);
+\draw[draw=none,fill=steelblue] (axis cs:-18128.2,0) rectangle (axis cs:-18122,0.00313802419354802);
+\draw[draw=none,fill=steelblue] (axis cs:-18122,0) rectangle (axis cs:-18115.8,0.00353314516128991);
+\draw[draw=none,fill=steelblue] (axis cs:-18115.8,0) rectangle (axis cs:-18109.6,0.00298122311827922);
+\draw[draw=none,fill=steelblue] (axis cs:-18109.6,0) rectangle (axis cs:-18103.4,0.00287158602150672);
+\draw[draw=none,fill=steelblue] (axis cs:-18103.4,0) rectangle (axis cs:-18097.2,0.00286290322580612);
+\draw[draw=none,fill=steelblue] (axis cs:-18097.2,0) rectangle (axis cs:-18091,0.00271009408602119);
+\draw[draw=none,fill=steelblue] (axis cs:-18091,0) rectangle (axis cs:-18084.8,0.00311413978494587);
+\draw[draw=none,fill=steelblue] (axis cs:-18084.8,0) rectangle (axis cs:-18078.6,0.00260903225806421);
+\draw[draw=none,fill=steelblue] (axis cs:-18078.6,0) rectangle (axis cs:-18072.4,0.00240049731182908);
+\draw[draw=none,fill=steelblue] (axis cs:-18072.4,0) rectangle (axis cs:-18066.2,0.00214814516129007);
+\draw[draw=none,fill=steelblue] (axis cs:-18066.2,0) rectangle (axis cs:-18060,0.00203080645161266);
+\draw[draw=none,fill=steelblue] (axis cs:-18060,0) rectangle (axis cs:-18053.8,0.00224401881720404);
+\draw[draw=none,fill=steelblue] (axis cs:-18053.8,0) rectangle (axis cs:-18047.6,0.00174838709677399);
+\draw[draw=none,fill=steelblue] (axis cs:-18047.6,0) rectangle (axis cs:-18041.4,0.00171670698924812);
+\draw[draw=none,fill=steelblue] (axis cs:-18041.4,0) rectangle (axis cs:-18035.2,0.00160076612903207);
+\draw[draw=none,fill=steelblue] (axis cs:-18035.2,0) rectangle (axis cs:-18029,0.00146435483870951);
+\draw[draw=none,fill=steelblue] (axis cs:-18029,0) rectangle (axis cs:-18022.8,0.00168530913978475);
+\draw[draw=none,fill=steelblue] (axis cs:-18022.8,0) rectangle (axis cs:-18016.6,0.00140114247311811);
+\draw[draw=none,fill=steelblue] (axis cs:-18016.6,0) rectangle (axis cs:-18010.4,0.00137293010752753);
+\draw[draw=none,fill=steelblue] (axis cs:-18010.4,0) rectangle (axis cs:-18004.2,0.0012986155913977);
+\draw[draw=none,fill=steelblue] (axis cs:-18004.2,0) rectangle (axis cs:-17998,0.001218696236559);
+\draw[draw=none,fill=steelblue] (axis cs:-17998,0) rectangle (axis cs:-17991.8,0.00132434139784931);
+\draw[draw=none,fill=steelblue] (axis cs:-17991.8,0) rectangle (axis cs:-17985.6,0.00108364247311815);
+\draw[draw=none,fill=steelblue] (axis cs:-17985.6,0) rectangle (axis cs:-17979.4,0.00099004032258111);
+\draw[draw=none,fill=steelblue] (axis cs:-17979.4,0) rectangle (axis cs:-17973.2,0.000964395161290209);
+\draw[draw=none,fill=steelblue] (axis cs:-17973.2,0) rectangle (axis cs:-17967,0.000915241935483764);
+\draw[draw=none,fill=steelblue] (axis cs:-17967,0) rectangle (axis cs:-17960.8,0.00100948924731171);
+\draw[draw=none,fill=steelblue] (axis cs:-17960.8,0) rectangle (axis cs:-17954.6,0.000808776881720335);
+\draw[draw=none,fill=steelblue] (axis cs:-17954.6,0) rectangle (axis cs:-17948.4,0.000761827956989605);
+\draw[draw=none,fill=steelblue] (axis cs:-17948.4,0) rectangle (axis cs:-17942.2,0.000711209677419271);
+\draw[draw=none,fill=steelblue] (axis cs:-17942.2,0) rectangle (axis cs:-17936,0.000653817204300999);
+\draw[draw=none,fill=steelblue] (axis cs:-17936,0) rectangle (axis cs:-17929.8,0.000666384408602072);
+\draw[draw=none,fill=steelblue] (axis cs:-17929.8,0) rectangle (axis cs:-17923.6,0.000517002688171982);
+\draw[draw=none,fill=steelblue] (axis cs:-17923.6,0) rectangle (axis cs:-17917.4,0.000467163978494843);
+\draw[draw=none,fill=steelblue] (axis cs:-17917.4,0) rectangle (axis cs:-17911.2,0.000420282258064467);
+\draw[draw=none,fill=steelblue] (axis cs:-17911.2,0) rectangle (axis cs:-17905,0.000400268817204254);
+\draw[draw=none,fill=steelblue] (axis cs:-17905,0) rectangle (axis cs:-17898.8,0.000397473118279523);
+\draw[draw=none,fill=steelblue] (axis cs:-17898.8,0) rectangle (axis cs:-17892.6,0.000290900537634374);
+\draw[draw=none,fill=steelblue] (axis cs:-17892.6,0) rectangle (axis cs:-17886.4,0.00028751344086035);
+\draw[draw=none,fill=steelblue] (axis cs:-17886.4,0) rectangle (axis cs:-17880.2,0.00027811827956986);
+\draw[draw=none,fill=steelblue] (axis cs:-17880.2,0) rectangle (axis cs:-17874,0.000242755376344058);
+\draw[draw=none,fill=steelblue] (axis cs:-17874,0) rectangle (axis cs:-17867.8,0.000276545698924699);
+\draw[draw=none,fill=steelblue] (axis cs:-17867.8,0) rectangle (axis cs:-17861.6,0.000233010752688145);
+\draw[draw=none,fill=steelblue] (axis cs:-17861.6,0) rectangle (axis cs:-17855.4,0.000238427419354951);
+\draw[draw=none,fill=steelblue] (axis cs:-17855.4,0) rectangle (axis cs:-17849.2,0.000249368279569863);
+\draw[draw=none,fill=steelblue] (axis cs:-17849.2,0) rectangle (axis cs:-17843,0.000230591397849435);
+\draw[draw=none,fill=steelblue] (axis cs:-17843,0) rectangle (axis cs:-17836.8,0.00024456989247309);
+\draw[draw=none,fill=steelblue] (axis cs:-17836.8,0) rectangle (axis cs:-17830.6,0.000170497311827937);
+\draw[draw=none,fill=steelblue] (axis cs:-17830.6,0) rectangle (axis cs:-17824.4,0.000151599462365663);
+\draw[draw=none,fill=steelblue] (axis cs:-17824.4,0) rectangle (axis cs:-17818.2,0.000130443548387081);
+\draw[draw=none,fill=steelblue] (axis cs:-17818.2,0) rectangle (axis cs:-17812,0.00011979838709676);
+\draw[draw=none,fill=steelblue] (axis cs:-17812,0) rectangle (axis cs:-17805.8,0.000116397849462352);
+\draw[draw=none,fill=steelblue] (axis cs:-17805.8,0) rectangle (axis cs:-17799.6,7.43548387096687e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17799.6,0) rectangle (axis cs:-17793.4,5.30779569892722e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17793.4,0) rectangle (axis cs:-17787.2,3.95698924731136e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17787.2,0) rectangle (axis cs:-17781,3.47311827956949e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17781,0) rectangle (axis cs:-17774.8,3.23655913978457e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17774.8,0) rectangle (axis cs:-17768.6,3.13172043010716e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17768.6,0) rectangle (axis cs:-17762.4,3.55241935484038e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17762.4,0) rectangle (axis cs:-17756.2,3.40725806451573e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17756.2,0) rectangle (axis cs:-17750,3.01612903225771e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17750,0) rectangle (axis cs:-17743.8,3.1424731182792e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17743.8,0) rectangle (axis cs:-17737.6,2.63172043010722e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17737.6,0) rectangle (axis cs:-17731.4,2.26747311828063e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17731.4,0) rectangle (axis cs:-17725.2,1.42069892473102e-05);
+\draw[draw=none,fill=steelblue] (axis cs:-17725.2,0) rectangle (axis cs:-17719,4.09946236559092e-06);
 \addplot [salmon]
 table {%
--18574 0
--18573.1631631632 0
--18572.3263263263 0
--18571.4894894895 0
--18570.6526526527 0
--18569.8158158158 0
--18568.978978979 0
--18568.1421421421 0
--18567.3053053053 0
--18566.4684684685 0
--18565.6316316316 0
--18564.7947947948 0
--18563.957957958 0
--18563.1211211211 0
--18562.2842842843 0
--18561.4474474474 0
--18560.6106106106 0
--18559.7737737738 0
--18558.9369369369 0
--18558.1001001001 0
--18557.2632632633 0
--18556.4264264264 0
--18555.5895895896 0
--18554.7527527528 0
--18553.9159159159 0
--18553.0790790791 0
--18552.2422422422 0
--18551.4054054054 0
--18550.5685685686 0
--18549.7317317317 0
--18548.8948948949 0
--18548.0580580581 0
--18547.2212212212 0
--18546.3843843844 0
--18545.5475475475 0
--18544.7107107107 0
--18543.8738738739 0
--18543.037037037 0
--18542.2002002002 0
--18541.3633633634 0
--18540.5265265265 0
--18539.6896896897 0
--18538.8528528529 0
--18538.016016016 0
--18537.1791791792 0
--18536.3423423423 0
--18535.5055055055 0
--18534.6686686687 0
--18533.8318318318 0
--18532.994994995 0
--18532.1581581582 0
--18531.3213213213 0
--18530.4844844845 0
--18529.6476476476 0
--18528.8108108108 0
--18527.973973974 0
--18527.1371371371 0
--18526.3003003003 0
--18525.4634634635 0
--18524.6266266266 0
--18523.7897897898 0
--18522.952952953 0
--18522.1161161161 0
--18521.2792792793 0
--18520.4424424424 0
--18519.6056056056 0
--18518.7687687688 0
--18517.9319319319 0
--18517.0950950951 0
--18516.2582582583 0
--18515.4214214214 0
--18514.5845845846 0
--18513.7477477477 0
--18512.9109109109 0
--18512.0740740741 0
--18511.2372372372 0
--18510.4004004004 0
--18509.5635635636 0
--18508.7267267267 0
--18507.8898898899 0
--18507.0530530531 0
--18506.2162162162 0
--18505.3793793794 0
--18504.5425425425 0
--18503.7057057057 0
--18502.8688688689 0
--18502.032032032 0
--18501.1951951952 0
--18500.3583583584 0
--18499.5215215215 0
--18498.6846846847 0
--18497.8478478478 0
--18497.011011011 0
--18496.1741741742 0
--18495.3373373373 0
--18494.5005005005 0
--18493.6636636637 0
--18492.8268268268 0
--18491.98998999 0
--18491.1531531532 0
--18490.3163163163 0
--18489.4794794795 0
--18488.6426426426 0
--18487.8058058058 0
--18486.968968969 0
--18486.1321321321 0
--18485.2952952953 0
--18484.4584584585 0
--18483.6216216216 0
--18482.7847847848 0
--18481.9479479479 0
--18481.1111111111 0
--18480.2742742743 0
--18479.4374374374 0
--18478.6006006006 0
--18477.7637637638 0
--18476.9269269269 0
--18476.0900900901 0
--18475.2532532533 0
--18474.4164164164 0
--18473.5795795796 0
--18472.7427427427 0
--18471.9059059059 0
--18471.0690690691 0
--18470.2322322322 0
--18469.3953953954 0
--18468.5585585586 0
--18467.7217217217 0
--18466.8848848849 0
--18466.048048048 0
--18465.2112112112 0
--18464.3743743744 0
--18463.5375375375 0
--18462.7007007007 0
--18461.8638638639 0
--18461.027027027 0
--18460.1901901902 0
--18459.3533533534 0
--18458.5165165165 0
--18457.6796796797 0
--18456.8428428428 0
--18456.006006006 0
--18455.1691691692 0
--18454.3323323323 0
--18453.4954954955 0
--18452.6586586587 0
--18451.8218218218 0
--18450.984984985 0
--18450.1481481481 0
--18449.3113113113 0
--18448.4744744745 0
--18447.6376376376 0
--18446.8008008008 0
--18445.963963964 0
--18445.1271271271 0
--18444.2902902903 0
--18443.4534534535 0
--18442.6166166166 0
--18441.7797797798 0
--18440.9429429429 0
--18440.1061061061 0
--18439.2692692693 0
--18438.4324324324 0
--18437.5955955956 0
--18436.7587587588 0
--18435.9219219219 0
--18435.0850850851 0
--18434.2482482482 0
--18433.4114114114 0
--18432.5745745746 0
--18431.7377377377 0
--18430.9009009009 0
--18430.0640640641 0
--18429.2272272272 0
--18428.3903903904 0
--18427.5535535536 0
--18426.7167167167 0
--18425.8798798799 0
--18425.043043043 0
--18424.2062062062 0
--18423.3693693694 0
--18422.5325325325 0
--18421.6956956957 0
--18420.8588588589 0
--18420.022022022 0
--18419.1851851852 0
--18418.3483483483 0
--18417.5115115115 0
--18416.6746746747 0
--18415.8378378378 0
--18415.001001001 0
--18414.1641641642 0
--18413.3273273273 0
--18412.4904904905 0
--18411.6536536537 0
--18410.8168168168 0
--18409.97997998 0
--18409.1431431431 0
--18408.3063063063 0
--18407.4694694695 0
--18406.6326326326 0
--18405.7957957958 0
--18404.958958959 0
--18404.1221221221 0
--18403.2852852853 0
--18402.4484484484 0
--18401.6116116116 0
--18400.7747747748 0
--18399.9379379379 0
--18399.1011011011 0
--18398.2642642643 0
--18397.4274274274 0
--18396.5905905906 0
--18395.7537537538 0
--18394.9169169169 0
--18394.0800800801 0
--18393.2432432432 0
--18392.4064064064 0
--18391.5695695696 0
--18390.7327327327 0
--18389.8958958959 0
--18389.0590590591 0
--18388.2222222222 0
--18387.3853853854 0
--18386.5485485485 0
--18385.7117117117 0
--18384.8748748749 0
--18384.038038038 0
--18383.2012012012 0
--18382.3643643644 0
--18381.5275275275 0
--18380.6906906907 0
--18379.8538538539 0
--18379.017017017 0
--18378.1801801802 0
--18377.3433433433 0
--18376.5065065065 0
--18375.6696696697 0
--18374.8328328328 0
--18373.995995996 0
--18373.1591591592 0
--18372.3223223223 0
--18371.4854854855 0
--18370.6486486487 0
--18369.8118118118 0
--18368.974974975 0
--18368.1381381381 0
--18367.3013013013 0
--18366.4644644645 0
--18365.6276276276 0
--18364.7907907908 0
--18363.953953954 0
--18363.1171171171 0
--18362.2802802803 0
--18361.4434434434 0
--18360.6066066066 0
--18359.7697697698 0
--18358.9329329329 0
--18358.0960960961 0
--18357.2592592593 0
--18356.4224224224 0
--18355.5855855856 0
--18354.7487487487 0
--18353.9119119119 0
--18353.0750750751 0
--18352.2382382382 0
--18351.4014014014 0
--18350.5645645646 0
--18349.7277277277 0
--18348.8908908909 0
--18348.0540540541 0
--18347.2172172172 0
--18346.3803803804 0
--18345.5435435435 0
--18344.7067067067 0
--18343.8698698699 0
--18343.033033033 0
--18342.1961961962 0
--18341.3593593594 0
--18340.5225225225 0
--18339.6856856857 0
--18338.8488488488 0
--18338.012012012 0
--18337.1751751752 0
--18336.3383383383 0
--18335.5015015015 0
--18334.6646646647 0
--18333.8278278278 0
--18332.990990991 0
--18332.1541541542 0
--18331.3173173173 0
--18330.4804804805 0
--18329.6436436436 0
--18328.8068068068 0
--18327.96996997 0
--18327.1331331331 0
--18326.2962962963 0
--18325.4594594595 0
--18324.6226226226 0
--18323.7857857858 0
--18322.9489489489 0
--18322.1121121121 0
--18321.2752752753 0
--18320.4384384384 0
--18319.6016016016 0
--18318.7647647648 0
--18317.9279279279 0
--18317.0910910911 0
--18316.2542542543 0
--18315.4174174174 0
--18314.5805805806 0
--18313.7437437437 0
--18312.9069069069 0
--18312.0700700701 0
--18311.2332332332 0
--18310.3963963964 0
--18309.5595595596 0
--18308.7227227227 0
--18307.8858858859 0
--18307.049049049 0
--18306.2122122122 0
--18305.3753753754 0
--18304.5385385385 0
--18303.7017017017 0
--18302.8648648649 0
--18302.028028028 0
--18301.1911911912 0
--18300.3543543544 0
--18299.5175175175 0
--18298.6806806807 0
--18297.8438438438 0
--18297.007007007 0
--18296.1701701702 0
--18295.3333333333 0
--18294.4964964965 0
--18293.6596596597 0
--18292.8228228228 0
--18291.985985986 0
--18291.1491491492 0
--18290.3123123123 0
--18289.4754754755 0
--18288.6386386386 0
--18287.8018018018 0
--18286.964964965 0
--18286.1281281281 0
--18285.2912912913 0
--18284.4544544545 0
--18283.6176176176 0
--18282.7807807808 0
--18281.9439439439 0
--18281.1071071071 0
--18280.2702702703 0
--18279.4334334334 0
--18278.5965965966 0
--18277.7597597598 0
--18276.9229229229 0
--18276.0860860861 0
--18275.2492492492 0
--18274.4124124124 0
--18273.5755755756 0
--18272.7387387387 0
--18271.9019019019 0
--18271.0650650651 0
--18270.2282282282 0
--18269.3913913914 0
--18268.5545545546 0
--18267.7177177177 0
--18266.8808808809 0
--18266.044044044 0
--18265.2072072072 0
--18264.3703703704 0
--18263.5335335335 0
--18262.6966966967 0
--18261.8598598599 0
--18261.023023023 0
--18260.1861861862 0
--18259.3493493493 0
--18258.5125125125 0
--18257.6756756757 0
--18256.8388388388 0
--18256.002002002 0
--18255.1651651652 0
--18254.3283283283 0
--18253.4914914915 0
--18252.6546546547 0
--18251.8178178178 0
--18250.980980981 0
--18250.1441441441 0
--18249.3073073073 0
--18248.4704704705 0
--18247.6336336336 0
--18246.7967967968 0
--18245.95995996 0
--18245.1231231231 0
--18244.2862862863 0
--18243.4494494495 0
--18242.6126126126 0
--18241.7757757758 0
--18240.9389389389 0
--18240.1021021021 0
--18239.2652652653 0
--18238.4284284284 0
--18237.5915915916 0
--18236.7547547548 0
--18235.9179179179 0
--18235.0810810811 0
--18234.2442442442 0
--18233.4074074074 0
--18232.5705705706 0
--18231.7337337337 0
--18230.8968968969 0
--18230.0600600601 0
--18229.2232232232 0
--18228.3863863864 0
--18227.5495495495 0
--18226.7127127127 0
--18225.8758758759 0
--18225.039039039 0
--18224.2022022022 0
--18223.3653653654 0
--18222.5285285285 0
--18221.6916916917 0
--18220.8548548549 0
--18220.018018018 0
--18219.1811811812 0
--18218.3443443443 0
--18217.5075075075 0
--18216.6706706707 0
--18215.8338338338 0
--18214.996996997 0
--18214.1601601602 0
--18213.3233233233 0
--18212.4864864865 0
--18211.6496496497 0
--18210.8128128128 0
--18209.975975976 0
--18209.1391391391 0
--18208.3023023023 0
--18207.4654654655 0
--18206.6286286286 0
--18205.7917917918 0
--18204.954954955 0
--18204.1181181181 0
--18203.2812812813 0
--18202.4444444444 0
--18201.6076076076 0
--18200.7707707708 0
--18199.9339339339 0
--18199.0970970971 0
--18198.2602602603 0
--18197.4234234234 0
--18196.5865865866 0
--18195.7497497497 0
--18194.9129129129 0
--18194.0760760761 0
--18193.2392392392 0
--18192.4024024024 0
--18191.5655655656 0
--18190.7287287287 0
--18189.8918918919 0
--18189.0550550551 0
--18188.2182182182 0
--18187.3813813814 0
--18186.5445445445 0
--18185.7077077077 0
--18184.8708708709 0
--18184.034034034 0
--18183.1971971972 0
--18182.3603603604 0
--18181.5235235235 0
--18180.6866866867 0
--18179.8498498498 0
--18179.013013013 0
--18178.1761761762 0
--18177.3393393393 0
--18176.5025025025 0
--18175.6656656657 0
--18174.8288288288 0
--18173.991991992 0
--18173.1551551552 0
--18172.3183183183 0
--18171.4814814815 0
--18170.6446446446 0
--18169.8078078078 0
--18168.970970971 0
--18168.1341341341 0
--18167.2972972973 0
--18166.4604604605 0
--18165.6236236236 0
--18164.7867867868 0
--18163.94994995 0
--18163.1131131131 0
--18162.2762762763 0
--18161.4394394394 0
--18160.6026026026 0
--18159.7657657658 0
--18158.9289289289 0
--18158.0920920921 0
--18157.2552552553 0
--18156.4184184184 0
--18155.5815815816 0
--18154.7447447447 0
--18153.9079079079 0
--18153.0710710711 0
--18152.2342342342 0
--18151.3973973974 0
--18150.5605605606 0
--18149.7237237237 0
--18148.8868868869 0
--18148.05005005 0
--18147.2132132132 0
--18146.3763763764 0
--18145.5395395395 0
--18144.7027027027 0
--18143.8658658659 0
--18143.029029029 0
--18142.1921921922 0
--18141.3553553554 0
--18140.5185185185 0
--18139.6816816817 0
--18138.8448448448 0
--18138.008008008 0
--18137.1711711712 0
--18136.3343343343 0
--18135.4974974975 0
--18134.6606606607 0
--18133.8238238238 0
--18132.986986987 0
--18132.1501501502 0
--18131.3133133133 0
--18130.4764764765 0
--18129.6396396396 0
--18128.8028028028 0
--18127.965965966 0
--18127.1291291291 0
--18126.2922922923 0
--18125.4554554555 0
--18124.6186186186 0
--18123.7817817818 0
--18122.9449449449 0
--18122.1081081081 0
--18121.2712712713 0
--18120.4344344344 0
--18119.5975975976 0
--18118.7607607608 0
--18117.9239239239 0
--18117.0870870871 0
--18116.2502502503 0
--18115.4134134134 0
--18114.5765765766 0
--18113.7397397397 0
--18112.9029029029 0
--18112.0660660661 0
--18111.2292292292 0
--18110.3923923924 0
--18109.5555555556 0
--18108.7187187187 0
--18107.8818818819 0
--18107.045045045 0
--18106.2082082082 0
--18105.3713713714 0
--18104.5345345345 0
--18103.6976976977 0
--18102.8608608609 0
--18102.024024024 0
--18101.1871871872 0
--18100.3503503503 0
--18099.5135135135 0
--18098.6766766767 0
--18097.8398398398 0
--18097.003003003 0
--18096.1661661662 0
--18095.3293293293 0
--18094.4924924925 0
--18093.6556556557 0
--18092.8188188188 0
--18091.981981982 0
--18091.1451451451 0
--18090.3083083083 0
--18089.4714714715 0
--18088.6346346346 0
--18087.7977977978 0
--18086.960960961 0
--18086.1241241241 0
--18085.2872872873 0
--18084.4504504505 0
--18083.6136136136 0
--18082.7767767768 0
--18081.9399399399 0
--18081.1031031031 0
--18080.2662662663 0
--18079.4294294294 0
--18078.5925925926 0
--18077.7557557558 0
--18076.9189189189 0
--18076.0820820821 0
--18075.2452452452 0
--18074.4084084084 0
--18073.5715715716 0
--18072.7347347347 0
--18071.8978978979 0
--18071.0610610611 0
--18070.2242242242 0
--18069.3873873874 0
--18068.5505505505 0
--18067.7137137137 0
--18066.8768768769 0
--18066.04004004 0
--18065.2032032032 0
--18064.3663663664 0
--18063.5295295295 0
--18062.6926926927 0
--18061.8558558559 0
--18061.019019019 0
--18060.1821821822 0
--18059.3453453453 0
--18058.5085085085 0
--18057.6716716717 0
--18056.8348348348 0
--18055.997997998 0
--18055.1611611612 0
--18054.3243243243 0
--18053.4874874875 0
--18052.6506506507 0
--18051.8138138138 0
--18050.976976977 0
--18050.1401401401 0
--18049.3033033033 0
--18048.4664664665 0
--18047.6296296296 0
--18046.7927927928 0
--18045.955955956 0
--18045.1191191191 0
--18044.2822822823 0
--18043.4454454454 0
--18042.6086086086 0
--18041.7717717718 0
--18040.9349349349 0
--18040.0980980981 0
--18039.2612612613 0
--18038.4244244244 0
--18037.5875875876 0
--18036.7507507508 0
--18035.9139139139 0
--18035.0770770771 0
--18034.2402402402 0
--18033.4034034034 0
--18032.5665665666 0
--18031.7297297297 0
--18030.8928928929 0
--18030.0560560561 0
--18029.2192192192 0
--18028.3823823824 0
--18027.5455455455 0
--18026.7087087087 0
--18025.8718718719 0
--18025.035035035 0
--18024.1981981982 0
--18023.3613613614 0
--18022.5245245245 0
--18021.6876876877 0
--18020.8508508508 0
--18020.014014014 0
--18019.1771771772 0
--18018.3403403403 0
--18017.5035035035 0
--18016.6666666667 0
--18015.8298298298 0
--18014.992992993 0
--18014.1561561562 0
--18013.3193193193 0
--18012.4824824825 0
--18011.6456456456 0
--18010.8088088088 0
--18009.971971972 0
--18009.1351351351 0
--18008.2982982983 0
--18007.4614614615 0
--18006.6246246246 0
--18005.7877877878 0
--18004.950950951 0
--18004.1141141141 0
--18003.2772772773 0
--18002.4404404404 0
--18001.6036036036 0
--18000.7667667668 0
--17999.9299299299 0
--17999.0930930931 0
--17998.2562562563 0
--17997.4194194194 0
--17996.5825825826 0
--17995.7457457457 0
--17994.9089089089 0
--17994.0720720721 0
--17993.2352352352 0
--17992.3983983984 0
--17991.5615615616 0
--17990.7247247247 0
--17989.8878878879 0
--17989.0510510511 0
--17988.2142142142 0
--17987.3773773774 0
--17986.5405405405 0
--17985.7037037037 0
--17984.8668668669 0
--17984.03003003 0
--17983.1931931932 0
--17982.3563563564 0
--17981.5195195195 0
--17980.6826826827 0
--17979.8458458458 0
--17979.009009009 0
--17978.1721721722 0
--17977.3353353353 0
--17976.4984984985 0
--17975.6616616617 0
--17974.8248248248 0
--17973.987987988 0
--17973.1511511512 0
--17972.3143143143 0
--17971.4774774775 0
--17970.6406406406 0
--17969.8038038038 0
--17968.966966967 0
--17968.1301301301 0
--17967.2932932933 0
--17966.4564564565 0
--17965.6196196196 0
--17964.7827827828 0
--17963.9459459459 0
--17963.1091091091 0
--17962.2722722723 0
--17961.4354354354 0
--17960.5985985986 0
--17959.7617617618 0
--17958.9249249249 0
--17958.0880880881 0
--17957.2512512513 0
--17956.4144144144 0
--17955.5775775776 0
--17954.7407407407 0
--17953.9039039039 0
--17953.0670670671 0
--17952.2302302302 0
--17951.3933933934 0
--17950.5565565566 0
--17949.7197197197 0
--17948.8828828829 0
--17948.046046046 0
--17947.2092092092 0
--17946.3723723724 0
--17945.5355355355 0
--17944.6986986987 0
--17943.8618618619 0
--17943.025025025 0
--17942.1881881882 0
--17941.3513513513 0
--17940.5145145145 0
--17939.6776776777 0
--17938.8408408408 0
--17938.004004004 0
--17937.1671671672 0
--17936.3303303303 0
--17935.4934934935 0
--17934.6566566567 0
--17933.8198198198 0
--17932.982982983 0
--17932.1461461461 0
--17931.3093093093 0
--17930.4724724725 0
--17929.6356356356 0
--17928.7987987988 0
--17927.961961962 0
--17927.1251251251 0
--17926.2882882883 0
--17925.4514514515 0
--17924.6146146146 0
--17923.7777777778 0
--17922.9409409409 0
--17922.1041041041 0
--17921.2672672673 0
--17920.4304304304 0
--17919.5935935936 0
--17918.7567567568 0
--17917.9199199199 0
--17917.0830830831 0
--17916.2462462462 0
--17915.4094094094 0
--17914.5725725726 0
--17913.7357357357 0
--17912.8988988989 0
--17912.0620620621 0
--17911.2252252252 0
--17910.3883883884 0
--17909.5515515516 0
--17908.7147147147 0
--17907.8778778779 0
--17907.041041041 0
--17906.2042042042 0
--17905.3673673674 0
--17904.5305305305 0
--17903.6936936937 0
--17902.8568568569 0
--17902.02002002 0
--17901.1831831832 0
--17900.3463463463 0
--17899.5095095095 0
--17898.6726726727 0
--17897.8358358358 0
--17896.998998999 0
--17896.1621621622 0
--17895.3253253253 0
--17894.4884884885 0
--17893.6516516517 0
--17892.8148148148 0
--17891.977977978 0
--17891.1411411411 0
--17890.3043043043 0
--17889.4674674675 0
--17888.6306306306 0
--17887.7937937938 0
--17886.956956957 0
--17886.1201201201 0
--17885.2832832833 0
--17884.4464464464 0
--17883.6096096096 0
--17882.7727727728 0
--17881.9359359359 0
--17881.0990990991 0
--17880.2622622623 0
--17879.4254254254 0
--17878.5885885886 0
--17877.7517517518 0
--17876.9149149149 0
--17876.0780780781 0
--17875.2412412412 0
--17874.4044044044 0
--17873.5675675676 0
--17872.7307307307 0
--17871.8938938939 0
--17871.0570570571 0
--17870.2202202202 0
--17869.3833833834 0
--17868.5465465465 0
--17867.7097097097 0
--17866.8728728729 0
--17866.036036036 0
--17865.1991991992 0
--17864.3623623624 0
--17863.5255255255 0
--17862.6886886887 0
--17861.8518518519 0
--17861.015015015 0
--17860.1781781782 0
--17859.3413413413 0
--17858.5045045045 0
--17857.6676676677 0
--17856.8308308308 0
--17855.993993994 0
--17855.1571571572 0
--17854.3203203203 0
--17853.4834834835 0
--17852.6466466466 0
--17851.8098098098 0
--17850.972972973 0
--17850.1361361361 0
--17849.2992992993 0
--17848.4624624625 0
--17847.6256256256 0
--17846.7887887888 0
--17845.951951952 0
--17845.1151151151 0
--17844.2782782783 0
--17843.4414414414 0
--17842.6046046046 0
--17841.7677677678 0
--17840.9309309309 0
--17840.0940940941 0
--17839.2572572573 0
--17838.4204204204 0
--17837.5835835836 0
--17836.7467467467 0
--17835.9099099099 0
--17835.0730730731 0
--17834.2362362362 0
--17833.3993993994 0
--17832.5625625626 0
--17831.7257257257 0
--17830.8888888889 0
--17830.0520520521 0
--17829.2152152152 0
--17828.3783783784 0
--17827.5415415415 0
--17826.7047047047 0
--17825.8678678679 0
--17825.031031031 0
--17824.1941941942 0
--17823.3573573574 0
--17822.5205205205 0
--17821.6836836837 0
--17820.8468468468 0
--17820.01001001 0
--17819.1731731732 0
--17818.3363363363 0
--17817.4994994995 0
--17816.6626626627 0
--17815.8258258258 0
--17814.988988989 0
--17814.1521521522 0
--17813.3153153153 0
--17812.4784784785 0
--17811.6416416416 0
--17810.8048048048 0
--17809.967967968 0
--17809.1311311311 0
--17808.2942942943 0
--17807.4574574575 0
--17806.6206206206 0
--17805.7837837838 0
--17804.9469469469 0
--17804.1101101101 0
--17803.2732732733 0
--17802.4364364364 0
--17801.5995995996 0
--17800.7627627628 0
--17799.9259259259 0
--17799.0890890891 0
--17798.2522522523 0
--17797.4154154154 0
--17796.5785785786 0
--17795.7417417417 0
--17794.9049049049 0
--17794.0680680681 0
--17793.2312312312 0
--17792.3943943944 0
--17791.5575575576 0
--17790.7207207207 0
--17789.8838838839 0
--17789.047047047 0
--17788.2102102102 0
--17787.3733733734 0
--17786.5365365365 0
--17785.6996996997 0
--17784.8628628629 0
--17784.026026026 0
--17783.1891891892 0
--17782.3523523524 0
--17781.5155155155 0
--17780.6786786787 0
--17779.8418418418 0
--17779.005005005 0
--17778.1681681682 0
--17777.3313313313 0
--17776.4944944945 0
--17775.6576576577 0
--17774.8208208208 0
--17773.983983984 0
--17773.1471471471 0
--17772.3103103103 0
--17771.4734734735 0
--17770.6366366366 0
--17769.7997997998 0
--17768.962962963 0
--17768.1261261261 0
--17767.2892892893 0
--17766.4524524525 0
--17765.6156156156 0
--17764.7787787788 0
--17763.9419419419 0
--17763.1051051051 0
--17762.2682682683 0
--17761.4314314314 0
--17760.5945945946 0
--17759.7577577578 0
--17758.9209209209 0
--17758.0840840841 0
--17757.2472472472 0
--17756.4104104104 0
--17755.5735735736 0
--17754.7367367367 0
--17753.8998998999 0
--17753.0630630631 0
--17752.2262262262 0
--17751.3893893894 0
--17750.5525525526 0
--17749.7157157157 0
--17748.8788788789 0
--17748.042042042 0
--17747.2052052052 0
--17746.3683683684 0
--17745.5315315315 0
--17744.6946946947 0
--17743.8578578579 0
--17743.021021021 0
--17742.1841841842 0
--17741.3473473473 0
--17740.5105105105 0
--17739.6736736737 0
--17738.8368368368 0
--17738 0
+-18649 0
+-18648.0690690691 0
+-18647.1381381381 0
+-18646.2072072072 0
+-18645.2762762763 0
+-18644.3453453453 0
+-18643.4144144144 0
+-18642.4834834835 0
+-18641.5525525526 0
+-18640.6216216216 0
+-18639.6906906907 0
+-18638.7597597598 0
+-18637.8288288288 0
+-18636.8978978979 0
+-18635.966966967 0
+-18635.036036036 0
+-18634.1051051051 0
+-18633.1741741742 0
+-18632.2432432432 0
+-18631.3123123123 0
+-18630.3813813814 0
+-18629.4504504505 0
+-18628.5195195195 0
+-18627.5885885886 0
+-18626.6576576577 0
+-18625.7267267267 0
+-18624.7957957958 0
+-18623.8648648649 0
+-18622.9339339339 0
+-18622.003003003 0
+-18621.0720720721 0
+-18620.1411411411 0
+-18619.2102102102 0
+-18618.2792792793 0
+-18617.3483483483 0
+-18616.4174174174 0
+-18615.4864864865 0
+-18614.5555555556 0
+-18613.6246246246 0
+-18612.6936936937 0
+-18611.7627627628 0
+-18610.8318318318 0
+-18609.9009009009 0
+-18608.96996997 0
+-18608.039039039 0
+-18607.1081081081 0
+-18606.1771771772 0
+-18605.2462462462 0
+-18604.3153153153 0
+-18603.3843843844 0
+-18602.4534534535 0
+-18601.5225225225 0
+-18600.5915915916 0
+-18599.6606606607 0
+-18598.7297297297 0
+-18597.7987987988 0
+-18596.8678678679 0
+-18595.9369369369 0
+-18595.006006006 0
+-18594.0750750751 0
+-18593.1441441441 0
+-18592.2132132132 0
+-18591.2822822823 0
+-18590.3513513513 0
+-18589.4204204204 0
+-18588.4894894895 0
+-18587.5585585586 0
+-18586.6276276276 0
+-18585.6966966967 0
+-18584.7657657658 0
+-18583.8348348348 0
+-18582.9039039039 0
+-18581.972972973 0
+-18581.042042042 0
+-18580.1111111111 0
+-18579.1801801802 0
+-18578.2492492492 0
+-18577.3183183183 0
+-18576.3873873874 0
+-18575.4564564565 0
+-18574.5255255255 0
+-18573.5945945946 0
+-18572.6636636637 0
+-18571.7327327327 0
+-18570.8018018018 0
+-18569.8708708709 0
+-18568.9399399399 0
+-18568.009009009 0
+-18567.0780780781 0
+-18566.1471471471 0
+-18565.2162162162 0
+-18564.2852852853 0
+-18563.3543543544 0
+-18562.4234234234 0
+-18561.4924924925 0
+-18560.5615615616 0
+-18559.6306306306 0
+-18558.6996996997 0
+-18557.7687687688 0
+-18556.8378378378 0
+-18555.9069069069 0
+-18554.975975976 0
+-18554.045045045 0
+-18553.1141141141 0
+-18552.1831831832 0
+-18551.2522522523 0
+-18550.3213213213 0
+-18549.3903903904 0
+-18548.4594594595 0
+-18547.5285285285 0
+-18546.5975975976 0
+-18545.6666666667 0
+-18544.7357357357 0
+-18543.8048048048 0
+-18542.8738738739 0
+-18541.9429429429 0
+-18541.012012012 0
+-18540.0810810811 0
+-18539.1501501502 0
+-18538.2192192192 0
+-18537.2882882883 0
+-18536.3573573574 0
+-18535.4264264264 0
+-18534.4954954955 0
+-18533.5645645646 0
+-18532.6336336336 0
+-18531.7027027027 0
+-18530.7717717718 0
+-18529.8408408408 0
+-18528.9099099099 0
+-18527.978978979 0
+-18527.048048048 0
+-18526.1171171171 0
+-18525.1861861862 0
+-18524.2552552553 0
+-18523.3243243243 0
+-18522.3933933934 0
+-18521.4624624625 0
+-18520.5315315315 0
+-18519.6006006006 0
+-18518.6696696697 0
+-18517.7387387387 0
+-18516.8078078078 0
+-18515.8768768769 0
+-18514.9459459459 0
+-18514.015015015 0
+-18513.0840840841 0
+-18512.1531531532 0
+-18511.2222222222 0
+-18510.2912912913 0
+-18509.3603603604 0
+-18508.4294294294 0
+-18507.4984984985 0
+-18506.5675675676 0
+-18505.6366366366 0
+-18504.7057057057 0
+-18503.7747747748 0
+-18502.8438438438 0
+-18501.9129129129 0
+-18500.981981982 0
+-18500.0510510511 0
+-18499.1201201201 0
+-18498.1891891892 0
+-18497.2582582583 0
+-18496.3273273273 0
+-18495.3963963964 0
+-18494.4654654655 0
+-18493.5345345345 0
+-18492.6036036036 0
+-18491.6726726727 0
+-18490.7417417417 0
+-18489.8108108108 0
+-18488.8798798799 0
+-18487.9489489489 0
+-18487.018018018 0
+-18486.0870870871 0
+-18485.1561561562 0
+-18484.2252252252 0
+-18483.2942942943 0
+-18482.3633633634 0
+-18481.4324324324 0
+-18480.5015015015 0
+-18479.5705705706 0
+-18478.6396396396 0
+-18477.7087087087 0
+-18476.7777777778 0
+-18475.8468468468 0
+-18474.9159159159 0
+-18473.984984985 0
+-18473.0540540541 0
+-18472.1231231231 0
+-18471.1921921922 0
+-18470.2612612613 0
+-18469.3303303303 0
+-18468.3993993994 0
+-18467.4684684685 0
+-18466.5375375375 0
+-18465.6066066066 0
+-18464.6756756757 0
+-18463.7447447447 0
+-18462.8138138138 0
+-18461.8828828829 0
+-18460.951951952 0
+-18460.021021021 0
+-18459.0900900901 0
+-18458.1591591592 0
+-18457.2282282282 0
+-18456.2972972973 0
+-18455.3663663664 0
+-18454.4354354354 0
+-18453.5045045045 0
+-18452.5735735736 0
+-18451.6426426426 0
+-18450.7117117117 0
+-18449.7807807808 0
+-18448.8498498498 0
+-18447.9189189189 0
+-18446.987987988 0
+-18446.0570570571 0
+-18445.1261261261 0
+-18444.1951951952 0
+-18443.2642642643 0
+-18442.3333333333 0
+-18441.4024024024 0
+-18440.4714714715 0
+-18439.5405405405 0
+-18438.6096096096 0
+-18437.6786786787 0
+-18436.7477477477 0
+-18435.8168168168 0
+-18434.8858858859 0
+-18433.954954955 0
+-18433.024024024 0
+-18432.0930930931 0
+-18431.1621621622 0
+-18430.2312312312 0
+-18429.3003003003 0
+-18428.3693693694 0
+-18427.4384384384 0
+-18426.5075075075 0
+-18425.5765765766 0
+-18424.6456456456 0
+-18423.7147147147 0
+-18422.7837837838 0
+-18421.8528528529 0
+-18420.9219219219 0
+-18419.990990991 0
+-18419.0600600601 0
+-18418.1291291291 0
+-18417.1981981982 0
+-18416.2672672673 0
+-18415.3363363363 0
+-18414.4054054054 0
+-18413.4744744745 0
+-18412.5435435435 0
+-18411.6126126126 0
+-18410.6816816817 0
+-18409.7507507508 0
+-18408.8198198198 0
+-18407.8888888889 0
+-18406.957957958 0
+-18406.027027027 0
+-18405.0960960961 0
+-18404.1651651652 0
+-18403.2342342342 0
+-18402.3033033033 0
+-18401.3723723724 0
+-18400.4414414414 0
+-18399.5105105105 0
+-18398.5795795796 0
+-18397.6486486487 0
+-18396.7177177177 0
+-18395.7867867868 0
+-18394.8558558559 0
+-18393.9249249249 0
+-18392.993993994 0
+-18392.0630630631 0
+-18391.1321321321 0
+-18390.2012012012 0
+-18389.2702702703 0
+-18388.3393393393 0
+-18387.4084084084 0
+-18386.4774774775 0
+-18385.5465465465 0
+-18384.6156156156 0
+-18383.6846846847 0
+-18382.7537537538 0
+-18381.8228228228 0
+-18380.8918918919 0
+-18379.960960961 0
+-18379.03003003 0
+-18378.0990990991 0
+-18377.1681681682 0
+-18376.2372372372 0
+-18375.3063063063 0
+-18374.3753753754 0
+-18373.4444444444 0
+-18372.5135135135 0
+-18371.5825825826 0
+-18370.6516516517 0
+-18369.7207207207 0
+-18368.7897897898 0
+-18367.8588588589 0
+-18366.9279279279 0
+-18365.996996997 0
+-18365.0660660661 0
+-18364.1351351351 0
+-18363.2042042042 0
+-18362.2732732733 0
+-18361.3423423423 0
+-18360.4114114114 0
+-18359.4804804805 0
+-18358.5495495495 0
+-18357.6186186186 0
+-18356.6876876877 0
+-18355.7567567568 0
+-18354.8258258258 0
+-18353.8948948949 0
+-18352.963963964 0
+-18352.033033033 0
+-18351.1021021021 0
+-18350.1711711712 0
+-18349.2402402402 0
+-18348.3093093093 0
+-18347.3783783784 0
+-18346.4474474474 0
+-18345.5165165165 0
+-18344.5855855856 0
+-18343.6546546547 0
+-18342.7237237237 0
+-18341.7927927928 0
+-18340.8618618619 0
+-18339.9309309309 0
+-18339 0
+-18338.0690690691 0
+-18337.1381381381 0
+-18336.2072072072 0
+-18335.2762762763 0
+-18334.3453453453 0
+-18333.4144144144 0
+-18332.4834834835 0
+-18331.5525525526 0
+-18330.6216216216 0
+-18329.6906906907 0
+-18328.7597597598 0
+-18327.8288288288 0
+-18326.8978978979 0
+-18325.966966967 0
+-18325.036036036 0
+-18324.1051051051 0
+-18323.1741741742 0
+-18322.2432432432 0
+-18321.3123123123 0
+-18320.3813813814 0
+-18319.4504504505 0
+-18318.5195195195 0
+-18317.5885885886 0
+-18316.6576576577 0
+-18315.7267267267 0
+-18314.7957957958 0
+-18313.8648648649 0
+-18312.9339339339 0
+-18312.003003003 0
+-18311.0720720721 0
+-18310.1411411411 0
+-18309.2102102102 0
+-18308.2792792793 0
+-18307.3483483483 0
+-18306.4174174174 0
+-18305.4864864865 0
+-18304.5555555556 0
+-18303.6246246246 0
+-18302.6936936937 0
+-18301.7627627628 0
+-18300.8318318318 0
+-18299.9009009009 0
+-18298.96996997 0
+-18298.039039039 0
+-18297.1081081081 0
+-18296.1771771772 0
+-18295.2462462462 0
+-18294.3153153153 0
+-18293.3843843844 0
+-18292.4534534535 0
+-18291.5225225225 0
+-18290.5915915916 0
+-18289.6606606607 0
+-18288.7297297297 0
+-18287.7987987988 0
+-18286.8678678679 0
+-18285.9369369369 0
+-18285.006006006 0
+-18284.0750750751 0
+-18283.1441441441 0
+-18282.2132132132 0
+-18281.2822822823 0
+-18280.3513513513 0
+-18279.4204204204 0
+-18278.4894894895 0
+-18277.5585585586 0
+-18276.6276276276 0
+-18275.6966966967 0
+-18274.7657657658 0
+-18273.8348348348 0
+-18272.9039039039 0
+-18271.972972973 0
+-18271.042042042 0
+-18270.1111111111 0
+-18269.1801801802 0
+-18268.2492492492 0
+-18267.3183183183 0
+-18266.3873873874 0
+-18265.4564564565 0
+-18264.5255255255 0
+-18263.5945945946 0
+-18262.6636636637 0
+-18261.7327327327 0
+-18260.8018018018 0
+-18259.8708708709 0
+-18258.9399399399 0
+-18258.009009009 0
+-18257.0780780781 0
+-18256.1471471471 0
+-18255.2162162162 0
+-18254.2852852853 0
+-18253.3543543544 0
+-18252.4234234234 0
+-18251.4924924925 0
+-18250.5615615616 0
+-18249.6306306306 0
+-18248.6996996997 0
+-18247.7687687688 0
+-18246.8378378378 0
+-18245.9069069069 0
+-18244.975975976 0
+-18244.045045045 0
+-18243.1141141141 0
+-18242.1831831832 0
+-18241.2522522523 0
+-18240.3213213213 0
+-18239.3903903904 0
+-18238.4594594595 0
+-18237.5285285285 0
+-18236.5975975976 0
+-18235.6666666667 0
+-18234.7357357357 0
+-18233.8048048048 0
+-18232.8738738739 0
+-18231.9429429429 0
+-18231.012012012 0
+-18230.0810810811 0
+-18229.1501501502 0
+-18228.2192192192 0
+-18227.2882882883 0
+-18226.3573573574 0
+-18225.4264264264 0
+-18224.4954954955 0
+-18223.5645645646 0
+-18222.6336336336 0
+-18221.7027027027 0
+-18220.7717717718 0
+-18219.8408408408 0
+-18218.9099099099 0
+-18217.978978979 0
+-18217.048048048 0
+-18216.1171171171 0
+-18215.1861861862 0
+-18214.2552552553 0
+-18213.3243243243 0
+-18212.3933933934 0
+-18211.4624624625 0
+-18210.5315315315 0
+-18209.6006006006 0
+-18208.6696696697 0
+-18207.7387387387 0
+-18206.8078078078 0
+-18205.8768768769 0
+-18204.9459459459 0
+-18204.015015015 0
+-18203.0840840841 0
+-18202.1531531532 0
+-18201.2222222222 0
+-18200.2912912913 0
+-18199.3603603604 0
+-18198.4294294294 0
+-18197.4984984985 0
+-18196.5675675676 0
+-18195.6366366366 0
+-18194.7057057057 0
+-18193.7747747748 0
+-18192.8438438438 0
+-18191.9129129129 0
+-18190.981981982 0
+-18190.0510510511 0
+-18189.1201201201 0
+-18188.1891891892 0
+-18187.2582582583 0
+-18186.3273273273 0
+-18185.3963963964 0
+-18184.4654654655 0
+-18183.5345345345 0
+-18182.6036036036 0
+-18181.6726726727 0
+-18180.7417417417 0
+-18179.8108108108 0
+-18178.8798798799 0
+-18177.9489489489 0
+-18177.018018018 0
+-18176.0870870871 0
+-18175.1561561562 0
+-18174.2252252252 0
+-18173.2942942943 0
+-18172.3633633634 0
+-18171.4324324324 0
+-18170.5015015015 0
+-18169.5705705706 0
+-18168.6396396396 0
+-18167.7087087087 0
+-18166.7777777778 0
+-18165.8468468468 0
+-18164.9159159159 0
+-18163.984984985 0
+-18163.0540540541 0
+-18162.1231231231 0
+-18161.1921921922 0
+-18160.2612612613 0
+-18159.3303303303 0
+-18158.3993993994 0
+-18157.4684684685 0
+-18156.5375375375 0
+-18155.6066066066 0
+-18154.6756756757 0
+-18153.7447447447 0
+-18152.8138138138 0
+-18151.8828828829 0
+-18150.951951952 0
+-18150.021021021 0
+-18149.0900900901 0
+-18148.1591591592 0
+-18147.2282282282 0
+-18146.2972972973 0
+-18145.3663663664 0
+-18144.4354354354 0
+-18143.5045045045 0
+-18142.5735735736 0
+-18141.6426426426 0
+-18140.7117117117 0
+-18139.7807807808 0
+-18138.8498498498 0
+-18137.9189189189 0
+-18136.987987988 0
+-18136.0570570571 0
+-18135.1261261261 0
+-18134.1951951952 0
+-18133.2642642643 0
+-18132.3333333333 0
+-18131.4024024024 0
+-18130.4714714715 0
+-18129.5405405405 0
+-18128.6096096096 0
+-18127.6786786787 0
+-18126.7477477477 0
+-18125.8168168168 0
+-18124.8858858859 0
+-18123.954954955 0
+-18123.024024024 0
+-18122.0930930931 0
+-18121.1621621622 0
+-18120.2312312312 0
+-18119.3003003003 0
+-18118.3693693694 0
+-18117.4384384384 0
+-18116.5075075075 0
+-18115.5765765766 0
+-18114.6456456456 0
+-18113.7147147147 0
+-18112.7837837838 0
+-18111.8528528529 0
+-18110.9219219219 0
+-18109.990990991 0
+-18109.0600600601 0
+-18108.1291291291 0
+-18107.1981981982 0
+-18106.2672672673 0
+-18105.3363363363 0
+-18104.4054054054 0
+-18103.4744744745 0
+-18102.5435435435 0
+-18101.6126126126 0
+-18100.6816816817 0
+-18099.7507507508 0
+-18098.8198198198 0
+-18097.8888888889 0
+-18096.957957958 0
+-18096.027027027 0
+-18095.0960960961 0
+-18094.1651651652 0
+-18093.2342342342 0
+-18092.3033033033 0
+-18091.3723723724 0
+-18090.4414414414 0
+-18089.5105105105 0
+-18088.5795795796 0
+-18087.6486486487 0
+-18086.7177177177 0
+-18085.7867867868 0
+-18084.8558558559 0
+-18083.9249249249 0
+-18082.993993994 0
+-18082.0630630631 0
+-18081.1321321321 0
+-18080.2012012012 0
+-18079.2702702703 0
+-18078.3393393393 0
+-18077.4084084084 0
+-18076.4774774775 0
+-18075.5465465465 0
+-18074.6156156156 0
+-18073.6846846847 0
+-18072.7537537538 0
+-18071.8228228228 0
+-18070.8918918919 0
+-18069.960960961 0
+-18069.03003003 0
+-18068.0990990991 0
+-18067.1681681682 0
+-18066.2372372372 0
+-18065.3063063063 0
+-18064.3753753754 0
+-18063.4444444444 0
+-18062.5135135135 0
+-18061.5825825826 0
+-18060.6516516517 0
+-18059.7207207207 0
+-18058.7897897898 0
+-18057.8588588589 0
+-18056.9279279279 0
+-18055.996996997 0
+-18055.0660660661 0
+-18054.1351351351 0
+-18053.2042042042 0
+-18052.2732732733 0
+-18051.3423423423 0
+-18050.4114114114 0
+-18049.4804804805 0
+-18048.5495495495 0
+-18047.6186186186 0
+-18046.6876876877 0
+-18045.7567567568 0
+-18044.8258258258 0
+-18043.8948948949 0
+-18042.963963964 0
+-18042.033033033 0
+-18041.1021021021 0
+-18040.1711711712 0
+-18039.2402402402 0
+-18038.3093093093 0
+-18037.3783783784 0
+-18036.4474474474 0
+-18035.5165165165 0
+-18034.5855855856 0
+-18033.6546546547 0
+-18032.7237237237 0
+-18031.7927927928 0
+-18030.8618618619 0
+-18029.9309309309 0
+-18029 0
+-18028.0690690691 0
+-18027.1381381381 0
+-18026.2072072072 0
+-18025.2762762763 0
+-18024.3453453453 0
+-18023.4144144144 0
+-18022.4834834835 0
+-18021.5525525526 0
+-18020.6216216216 0
+-18019.6906906907 0
+-18018.7597597598 0
+-18017.8288288288 0
+-18016.8978978979 0
+-18015.966966967 0
+-18015.036036036 0
+-18014.1051051051 0
+-18013.1741741742 0
+-18012.2432432432 0
+-18011.3123123123 0
+-18010.3813813814 0
+-18009.4504504505 0
+-18008.5195195195 0
+-18007.5885885886 0
+-18006.6576576577 0
+-18005.7267267267 0
+-18004.7957957958 0
+-18003.8648648649 0
+-18002.9339339339 0
+-18002.003003003 0
+-18001.0720720721 0
+-18000.1411411411 0
+-17999.2102102102 0
+-17998.2792792793 0
+-17997.3483483483 0
+-17996.4174174174 0
+-17995.4864864865 0
+-17994.5555555556 0
+-17993.6246246246 0
+-17992.6936936937 0
+-17991.7627627628 0
+-17990.8318318318 0
+-17989.9009009009 0
+-17988.96996997 0
+-17988.039039039 0
+-17987.1081081081 0
+-17986.1771771772 0
+-17985.2462462462 0
+-17984.3153153153 0
+-17983.3843843844 0
+-17982.4534534535 0
+-17981.5225225225 0
+-17980.5915915916 0
+-17979.6606606607 0
+-17978.7297297297 0
+-17977.7987987988 0
+-17976.8678678679 0
+-17975.9369369369 0
+-17975.006006006 0
+-17974.0750750751 0
+-17973.1441441441 0
+-17972.2132132132 0
+-17971.2822822823 0
+-17970.3513513513 0
+-17969.4204204204 0
+-17968.4894894895 0
+-17967.5585585586 0
+-17966.6276276276 0
+-17965.6966966967 0
+-17964.7657657658 0
+-17963.8348348348 0
+-17962.9039039039 0
+-17961.972972973 0
+-17961.042042042 0
+-17960.1111111111 0
+-17959.1801801802 0
+-17958.2492492492 0
+-17957.3183183183 0
+-17956.3873873874 0
+-17955.4564564565 0
+-17954.5255255255 0
+-17953.5945945946 0
+-17952.6636636637 0
+-17951.7327327327 0
+-17950.8018018018 0
+-17949.8708708709 0
+-17948.9399399399 0
+-17948.009009009 0
+-17947.0780780781 0
+-17946.1471471471 0
+-17945.2162162162 0
+-17944.2852852853 0
+-17943.3543543544 0
+-17942.4234234234 0
+-17941.4924924925 0
+-17940.5615615616 0
+-17939.6306306306 0
+-17938.6996996997 0
+-17937.7687687688 0
+-17936.8378378378 0
+-17935.9069069069 0
+-17934.975975976 0
+-17934.045045045 0
+-17933.1141141141 0
+-17932.1831831832 0
+-17931.2522522523 0
+-17930.3213213213 0
+-17929.3903903904 0
+-17928.4594594595 0
+-17927.5285285285 0
+-17926.5975975976 0
+-17925.6666666667 0
+-17924.7357357357 0
+-17923.8048048048 0
+-17922.8738738739 0
+-17921.9429429429 0
+-17921.012012012 0
+-17920.0810810811 0
+-17919.1501501502 0
+-17918.2192192192 0
+-17917.2882882883 0
+-17916.3573573574 0
+-17915.4264264264 0
+-17914.4954954955 0
+-17913.5645645646 0
+-17912.6336336336 0
+-17911.7027027027 0
+-17910.7717717718 0
+-17909.8408408408 0
+-17908.9099099099 0
+-17907.978978979 0
+-17907.048048048 0
+-17906.1171171171 0
+-17905.1861861862 0
+-17904.2552552553 0
+-17903.3243243243 0
+-17902.3933933934 0
+-17901.4624624625 0
+-17900.5315315315 0
+-17899.6006006006 0
+-17898.6696696697 0
+-17897.7387387387 0
+-17896.8078078078 0
+-17895.8768768769 0
+-17894.9459459459 0
+-17894.015015015 0
+-17893.0840840841 0
+-17892.1531531532 0
+-17891.2222222222 0
+-17890.2912912913 0
+-17889.3603603604 0
+-17888.4294294294 0
+-17887.4984984985 0
+-17886.5675675676 0
+-17885.6366366366 0
+-17884.7057057057 0
+-17883.7747747748 0
+-17882.8438438438 0
+-17881.9129129129 0
+-17880.981981982 0
+-17880.0510510511 0
+-17879.1201201201 0
+-17878.1891891892 0
+-17877.2582582583 0
+-17876.3273273273 0
+-17875.3963963964 0
+-17874.4654654655 0
+-17873.5345345345 0
+-17872.6036036036 0
+-17871.6726726727 0
+-17870.7417417417 0
+-17869.8108108108 0
+-17868.8798798799 0
+-17867.9489489489 0
+-17867.018018018 0
+-17866.0870870871 0
+-17865.1561561562 0
+-17864.2252252252 0
+-17863.2942942943 0
+-17862.3633633634 0
+-17861.4324324324 0
+-17860.5015015015 0
+-17859.5705705706 0
+-17858.6396396396 0
+-17857.7087087087 0
+-17856.7777777778 0
+-17855.8468468468 0
+-17854.9159159159 0
+-17853.984984985 0
+-17853.0540540541 0
+-17852.1231231231 0
+-17851.1921921922 0
+-17850.2612612613 0
+-17849.3303303303 0
+-17848.3993993994 0
+-17847.4684684685 0
+-17846.5375375375 0
+-17845.6066066066 0
+-17844.6756756757 0
+-17843.7447447447 0
+-17842.8138138138 0
+-17841.8828828829 0
+-17840.951951952 0
+-17840.021021021 0
+-17839.0900900901 0
+-17838.1591591592 0
+-17837.2282282282 0
+-17836.2972972973 0
+-17835.3663663664 0
+-17834.4354354354 0
+-17833.5045045045 0
+-17832.5735735736 0
+-17831.6426426426 0
+-17830.7117117117 0
+-17829.7807807808 0
+-17828.8498498498 0
+-17827.9189189189 0
+-17826.987987988 0
+-17826.0570570571 0
+-17825.1261261261 0
+-17824.1951951952 0
+-17823.2642642643 0
+-17822.3333333333 0
+-17821.4024024024 0
+-17820.4714714715 0
+-17819.5405405405 0
+-17818.6096096096 0
+-17817.6786786787 0
+-17816.7477477477 0
+-17815.8168168168 0
+-17814.8858858859 0
+-17813.954954955 0
+-17813.024024024 0
+-17812.0930930931 0
+-17811.1621621622 0
+-17810.2312312312 0
+-17809.3003003003 0
+-17808.3693693694 0
+-17807.4384384384 0
+-17806.5075075075 0
+-17805.5765765766 0
+-17804.6456456456 0
+-17803.7147147147 0
+-17802.7837837838 0
+-17801.8528528529 0
+-17800.9219219219 0
+-17799.990990991 0
+-17799.0600600601 0
+-17798.1291291291 0
+-17797.1981981982 0
+-17796.2672672673 0
+-17795.3363363363 0
+-17794.4054054054 0
+-17793.4744744745 0
+-17792.5435435435 0
+-17791.6126126126 0
+-17790.6816816817 0
+-17789.7507507508 0
+-17788.8198198198 0
+-17787.8888888889 0
+-17786.957957958 0
+-17786.027027027 0
+-17785.0960960961 0
+-17784.1651651652 0
+-17783.2342342342 0
+-17782.3033033033 0
+-17781.3723723724 0
+-17780.4414414414 0
+-17779.5105105105 0
+-17778.5795795796 0
+-17777.6486486487 0
+-17776.7177177177 0
+-17775.7867867868 0
+-17774.8558558559 0
+-17773.9249249249 0
+-17772.993993994 0
+-17772.0630630631 0
+-17771.1321321321 0
+-17770.2012012012 0
+-17769.2702702703 0
+-17768.3393393393 0
+-17767.4084084084 0
+-17766.4774774775 0
+-17765.5465465465 0
+-17764.6156156156 0
+-17763.6846846847 0
+-17762.7537537538 0
+-17761.8228228228 0
+-17760.8918918919 0
+-17759.960960961 0
+-17759.03003003 0
+-17758.0990990991 0
+-17757.1681681682 0
+-17756.2372372372 0
+-17755.3063063063 0
+-17754.3753753754 0
+-17753.4444444444 0
+-17752.5135135135 0
+-17751.5825825826 0
+-17750.6516516517 0
+-17749.7207207207 0
+-17748.7897897898 0
+-17747.8588588589 0
+-17746.9279279279 0
+-17745.996996997 0
+-17745.0660660661 0
+-17744.1351351351 0
+-17743.2042042042 0
+-17742.2732732733 0
+-17741.3423423423 0
+-17740.4114114114 0
+-17739.4804804805 0
+-17738.5495495495 0
+-17737.6186186186 0
+-17736.6876876877 0
+-17735.7567567568 0
+-17734.8258258258 0
+-17733.8948948949 0
+-17732.963963964 0
+-17732.033033033 0
+-17731.1021021021 0
+-17730.1711711712 0
+-17729.2402402402 0
+-17728.3093093093 0
+-17727.3783783784 0
+-17726.4474474474 0
+-17725.5165165165 0
+-17724.5855855856 0
+-17723.6546546547 0
+-17722.7237237237 0
+-17721.7927927928 0
+-17720.8618618619 0
+-17719.9309309309 0
+-17719 0
 };
 \end{axis}
 

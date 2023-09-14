@@ -59,12 +59,27 @@ to determine $t_0$. If on the other hand we start in cold state the energy will 
 \end{figure}
 
 \subsubsection{Improving performance}
-While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features.
+While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features. We noted during the simulation of the 
 
 
 \begin{figure}
 \centering
-\input{../../Plots/Energies_Boltzmann_Distribution.pgf}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_0.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_1.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_2.pgf}
+\end{figure}
+
+\begin{figure}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_3.pgf}
 \end{figure}
 
 \begin{figure}
