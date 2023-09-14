@@ -179,7 +179,7 @@ class Potts:
     
     def get_stats(self, M_sampling=0):
         # return mean and variance
-        t_0 = len(self.E)-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
+        t_0 = self.i-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
         return np.mean(self.E[t_0:self.i])/self.N, np.var(self.E[t_0:self.i])/(self.N**2), t_0
 
     def write_E(self,  filename=pathname_gen/'Energies.csv', max_length=int(1E7), t_0=0):
@@ -193,7 +193,9 @@ class Potts:
         if not ax: ax = plt.subplot()
         ax.clear()
         ax.imshow(self.s, cmap='Set1')
-        if filename: tikzplotlib.save(f'{filename}.pgf')
+        if filename: 
+            tikzplotlib.save(f'{filename}.pgf')
+            ax.figure.savefig(f'{filename}.png')
         if frame_nbr: ax.set_title(f"frame {frame_nbr}")
         if show_plt: plt.show()
 
@@ -274,7 +276,9 @@ def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
         params = maxwell.fit(E[::(len(E)//1000)], loc=min(E))
         x = np.linspace(min(E), max(E), 1000)
         ax.plot(x, maxwell.pdf(x, *params), label='Maxwell distribution')
-    if filename: tikzplotlib.save(f'{filename}.pgf')
+    if filename:
+        tikzplotlib.save(f'{filename}.pgf')
+        ax.figure.savefig(f'{filename}.png')
     ax.set_title('Distribution of the energy in equilibrium')
     ax.legend()
     if show_plt: plt.show()
@@ -377,12 +381,12 @@ if __name__ == '__main__':
             plot_energies(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tots[-1]}.csv')
 
     
-    if True:
+    if False:
         # Show nice animations for high, medium and low temperatures
         Ts = [1E5, 1, 1E-1]
         filenames = [pathname_plots/f'{state}_temp_state' for state in ['High', 'Medium', 'Low']]
         for i in range(3):
-            model = Potts(20, T=Ts[i], q=5)
+            model = Potts(20, Ts[i], 5)
             model.run_simulation(10000, show_state=range(0,10000,200), save_state=[10000], filename=filenames[i])
 
 
@@ -397,7 +401,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -413,7 +417,7 @@ if __name__ == '__main__':
         variances.to_pickle(pathname/f'variances_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if False:
+    if True:
         # plot variances and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
         variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')
