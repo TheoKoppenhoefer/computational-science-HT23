@@ -319,25 +319,32 @@ def analyse_energy(E, n=1000):
 if __name__ == '__main__':
     # main starts here
     # designing experiments: Anna, Theo, Carmen
-        
-    # TODO: compare hot start - cold start final results
+    
+    #hot start vs cold start    
+    # TODO: fix the plot (energies inverted order?)
     if True: 
         M = -5000
         M_sampling = int(1E6)
         methods = [MC_step_fast, Gibbs_step]
+        cs = 2
+        
+        ax = plt.subplot()
         for method in methods:
-            hot = Potts(300, q=2, T=1E2)
+            hot = Potts(100, q=2, T=1E2)
             hot.run_simulation(M, M_sampling, method=method)
+            ax.plot(hot.E, label= str(method) + 'hot')
             
-            cold7 = Potts(300, q=2, T=1E2, cs = 2)
-            hot.run_simulation(M, M_sampling, method=method)
-    
-            print(method, 'hot start final total energy: ', hot.e, 'cold start 2: ', cold7.e)  
-            #for L = 100 everything agrees (give or take)
-            #for L = 300, cold7 final e is one order of magnitude smaller
-    
-    
-    
+            
+            cold = Potts(100, q=2, T=1E2, cs = cs)
+            cold.run_simulation(M, M_sampling, method=method)
+            ax.plot(cold.E, label= str(method) + 'cs = '+ str(cs) , marker='.')
+            
+            print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
+        
+        ax.set_xlabel('Iterations')
+        ax.set_ylabel('Energy $E$')
+        plt.show()
+            
     # Create a time series of the temperature with Bolzmann
     M = -5000
     M_sampling = int(1E6)
