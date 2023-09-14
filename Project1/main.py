@@ -180,9 +180,9 @@ class Potts:
     def get_stats(self, M_sampling=0):
         # return mean and variance
         t_0 = self.i-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
-        return np.mean(self.E[t_0:self.i])/self.N, np.var(self.E[t_0:self.i])/(self.N**2), t_0
+        return np.mean(self.E[t_0:self.i])/self.N, np.var(self.E[t_0:self.i])/self.N, t_0
 
-    def write_E(self,  filename=pathname_gen/'Energies.csv', max_length=int(1E7), t_0=0):
+    def write_E(self,  filename=pathname_gen/'Energies.csv', max_length=int(1E6), t_0=0):
         # write self.E to a file of maximum length given by max_length
         with open(filename, 'w') as f:
             wr = csv.writer(f)
@@ -380,7 +380,10 @@ if __name__ == '__main__':
                 plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
             plot_energies(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tots[-1]}.csv')
 
-    
+    # TODO: This should work but doesn't
+    # plot_energies(pathname/f'Energies_maxwell_distribution_MC_step_fast_M10000000.csv')
+
+
     if False:
         # Show nice animations for high, medium and low temperatures
         Ts = [1E5, 1, 1E-1]
@@ -401,7 +404,7 @@ if __name__ == '__main__':
     variances = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -417,7 +420,7 @@ if __name__ == '__main__':
         variances.to_pickle(pathname/f'variances_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if True:
+    if False:
         # plot variances and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
         variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')

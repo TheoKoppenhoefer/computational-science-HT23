@@ -20,12 +20,14 @@
 \pgfplotsset{compat=newest,
     width=10cm,
     height=10cm,
-    max space between ticks=25pt,
     try min ticks=5,
     every axis/.style={
         axis y line=left,
         axis x line=bottom,
-        axis line style={thick,->,>=latex, shorten >=-.4cm}
+        axis line style={thick,->,>=latex, shorten >=-.4cm},
+    		x tick label style={
+		    /pgf/number format/precision=3
+		}
     },
     every axis plot/.append style={thick},
     tick style={black, thick}
