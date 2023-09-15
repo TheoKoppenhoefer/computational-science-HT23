@@ -17,14 +17,16 @@
 \usepackage{pgfplots}
 \graphicspath{{../Figures/}}
 
-\pgfplotsset{compat=newest,
-    width=10cm,
-    height=10cm,
-    try min ticks=5,
-    every axis/.style={
+\pgfplotsset{
+	compat=newest,
+    every axis/.append style={
         axis y line=left,
         axis x line=bottom,
-        axis line style={thick,->,>=latex, shorten >=-.4cm},
+        scale only axis,
+%    	max space between ticks=25pt,
+        width=\textwidth,
+        scaled ticks=true,
+        axis line style={thick,-,>=latex, shorten >=-.4cm},
     		x tick label style={
 		    /pgf/number format/precision=3
 		}
@@ -58,6 +60,12 @@ One assigns this state an energy via
 \end{align*}
 where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid.
 
+\section{The algorithms}
+\subsection{The Metropolis}
+
+
+\subsection{The Heat-Bath algorithm}
+
 \section{The implementation}
 
 \subsubsection{Determining when the Energy has plateaued}
@@ -76,46 +84,98 @@ to determine $t_0$. If on the other hand we start in cold state the energy will 
 \end{figure}
 
 \subsubsection{Improving performance}
-While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features. We noted during the simulation of the 
+While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features. In hindsight python seems to have been 
 
+\section{The experiments}
+
+\subsection{Distribution of energies in equilibrium}
+
+In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches a distribution which looks like the Maxwell-Boltzmann distribution.
 
 \begin{figure}
+\begin{minipage}[b]{0.4\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_0.pgf}
-\end{figure}
-
-\begin{figure}
+\vspace*{-0.5cm}
+\caption{For $M=10^5$}
+\label{pl:Maxwell_distribution_0}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_1.pgf}
-\end{figure}
-
-\begin{figure}
+\vspace*{-0.5cm}
+\caption{For $M=10^6$}
+\label{pl:Maxwell_distribution_1}
+\end{minipage}
+\begin{minipage}[b]{0.4\textwidth}
+\vspace*{1cm}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_2.pgf}
-\end{figure}
-
-\begin{figure}
+\vspace*{-0.5cm}
+\caption{For $M=4\cdot10^6$}
+\label{pl:Maxwell_distribution_2}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_3.pgf}
+\vspace*{-0.5cm}
+\caption{For $M=10^7$}
+\label{pl:Maxwell_distribution_3}
+\end{minipage}
 \end{figure}
 
+\subsection{State plots}
+
+In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that as the temperature increases the state of the system becomes more chaotic. For low temperatures there are larger patches of the same state which corresponds to a lower energy configuration. In the implementation one can see an animated version of the evolution of the system state.
+
 \begin{figure}
+\begin{minipage}{0.25\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
 \input{../../Plots/High_temp_state_10000.pgf}
-\end{figure}
-
-\begin{figure}
+\caption{State for temperature $T=0.1$.}
+\label{fi:High_temp_state}
+\end{minipage}
+\hfill
+\begin{minipage}{0.25\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
 \input{../../Plots/Medium_temp_state_10000.pgf}
+\caption{State for temperature $T=1$.}
+\label{fi:Medium_temp_state}
+\end{minipage}
+\hfill
+\begin{minipage}{0.25\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Low_temp_state_10000.pgf}
+\caption{State for temperature $T=100$.}
+\label{fi:Low_temp_state}
+\end{minipage}
 \end{figure}
+
+\subsection*{Energies in dependence of the temperature}
 
 \begin{figure}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/Low_temp_state_10000.pgf}
+\input{../../Plots/energies_T_q_L500.pgf}
 \end{figure}
+
+\newpage
+TODO:
+\begin{itemize}
+\item explain Metropolis algorithm
+\item explain Heat-bath algorithm
+\item briefly explain implementation
+\item sanity test hot vs. cold start
+\item energy evolution for maxwell-distribution test
+\item play around with phase transitions
+\item phase transition test -> E-T plots and t_0 plot
+\item distribution based on energy
+\end{itemize}
 
 
 \newpage

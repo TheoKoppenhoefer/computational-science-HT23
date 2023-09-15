@@ -9,6 +9,7 @@ import numba as nb
 from scipy.stats import maxwell
 import time
 from pathlib import Path
+from pgf_plot_fix import tikzplotlib_fix_ncols
 
 if False:
     pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Data")
@@ -115,7 +116,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # list of total energies of the system
-        self.E = np.empty(int(1E7)) # allocate a huge amount of virtual memory for the energies
+        self.E = np.empty(int(1E8)) # allocate a huge amount of virtual memory for the energies
         self.i = 0 # the current step
         # calculate the total energy
         self.E[0] = get_E(self.s, J)
@@ -195,7 +196,7 @@ class Potts:
         ax.imshow(self.s, cmap='Set1')
         if filename: 
             tikzplotlib.save(f'{filename}.pgf')
-            ax.figure.savefig(f'{filename}.png')
+            ax.figure.savefig(f'{filename}.pdf')
         if frame_nbr: ax.set_title(f"frame {frame_nbr}")
         if show_plt: plt.show()
 
@@ -269,7 +270,7 @@ def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
     plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
     ax.hist(E, bins=150, density=True, label='Data')
-    ax.set_xlabel('Energy $E$')
+    ax.set_xlabel('Energy $E$ per spin')
     ax.set_ylabel('Share of states')
     if fit_maxwell:
         # fit a maxwell distribution to the data
@@ -278,7 +279,7 @@ def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
         ax.plot(x, maxwell.pdf(x, *params), label='Maxwell distribution')
     if filename:
         tikzplotlib.save(f'{filename}.pgf')
-        ax.figure.savefig(f'{filename}.png')
+        ax.figure.savefig(f'{filename}.pdf')
     ax.set_title('Distribution of the energy in equilibrium')
     ax.legend()
     if show_plt: plt.show()
@@ -290,8 +291,10 @@ def plot_energies_t0(E, t_0=None, show_plt=True, filename=None):
     ax.plot(E)
     if t_0: ax.axvline(t_0, label='$t_0$')
     ax.set_xlabel('Iteration $i$')
-    ax.set_ylabel('Energy $E$')
-    if filename: tikzplotlib.save(f'{filename}.pgf')
+    ax.set_ylabel('Energy $E$ per spin')
+    if filename:
+        tikzplotlib.save(f'{filename}.pgf')
+        ax.figure.savefig(f'{filename}.pdf')
     ax.set_title('Energy evolution')
     if show_plt: plt.show()
 
@@ -346,7 +349,7 @@ if __name__ == '__main__':
             print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
         
         ax.set_xlabel('Iterations')
-        ax.set_ylabel('Energy $E$')
+        ax.set_ylabel('Energy $E$ per spin')
         plt.show()
 
     # Check if the energy calculations coincide
@@ -378,7 +381,8 @@ if __name__ == '__main__':
                 # and plot the results
                 E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', delimiter=',')
                 plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
-            plot_energies(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tots[-1]}.csv')
+            E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{int(M_tots[-1])}.csv', delimiter=',')
+            plot_energies_t0(E, filename=pathname/f'Energies_evolution_{method.__name__}_M{int(M_tots[-1])}')
 
     # TODO: This should work but doesn't
     # plot_energies(pathname/f'Energies_maxwell_distribution_MC_step_fast_M10000000.csv')
@@ -430,7 +434,10 @@ if __name__ == '__main__':
             ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
-        ax.set_ylabel('Energy $E$')
+        ax.set_ylabel('Energy $E$ per spin')
+        tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
+        tikzplotlib.save(pathname_plots/f'energies_T_q_L{L}.pgf')
+        ax.figure.savefig(pathname_plots/f'energies_T_q_L{L}.png')
         plt.show()
 
         # plot t_0s 
@@ -442,4 +449,7 @@ if __name__ == '__main__':
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Time $t_0$')
+        tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
+        tikzplotlib.save(pathname_plots/f't0_T_q_L{L}.pgf')
+        ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png')
         plt.show()
