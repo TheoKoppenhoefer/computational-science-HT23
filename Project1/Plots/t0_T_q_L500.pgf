@@ -1,0 +1,55 @@
+% This file was created with tikzplotlib v0.10.1.
+\begin{tikzpicture}
+
+\definecolor{darkgray176}{RGB}{176,176,176}
+\definecolor{darkorange25512714}{RGB}{255,127,14}
+\definecolor{lightgray204}{RGB}{204,204,204}
+\definecolor{steelblue31119180}{RGB}{31,119,180}
+
+\begin{axis}[
+legend cell align={left},
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=lightgray204},
+tick align=outside,
+tick pos=left,
+x grid style={darkgray176},
+xlabel={Temperature \(\displaystyle T\)},
+xmin=-0.0895, xmax=2.0995,
+xtick style={color=black},
+y grid style={darkgray176},
+ylabel={Time \(\displaystyle t_0\)},
+ymin=-1067826.6, ymax=32646482.6,
+ytick style={color=black},
+ytick={-5000000,0,5000000,10000000,15000000,20000000,25000000,30000000,35000000},
+yticklabels={\ensuremath{-}0.5,0.0,0.5,1.0,1.5,2.0,2.5,3.0,3.5}
+]
+\addplot [semithick, steelblue31119180]
+table {%
+0.01 11126873
+0.231111111111111 11386813
+0.452222222222222 5435834
+0.673333333333333 3508811
+0.894444444444444 2944972
+1.11555555555556 1729190
+1.33666666666667 1396861
+1.55777777777778 1013567
+1.77888888888889 934959
+2 813330
+};
+\addlegendentry{2}
+\addplot [semithick, darkorange25512714]
+table {%
+0.01 31114014
+0.231111111111111 18895185
+0.452222222222222 9416475
+0.673333333333333 1937470
+0.894444444444444 978061
+1.11555555555556 1022703
+1.33666666666667 660619
+1.55777777777778 522569
+1.77888888888889 588331
+2 464642
+};
+\addlegendentry{10}
+\end{axis}
+
+\end{tikzpicture}

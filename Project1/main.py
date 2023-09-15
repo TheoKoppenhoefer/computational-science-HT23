@@ -179,9 +179,9 @@ class Potts:
         plt.ioff()
     
     def get_stats(self, M_sampling=0):
-        # return mean and variance
+        # return mean and standard deviation
         t_0 = self.i-M_sampling if M_sampling else analyse_energy(self.E[:self.i])
-        return np.mean(self.E[t_0:self.i])/self.N, np.var(self.E[t_0:self.i])/self.N, t_0
+        return np.mean(self.E[t_0:self.i])/self.N, np.std(self.E[t_0:self.i])/self.N, t_0
 
     def write_E(self,  filename=pathname_gen/'Energies.csv', max_length=int(1E6), t_0=0):
         # write self.E to a file of maximum length given by max_length
@@ -399,16 +399,16 @@ if __name__ == '__main__':
 
     # Define the parameters for the experiments
     qs = [2,10]# range(2,10,3)
-    Ts = np.linspace(1E-2,2,10)
-    M = -1000
-    M_sampling = 5000
-    L = 500
+    Ts = np.linspace(1E-2,2,30)
+    M = -5000
+    M_sampling = int(1E7)
+    L = 50
 
     means = pd.DataFrame(columns=Ts, index=qs)
-    variances = pd.DataFrame(columns=Ts, index=qs)
+    stddev = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -419,19 +419,19 @@ if __name__ == '__main__':
                 # pf = time.perf_counter()
                 model.run_simulation(M, M_sampling)
                 # print(f'running {time.perf_counter()-pf}.')
-                means.loc[q][T], variances.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
+                means.loc[q][T], stddev.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
         means.to_pickle(pathname/f'means_L{L}.pkl')
-        variances.to_pickle(pathname/f'variances_L{L}.pkl')
+        stddev.to_pickle(pathname/f'stddev_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if False:
-        # plot variances and means
+    if True:
+        # plot standard deviation and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
-        variances = pd.read_pickle(pathname/f'variances_L{L}.pkl')
+        stddev = pd.read_pickle(pathname/f'stddev_L{L}.pkl')
         fig, ax = plt.subplots()
         for q in qs:
             # plot the values in dependence of the temperature
-            ax.errorbar(Ts, means.loc[q], yerr=variances.loc[q], label=f'{q}')
+            ax.errorbar(Ts, means.loc[q], yerr=stddev.loc[q], label=f'{q}')
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Energy $E$ per spin')

@@ -62,9 +62,54 @@ where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. A
 
 \section{The algorithms}
 \subsection{The Metropolis}
+ 
+The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}. A single iteration of this algorithm is performed by the function \pyth{MC_step_fast} in the implementation.
 
+\begin{figure}
+\centering
+\begin{algorithm}[H]
+\caption{Metropolis}
+\label{alg:Metropolis}
+\SetKwInOut{Input}{Input}
 
-\subsection{The Heat-Bath algorithm}
+\Input{Initial data $s$, $L$, $T$, $q$}
+\BlankLine
+\For{$k=0,1,\dots$}{
+	Pick a point on the grid.
+	
+	Propose a new random spin value for this point.
+	
+	Calculate the change of energy $\Delta E$ that this spin flip would cause.
+	
+	Accept this spin flip with probability $\min\brk[c]*{1,\exp(-\Delta E/T)}$.
+}
+\end{algorithm}
+\end{figure}
+
+\subsection{The heat-bath algorithm}
+
+The steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. In the implementation a single iteration is performed by the function \pyth{Gibbs_step}.
+
+\begin{figure}
+\centering
+\begin{algorithm}[H]
+\caption{Heat-bath}
+\label{alg:heat-bath}
+\SetKwInOut{Input}{Input}
+
+\Input{Initial data $s$, $L$, $T$, $q$}
+\BlankLine
+\For{$k=0,1,\dots$}{
+	Pick a point on the grid.
+	
+	Pick a spin value for this point with a probability given by the distribution
+	\begin{align*}
+		p(s_i) = C \exp\brk*{\frac{1}{T}\sum_{j\text{ neighbours }i}\delta\brk*{s_i,s_j}}\,.
+	\end{align*}
+	Here $C$ is a normalisation constant.
+}
+\end{algorithm}
+\end{figure}
 
 \section{The implementation}
 
@@ -90,7 +135,7 @@ While simulating we run into performance issues due to the fact that Python is i
 
 \subsection{Distribution of energies in equilibrium}
 
-In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches a distribution which looks like the Maxwell-Boltzmann distribution.
+In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
 
 \begin{figure}
 \begin{minipage}[b]{0.4\textwidth}
@@ -168,13 +213,15 @@ In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that a
 TODO:
 \begin{itemize}
 \item explain Metropolis algorithm
+\item explain why we are interested in when the energy has plateaued.
 \item explain Heat-bath algorithm
 \item briefly explain implementation
 \item sanity test hot vs. cold start
 \item energy evolution for maxwell-distribution test
 \item play around with phase transitions
-\item phase transition test -> E-T plots and t_0 plot
+\item phase transition test -> E-T plots and t0 plot
 \item distribution based on energy
+\item spell-check
 \end{itemize}
 
 
