@@ -2,9 +2,9 @@
 	[] Show how we implemented both algorithms, but briefly and in a smart way:
 		[] 2. Anna: smart MC step and Gibbs step
 		[] 3. Theo: statistics (finding equlibrium, ... you know which is the interesting and important stuff Theo)
-		[] 1. Carmen: Total Energies , class structure and which are the available functions 
+		[X] 1. Carmen: Total Energies , class structure and which are the available functions 
 	[] discrepancies between totalE and e (included in "2. Anna")
-	[] how to understand the boundary conditions (included in "1. Carmen")
+	[X] how to understand the boundary conditions (included in "1. Carmen")
 	(some of us interpreted the periodic boundary conditions as an infinite lattice, turned to be a torus)
 	[] speed of the code - numba made it significantly faster ("2. Anna")
 	[] gibbs probability distribution: the function one can normally use from python didtn work , we had to implement a new districution function (2.Anna)
@@ -12,9 +12,9 @@
 
 2 Pictures (6 mins)
 	[X] Carmen: Cold - Hot
-		[] all experiments of the same plot (temperature) lead to more or less the same energy
+		[X] all experiments of the same plot (temperature) lead to more or less the same energy
 			(different tests have different t0)
-		[] hot start seems to be closer to equilibrium compared to cold start
+		[X] hot start seems to be closer to equilibrium compared to cold start
 			(at low temperature cold start is closer to equilibrium) 
 		[] show gifs - TALK TO THEO
 
