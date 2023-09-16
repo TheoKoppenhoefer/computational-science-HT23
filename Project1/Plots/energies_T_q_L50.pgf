@@ -1,8 +1,10 @@
 % This file was created with tikzplotlib v0.10.1.
 \begin{tikzpicture}
 
+\definecolor{cornflowerblue}{RGB}{100,149,237}
 \definecolor{lightgray}{RGB}{211,211,211}
 \definecolor{lightgray204}{RGB}{204,204,204}
+\definecolor{orange}{RGB}{255,165,0}
 \definecolor{salmon}{RGB}{250,128,114}
 \definecolor{steelblue}{RGB}{70,130,180}
 
@@ -349,6 +351,16 @@ ytick style={color=black}
 (axis cs:2,-0.321345385560598)
 --(axis cs:2,-0.300562466999402);
 
+\addplot [cornflowerblue, opacity=0.75, forget plot]
+table {%
+1.13 -2.08516984951753
+1.13 -0.215581163069968
+};
+\addplot [orange, opacity=0.75, forget plot]
+table {%
+0.701 -2.08516984951753
+0.701 -0.215581163069968
+};
 \addplot [steelblue]
 table {%
 0.1 -2
@@ -437,6 +449,18 @@ table {%
 2 -0.31095392628
 };
 \addlegendentry{10}
+\draw (axis cs:1.15,-1.1) node[
+  scale=0.5,
+  anchor=base west,
+  text=black,
+  rotate=0.0
+]{$T_c^{q = 2} = 1.13$};
+\draw (axis cs:0.71,-1.5) node[
+  scale=0.5,
+  anchor=base west,
+  text=black,
+  rotate=0.0
+]{$T_c^{q = 10} = 0.701$};
 \end{axis}
 
 \end{tikzpicture}

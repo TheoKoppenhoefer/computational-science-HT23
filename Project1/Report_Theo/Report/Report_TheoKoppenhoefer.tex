@@ -45,23 +45,31 @@
 \section{Introduction}
 
 The following report is part of the first project of the Modelling in Computational Science course at Lund University, HT2023.
-In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model. In the first part of this report we will describe the Potts model, the Monte-Carlo algorithms and some technicalities regarding the implementation. In the second part we will describe several experiments we did and the results they yielded.
+In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model. In the first part of this report we will describe the Potts model, the Monte-Carlo algorithms and some technicalities regarding the implementation. In the second part we will describe several experiments and the results they yielded.
 The report and the Python implementation can be found online under \cite{Repository}.
 
 \section{The setup}
 
 \subsection{The Potts model}
 
-The following is a brief introduction to the potts model from statistical mechanics.
+The following is a brief introduction to the potts model from statistical mechanics which describes the spin of a particle on a grid.
 A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping
 \begin{align*}
 	s\colon \brk[c]{1,\dots,L}\times\brk[c]{1,\dots,L}\to\brk[c]{1,\dots,L}\,.
 \end{align*}
 One assigns this state an energy via
 \begin{align*}
-	E = -J\sum_{\substack{i, j\text{ neighbouring}\\ \text{grid points}}}\delta\brk*{s_i,s_j}
+	E(s) = -J\sum_{\substack{i, j\text{ neighbouring}\\ \text{grid points}}}\delta\brk*{s_i,s_j}
 \end{align*}
-where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid.
+where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid. The aim is to evaluate the integral
+\begin{align}
+	\brk[a]*{E} = \int E(s)p(s) \dif s\,.\label{eq:integralAim}
+\end{align}
+Here $p$ is the density corresponding to the Boltzmann distribution, i.e.\
+\begin{align*}
+	p(s) = \exp\brk*{-E(s)/T}/Z
+\end{align*}
+with $Z$ a normalisation constant. To evaluate the integral in \eqref{eq:integralAim} we will use random sampling of $E$ with the samples distributed according to the Boltzmann distribution. In other words, we will use a Monte-Carlo simulation.
 
 \subsection{The Monte-Carlo algorithms}
 
@@ -200,7 +208,7 @@ In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that a
 
 \subsection{Distribution of energies in equilibrium}
 
-In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
+In the following numerical experiment we set the grid size to $L=50$, the spin states to $q=10$ and the temperature to $T=1$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
 
 \begin{figure}
 \begin{minipage}[b]{0.4\textwidth}
@@ -265,16 +273,16 @@ We can see from figure \ref{fi:t0_T_q_L50} that it takes the simulation in most 
 \end{minipage}
 \end{figure}
 
-In another series of experiments we would like to see how this plot depends on the system size $L$. The results can be seen in plots for system sizes $L=10$ and $L=30$.
+In another series of experiments we would like to see how this plot depends on the system size $L$. The results can be seen in plots for system sizes $L=10$ and $L=30$. One can notice that as the state size $L$ becomes decreases the standard deviation for the energies per spin increases. It is also noticable that the curve for the parameter $q=10$ smoothens out.
 
 \begin{figure}
 \centering
 \begin{minipage}{0.7\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/energies_T_q_L10.pgf}
-\caption{$L=10$.}
-\label{fi:energies_T_q_L50}
+\input{../../Plots/energies_T_q_L5.pgf}
+\caption{$L=5$.}
+\label{fi:energies_T_q_L5}
 \end{minipage}
 \end{figure}
 
@@ -283,9 +291,9 @@ In another series of experiments we would like to see how this plot depends on t
 \begin{minipage}{0.7\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/energies_T_q_L30.pgf}
-\caption{$L=30$.}
-\label{fi:energies_T_q_L50}
+\input{../../Plots/energies_T_q_L10.pgf}
+\caption{$L=10$.}
+\label{fi:energies_T_q_L10}
 \end{minipage}
 \end{figure}
 
@@ -330,8 +338,8 @@ Correspondingly for the slightly higher temperature $T=0.698$ we see in figure \
 \newpage
 TODO:
 \begin{itemize}
-\item phase transition test -> E-T plots and t0 plot
 \item distribution based on energy
+\item explain why it approaches the maxwell-boltzmann distribution
 \item proof-read
 \item spell-check
 \end{itemize}

@@ -333,7 +333,7 @@ if __name__ == '__main__':
     
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
-    if True: 
+    if False: 
         plt.style.use(pathname_gen/'rc.mplstyle')
         Ms = [int(1E6), int(4E4)]
         M_sampling = 0
@@ -439,13 +439,13 @@ if __name__ == '__main__':
     Ts = np.linspace(0.1,2,40)
     M = -int(1E6)
     M_sampling = int(1E7)
-    L = 50
+    L = 5
 
     means = pd.DataFrame(columns=Ts, index=qs)
     stddev = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if False:
+    if True:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -461,7 +461,7 @@ if __name__ == '__main__':
         stddev.to_pickle(pathname/f'stddev_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if False:
+    if True:
 
         plt.style.use(pathname_gen/'rc.mplstyle')
         # plot standard deviation and means
