@@ -329,7 +329,7 @@ if __name__ == '__main__':
     
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
-    if False: 
+    if True: 
         M = int(1E5)
         methods = [MC_step_fast, Gibbs_step]
         cs = 2
@@ -359,7 +359,7 @@ if __name__ == '__main__':
         model.test_energies()
             
     # Create a time series of the temperature with Bolzmann
-    if True:
+    if False:
         Ts = [1, 0.696, 0.697, 0.698]
         M_tots = np.array([1E5, 1E6, 4E6, 1E7, 1E8])
         Ms = M_tots.copy()
