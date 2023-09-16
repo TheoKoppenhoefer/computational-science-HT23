@@ -470,10 +470,10 @@ if __name__ == '__main__':
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Energy $E$ per spin')
-        ax.axvline(1.13, color='orange', alpha = 0.75)
-        ax.axvline(0.701, color='cornflowerblue', alpha = 0.75)
+        ax.axvline(1.13, color='cornflowerblue', alpha = 0.75)
+        ax.axvline(0.701, color='orange', alpha = 0.75)
         ax.text(1.15, -1.1, r"$T_c^{q = 2} = 1.13$")
-        ax.text(0.71, -0.75, r"$T_c^{q = 10} = 0.701$")
+        ax.text(0.71, -1.5, r"$T_c^{q = 10} = 0.701$")
         #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
         #tikzplotlib.save(pathname_plots/f'energies_T_q_L{L}.pgf')
         ax.figure.savefig(pathname_plots/f'energies_T_q_L{L}.png', bbox_inches='tight')
@@ -489,10 +489,10 @@ if __name__ == '__main__':
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Time $t_0$')
-        ax.axvline(1.13, color='cornflowerblue', alpha = 0.75)
-        ax.axvline(0.701, color='orange', alpha = 0.75)
-        ax.text(1.15, 3E5, r"$T_c^{q = 2} = 1.13$")    #y - high possibly has to be addapted
-        ax.text(0.71, 3E5,  r"$T_c^{q = 10} = 0.701$")
+        ax.axvline(1.13, color='orange', alpha = 0.75)
+        ax.axvline(0.701, color='cornflowerblue', alpha = 0.75)
+        #ax.text(1.15, 3E5, r"$T_c^{q = 2} = 1.13$")    #y - high possibly has to be addapted
+        #ax.text(0.71, 3E5,  r"$T_c^{q = 10} = 0.701$")
         #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
         #tikzplotlib.save(pathname_plots/f't0_T_q_L{L}.pgf')
         ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png',  bbox_inches='tight')
