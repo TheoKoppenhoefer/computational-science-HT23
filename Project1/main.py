@@ -343,17 +343,18 @@ if __name__ == '__main__':
         cs = 2
         i = 0
         methodsstring = ['Metropolis', 'Heat - bath']
-
+        L = 100
+        N = L*L
         ax = plt.subplot()
         for method in methods:
-            hot = Potts(100, q=2, T=T)
+            hot = Potts(L, q=2, T=T)
             hot.run_simulation(M, M_sampling, method=method)
-            ax.plot(hot.E[:hot.i], label= str(methodsstring[i]) + ', hot ', linewidth=2)
+            ax.plot(hot.E[:hot.i]/N, label= str(methodsstring[i]) + ', hot ', linewidth=2)
             
             
-            cold = Potts(100, q=2, T=T, cs = cs)
+            cold = Potts(L, q=2, T=T, cs = cs)
             cold.run_simulation(M, M_sampling, method=method)
-            ax.plot(cold.E[:cold.i], label= str(methodsstring[i]) + ', cs ', linewidth=2)
+            ax.plot(cold.E[:cold.i]/N, label= str(methodsstring[i]) + ', cs ', linewidth=2)
             
             i+=1
             print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
