@@ -116,7 +116,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # list of total energies of the system
-        self.E = np.empty(int(1E8)) # allocate a huge amount of virtual memory for the energies
+        self.E = np.empty(int(1E9)) # allocate a huge amount of virtual memory for the energies
         self.i = 0 # the current step
         # calculate the total energy
         self.E[0] = get_E(self.s, J)
@@ -330,20 +330,19 @@ if __name__ == '__main__':
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
     if False: 
-        M = -5000
-        M_sampling = int(1E6)
+        M = int(1E5)
         methods = [MC_step_fast, Gibbs_step]
         cs = 2
         
         ax = plt.subplot()
         for method in methods:
             hot = Potts(100, q=2, T=1E2)
-            hot.run_simulation(M, M_sampling, method=method)
+            hot.run_simulation(M, method=method)
             ax.plot(hot.E[:hot.i], label= str(method) + 'hot')
             
             
             cold = Potts(100, q=2, T=1E2, cs = cs)
-            cold.run_simulation(M, M_sampling, method=method)
+            cold.run_simulation(M, method=method)
             ax.plot(cold.E[:cold.i], label= str(method) + 'cs = '+ str(cs) , marker='.')
             
             print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
@@ -360,29 +359,30 @@ if __name__ == '__main__':
         model.test_energies()
             
     # Create a time series of the temperature with Bolzmann
-    if False:
-        M_tots = np.array([1E5, 1E6, 4E6, 1E7])
+    if True:
+        Ts = [1, 0.696, 0.697, 0.698]
+        M_tots = np.array([1E5, 1E6, 4E6, 1E7, 1E8])
         Ms = M_tots.copy()
         Ms[1:] -= M_tots[:-1]
 
         methods = [MC_step_fast]
-        n_runs = 4
         for method in methods:
-            model = Potts(300, q=10, T=1E2)
-            model.run_simulation(-5000, 0, method=method)
-            t_0 = model.i
-            for i, M in enumerate(Ms):
-                M_tot = int(M_tots[i])
-                # run the simulation
-                pf = time.perf_counter()
-                model.run_simulation(M, method=method)
-                print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
-                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', t_0=t_0)
-                # and plot the results
-                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', delimiter=',')
-                plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
-            E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{int(M_tots[-1])}.csv', delimiter=',')
-            plot_energies_t0(E, filename=pathname/f'Energies_evolution_{method.__name__}_M{int(M_tots[-1])}')
+            for T in Ts:
+                model = Potts(50, q=10, T=T)
+                model.run_simulation(-int(1E7), 0, method=method)
+                t_0 = model.i
+                for i, M in enumerate(Ms):
+                    M_tot = int(M_tots[i])
+                    # run the simulation
+                    pf = time.perf_counter()
+                    model.run_simulation(M, method=method)
+                    print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
+                    model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', t_0=t_0)
+                    # and plot the results
+                    E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', delimiter=',')
+                    plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_T{T}_{i}', show_plt=False)
+                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{int(M_tots[-1])}.csv', delimiter=',')
+                plot_energies_t0(E, filename=pathname_plots/f'Energies_evolution_{method.__name__}_T{T}_M{int(M_tots[-1])}', show_plt=False)
 
     # TODO: This should work but doesn't
     # plot_energies(pathname/f'Energies_maxwell_distribution_MC_step_fast_M10000000.csv')
@@ -399,8 +399,8 @@ if __name__ == '__main__':
 
     # Define the parameters for the experiments
     qs = [2,10]# range(2,10,3)
-    Ts = np.linspace(1E-2,2,30)
-    M = -5000
+    Ts = np.linspace(0.1,2,40)
+    M = -int(1E6)
     M_sampling = int(1E7)
     L = 50
 
@@ -408,7 +408,7 @@ if __name__ == '__main__':
     stddev = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -424,7 +424,7 @@ if __name__ == '__main__':
         stddev.to_pickle(pathname/f'stddev_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if True:
+    if False:
         # plot standard deviation and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
         stddev = pd.read_pickle(pathname/f'stddev_L{L}.pkl')

@@ -50,6 +50,7 @@ The report and the Python implementation can be found online under \cite{Reposit
 
 \section{The Potts model}
 
+The following is a brief introduction to the potts model from statistical mechanics.
 A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping
 \begin{align*}
 	s\colon \brk[c]{1,\dots,L}\times\brk[c]{1,\dots,L}\to\brk[c]{1,\dots,L}\,.
@@ -61,9 +62,10 @@ One assigns this state an energy via
 where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid.
 
 \section{The algorithms}
-\subsection{The Metropolis}
- 
-The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}. A single iteration of this algorithm is performed by the function \pyth{MC_step_fast} in the implementation.
+
+To model the statistical behaviour of the model we use Monte-Carlo simulations. 
+The first method we implemented was the Metropolis algorithm.
+The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}. A single iteration of this algorithm is performed by the function \pyth{MC_step_fast} in the implementation. In the implementation we used the pseudo-random number generators from \pyth{numpy.random} for the proposed spins, spin states and for determining if the choice should be accepted.
 
 \begin{figure}
 \centering
@@ -86,9 +88,7 @@ The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}.
 \end{algorithm}
 \end{figure}
 
-\subsection{The heat-bath algorithm}
-
-The steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. In the implementation a single iteration is performed by the function \pyth{Gibbs_step}.
+Analogously to the Metropolis algorithm the steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. it differs from the Metropolis algorithm only after a point on the grid was randomly chosen. In the implementation a single iteration is performed by the function \pyth{Gibbs_step}. In the implementation for this algorithm we also used the \pyth{numpy.random} functions.
 
 \begin{figure}
 \centering
@@ -111,65 +111,40 @@ The steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. In
 \end{algorithm}
 \end{figure}
 
-\section{The implementation}
+\section{Some implementation details}
 
 \subsubsection{Determining when the Energy has plateaued}
 
-The energy of the system takes some time $t_0$ to reach an equilibrium state. To determine $t_0$ we calculate in every step $i$ moving averages $\text{ma}_1$ and $\text{ma}_2$ over $n$ energies. The construction is shown in figure \ref{fi:movingAverages}. If we start in the hot state then the energy will tend to shrink until we reach an equilibrium. Hence we can use the condition
+In order for the simulation to start sampling we needed a criteria to determine the time $t_0$ when the system reaches an equilibrium state.
+ To determine $t_0$ we calculate in every step $i$ moving averages $\text{ma}_1$ and $\text{ma}_2$ over $n$ energies. The construction is shown in figure \ref{fi:movingAverages}. If we start in the hot state then the energy will tend to decrease until we reach an equilibrium. Hence we can use the condition
 \begin{align}
 	\text{ma}_2 \leq \text{ma}_1 \label{eq:equilCondition}
 \end{align}
-to determine $t_0$. If on the other hand we start in cold state the energy will in general increase and we have to reverse the inequality in equation \eqref{eq:equilCondition}. After reaching an equilibrium the simulation runs for a further \pyth{M_sampling=5000} steps. It is over these samples we take the mean and the variance.
+to determine $t_0$. If on the other hand we start in cold state the energy will in general increase and we have to reverse the inequality in equation \eqref{eq:equilCondition}. After reaching an equilibrium the simulation runs for a further \pyth{M_sampling} steps. It is over these samples we take the mean and the standard deviation.
 
 \begin{figure}
 \centering
 \input{../Figures/explanationMovingAverages.pdf_tex}
-\caption{Explanation of the moving averages.}
+\caption{A visualisation of the moving averages.}
 \label{fi:movingAverages}
 \end{figure}
 
 \subsubsection{Improving performance}
-While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of Numpy. We resolved this issue with the help of Numba which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unestetic because Numba only supports some Python and Numpy features. In hindsight python seems to have been 
+
+While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of \pyth{numpy}. We resolved this issue with the help of \pyth{numba} which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unaestetic because \pyth{numba} does not support all \pyth{python} and \pyth{numpy} features. In hindsight it would probably been better to have written the iteration in a language other than python.
+In the experiments we also preferred to use the Metropolis algorithm because our implementation of this algorithm ran faster than the heat-bath algorithm.
 
 \section{The experiments}
 
-\subsection{Distribution of energies in equilibrium}
+\subsection{A brief sanity check}
 
-In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
+In order to check that our code was indeed doing what it was supposed to we designed some sanity checks. 
+The energy during the simulation is updated with the calculated value for $\Delta E$.
+Hence we checked with the function \pyth{test_energies} if the energy of the end state of the simulation is the same as the energy calculated during the simulation.
 
-\begin{figure}
-\begin{minipage}[b]{0.4\textwidth}
-\centering
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_0.pgf}
-\vspace*{-0.5cm}
-\caption{For $M=10^5$}
-\label{pl:Maxwell_distribution_0}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.4\textwidth}
-\centering
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_1.pgf}
-\vspace*{-0.5cm}
-\caption{For $M=10^6$}
-\label{pl:Maxwell_distribution_1}
-\end{minipage}
-\begin{minipage}[b]{0.4\textwidth}
-\vspace*{1cm}
-\centering
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_2.pgf}
-\vspace*{-0.5cm}
-\caption{For $M=4\cdot10^6$}
-\label{pl:Maxwell_distribution_2}
-\end{minipage}
-\hfill
-\begin{minipage}[b]{0.4\textwidth}
-\centering
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_3.pgf}
-\vspace*{-0.5cm}
-\caption{For $M=10^7$}
-\label{pl:Maxwell_distribution_3}
-\end{minipage}
-\end{figure}
+We also ran the simulation
+
+
 
 \subsection{State plots}
 
@@ -201,24 +176,142 @@ In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that a
 \end{minipage}
 \end{figure}
 
+
+
+\subsection{Distribution of energies in equilibrium}
+
+In the following numerical experiment we set the grid size to $L=300$, the spin states to $q=10$ and the temperature to $T=10^2$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
+
+\begin{figure}
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_0.pgf}
+\vspace*{-0.5cm}
+\caption{For $M=10^5$}
+\label{pl:Maxwell_distribution_0}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_1.pgf}
+\vspace*{-0.5cm}
+\caption{For $M=10^6$}
+\label{pl:Maxwell_distribution_1}
+\end{minipage}
+\begin{minipage}[b]{0.4\textwidth}
+\vspace*{1cm}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_2.pgf}
+\vspace*{-0.5cm}
+\caption{For $M=4\cdot10^6$}
+\label{pl:Maxwell_distribution_2}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_3.pgf}
+\vspace*{-0.5cm}
+\caption{For $M=10^7$}
+\label{pl:Maxwell_distribution_3}
+\end{minipage}
+\end{figure}
+
 \subsection*{Energies in dependence of the temperature}
+
+In this experiment we plotted the energies in dependence of the temperature for a system with parameters $q=2$ and $q=10$. Our aim was to see the critical temperature $T_c=1/(\ln(1+\sqrt{q})$. For this we wanted to simulate a system of maximal size. Since a sampling size beyond $10^7$ seemed unreasonable and the temperature would be in the region of $T\approx1$ the previous experiment suggested a maximal system size of $L=50$. For larger systems the distribution plot shown in figure \ref{pl:Maxwell_distribution_3} would become degenerate.
+So we run the experiment with a sampling size of \pyth{M_sampling=10E7} and chose the parameter $n$ for the moving averages to be $10^6$. The results of the experiment are shown in plot. The error bars in the plot are the standard deviation of the energies.
 
 \begin{figure}
 \centering
+\begin{minipage}{0.7\textwidth}
+\centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/energies_T_q_L500.pgf}
+\input{../../Plots/energies_T_q_L50.pgf}
+\caption{}
+\label{fi:energies_T_q_L50}
+\end{minipage}
 \end{figure}
+
+We can see from figure \ref{fi:t0_T_q_L50} that it takes the simulation in most cases roughly $0.25\cdot 10^7$ steps to reach an equilibrium. For cold temperatures with $q=10$ this takes however far longer since the system starts in the 'hot' state.
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/t0_T_q_L50.pgf}
+\caption{Time $t_0$ until the equilibrium is reached.}
+\label{fi:t0_T_q_L50}
+\end{minipage}
+\end{figure}
+
+In another series of experiments we would like to see how this plot depends on the system size $L$. The results can be seen in plots for system sizes $L=10$ and $L=30$.
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/energies_T_q_L10.pgf}
+\caption{$L=10$.}
+\label{fi:energies_T_q_L50}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/energies_T_q_L30.pgf}
+\caption{$L=30$.}
+\label{fi:energies_T_q_L50}
+\end{minipage}
+\end{figure}
+
+
+\subsection{Plotting the energy distribution around the critical temperature}
+
+In a final experiment we plotted the distribution of energies around the critical temperature for a grid size of $L=50$ and parameter $q=10$. The number of sampling steps was taken to be $M_sampling=10^8$. In figure \ref{fi:T0697} we see that the distribution of energies splits up at the temperature $T=0.697$. In figure \ref{fi:T0696} the distribution has shifted to the left for the slightly lower temperature $T=0.696$. 
+Correspondingly for the slightly higher temperature $T=0.698$ we see in figure \ref{fi:T0698} that the distribution has shifted to the right.
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.697_4.pgf}
+\caption{Distribution of energies for the temperature $T=0.697$.}
+\label{fi:T0697}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.696_4.pgf}
+\caption{Distribution of energies for the temperature  $T=0.696$.}
+\label{fi:T0696}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.698_4.pgf}
+\caption{Distribution of energies for the temperature  $T=0.698$.}
+\label{fi:T0698}
+\end{minipage}
+\end{figure}
+
+
 
 \newpage
 TODO:
 \begin{itemize}
-\item explain Metropolis algorithm
-\item explain why we are interested in when the energy has plateaued.
-\item explain Heat-bath algorithm
-\item briefly explain implementation
 \item sanity test hot vs. cold start
 \item energy evolution for maxwell-distribution test
-\item play around with phase transitions
 \item phase transition test -> E-T plots and t0 plot
 \item distribution based on energy
 \item spell-check
