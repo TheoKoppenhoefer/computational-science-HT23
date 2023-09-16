@@ -1,3 +1,7 @@
+
+
+####### pgf_plot fix outcommented
+
 import csv
 import tikzplotlib
 import matplotlib.pyplot as plt
@@ -9,9 +13,9 @@ import numba as nb
 from scipy.stats import maxwell
 import time
 from pathlib import Path
-from pgf_plot_fix import tikzplotlib_fix_ncols
+#from pgf_plot_fix import tikzplotlib_fix_ncols    
 
-if False:
+if True:
     pathname = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Data")
     pathname_gen = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1")
     pathname_plots = Path("C:/Users/annar/OneDrive - Lund University/Lund Studium/Mathematikstudium/Third Semester/IntCompSience/computational-science-HT23/Project1/computational-science-HT23/Project1/Plots")
@@ -116,7 +120,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # list of total energies of the system
-        self.E = np.empty(int(1E9)) # allocate a huge amount of virtual memory for the energies
+        self.E = np.empty(int(1E8)) # allocate a huge amount of virtual memory for the energies
         self.i = 0 # the current step
         # calculate the total energy
         self.E[0] = get_E(self.s, J)
@@ -196,7 +200,7 @@ class Potts:
         ax.imshow(self.s, cmap='Set1')
         if filename: 
             tikzplotlib.save(f'{filename}.pgf')
-            ax.figure.savefig(f'{filename}.pdf')
+            ax.figure.savefig(f'{filename}.pdf', bbox_inches='tight')
         if frame_nbr: ax.set_title(f"frame {frame_nbr}")
         if show_plt: plt.show()
 
@@ -263,7 +267,7 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     if show_plt:
         plt.show()
     
-    ax.figure.savefig(filename[0:-3] + 'png')
+    ax.figure.savefig(filename[0:-3] + 'png', bbox_inches='tight')
 
 def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
     # plot a distribution of the energies in E
@@ -279,7 +283,7 @@ def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
         ax.plot(x, maxwell.pdf(x, *params), label='Maxwell distribution')
     if filename:
         tikzplotlib.save(f'{filename}.pgf')
-        ax.figure.savefig(f'{filename}.pdf')
+        ax.figure.savefig(f'{filename}.pdf', bbox_inches='tight')
     ax.set_title('Distribution of the energy in equilibrium')
     ax.legend()
     if show_plt: plt.show()
@@ -294,7 +298,7 @@ def plot_energies_t0(E, t_0=None, show_plt=True, filename=None):
     ax.set_ylabel('Energy $E$ per spin')
     if filename:
         tikzplotlib.save(f'{filename}.pgf')
-        ax.figure.savefig(f'{filename}.pdf')
+        ax.figure.savefig(f'{filename}.pdf', bbox_inches='tight')
     ax.set_title('Energy evolution')
     if show_plt: plt.show()
 
@@ -329,30 +333,39 @@ if __name__ == '__main__':
     
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
-    if False: 
-        M = int(1E5)
+    if True: 
+        plt.style.use(pathname_gen/'rc.mplstyle')
+        M = -int(1E4)
+        M_sampling = int(1E3)
+        T = 1E2
+        q = 2
         methods = [MC_step_fast, Gibbs_step]
         cs = 2
-        
+        i = 0
+        methodsstring = ['Metropolis', 'Heat - bath']
+
         ax = plt.subplot()
         for method in methods:
-            hot = Potts(100, q=2, T=1E2)
-            hot.run_simulation(M, method=method)
-            ax.plot(hot.E[:hot.i], label= str(method) + 'hot')
+            hot = Potts(100, q=2, T=T)
+            hot.run_simulation(M, M_sampling, method=method)
+            ax.plot(hot.E[:hot.i], label= str(methodsstring[i]) + ', hot ', linewidth=2)
             
             
-            cold = Potts(100, q=2, T=1E2, cs = cs)
-            cold.run_simulation(M, method=method)
-            ax.plot(cold.E[:cold.i], label= str(method) + 'cs = '+ str(cs) , marker='.')
+            cold = Potts(100, q=2, T=T, cs = cs)
+            cold.run_simulation(M, M_sampling, method=method)
+            ax.plot(cold.E[:cold.i], label= str(methodsstring[i]) + ', cs ', linewidth=2)
             
+            i+=1
             print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
         
         ax.set_xlabel('Iterations')
         ax.set_ylabel('Energy $E$ per spin')
+        ax.legend()
+        plt.savefig(pathname_plots/f"Hot-cold-starts_{T}_{q}.pdf", bbox_inches='tight') 
         plt.show()
 
     # Check if the energy calculations coincide
-    if False:
+    if True:
         print('Testing energy calculation.')
         model = Potts()
         model.run_simulation()
@@ -360,35 +373,54 @@ if __name__ == '__main__':
             
     # Create a time series of the temperature with Bolzmann
     if True:
-        Ts = [1, 0.696, 0.697, 0.698]
-        M_tots = np.array([1E5, 1E6, 4E6, 1E7, 1E8])
+        M_tots = np.array([1E5, 1E6, 4E6, 1E7])
         Ms = M_tots.copy()
         Ms[1:] -= M_tots[:-1]
 
         methods = [MC_step_fast]
+        n_runs = 4
         for method in methods:
-            for T in Ts:
-                model = Potts(50, q=10, T=T)
-                model.run_simulation(-int(1E7), 0, method=method)
-                t_0 = model.i
-                for i, M in enumerate(Ms):
-                    M_tot = int(M_tots[i])
-                    # run the simulation
-                    pf = time.perf_counter()
-                    model.run_simulation(M, method=method)
-                    print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
-                    model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', t_0=t_0)
-                    # and plot the results
-                    E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', delimiter=',')
-                    plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_T{T}_{i}', show_plt=False)
-                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{int(M_tots[-1])}.csv', delimiter=',')
-                plot_energies_t0(E, filename=pathname_plots/f'Energies_evolution_{method.__name__}_T{T}_M{int(M_tots[-1])}', show_plt=False)
+            model = Potts(300, q=10, T=1E2)
+            model.run_simulation(-5000, 0, method=method)
+            t_0 = model.i
+            for i, M in enumerate(Ms):
+                M_tot = int(M_tots[i])
+                # run the simulation
+                pf = time.perf_counter()
+                model.run_simulation(M, method=method)
+                print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
+                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', t_0=t_0)
+                # and plot the results
+                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', delimiter=',')
+                plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
+            E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{int(M_tots[-1])}.csv', delimiter=',')
+            plot_energies_t0(E, filename=pathname/f'Energies_evolution_{method.__name__}_M{int(M_tots[-1])}')
 
     # TODO: This should work but doesn't
     # plot_energies(pathname/f'Energies_maxwell_distribution_MC_step_fast_M10000000.csv')
 
-
+    # Create distributions without looping through an array but for both algorithms: 
+        # Create a time series of the temperature with Bolzmann
     if False:
+        M = -5000
+        M_sampling = int(1E6)
+        methods = [MC_step_fast, Gibbs_step]
+        #n_runs = 4
+        for method in methods:
+            if False:
+                # run the simulation
+                model = Potts(300, q=10, T=100)
+                filename= pathname/f'Energies_maxwell_distribution'
+                model.run_simulation(M, M_sampling, method=method)
+                model.write_E(filename)
+            if False:
+                # and plot it
+                E = np.loadtxt(filename, delimiter=',')
+                t_0 = int(len(E)-M_sampling)
+                plot_energies_distr(E[t_0:], filename= pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{model.T}_{model.q}_{model.L}', show_plt=True)
+                # plot_energies_t0(E, t_0)
+
+    if True:
         # Show nice animations for high, medium and low temperatures
         Ts = [1E5, 1, 1E-1]
         filenames = [pathname_plots/f'{state}_temp_state' for state in ['High', 'Medium', 'Low']]
@@ -414,10 +446,10 @@ if __name__ == '__main__':
             for T in Ts:
                 print(f'running model for L={L}, T={T}, q={q}')
                 # pf = time.perf_counter()
-                model = Potts(L, T, q)
+                model = Potts(L, T, q, cs = False)
                 # print(f'setup {time.perf_counter()-pf}.')
                 # pf = time.perf_counter()
-                model.run_simulation(M, M_sampling)
+                model.run_simulation(M, M_sampling, method=MC_step_fast)
                 # print(f'running {time.perf_counter()-pf}.')
                 means.loc[q][T], stddev.loc[q][T], t_0s.loc[q][T] = model.get_stats(M_sampling)
         means.to_pickle(pathname/f'means_L{L}.pkl')
@@ -425,6 +457,8 @@ if __name__ == '__main__':
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
     if False:
+
+        plt.style.use(pathname_gen/'rc.mplstyle')
         # plot standard deviation and means
         means = pd.read_pickle(pathname/f'means_L{L}.pkl')
         stddev = pd.read_pickle(pathname/f'stddev_L{L}.pkl')
@@ -435,9 +469,14 @@ if __name__ == '__main__':
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Energy $E$ per spin')
-        tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
-        tikzplotlib.save(pathname_plots/f'energies_T_q_L{L}.pgf')
-        ax.figure.savefig(pathname_plots/f'energies_T_q_L{L}.png')
+        ax.axvline(1.13, color='orange', alpha = 0.75)
+        ax.axvline(0.701, color='cornflowerblue', alpha = 0.75)
+        ax.text(1.15, -1.1, r"$T_c^{q = 2} = 1.13$")
+        ax.text(0.71, -0.75, r"$T_c^{q = 10} = 0.701$")
+        #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
+        #tikzplotlib.save(pathname_plots/f'energies_T_q_L{L}.pgf')
+        ax.figure.savefig(pathname_plots/f'energies_T_q_L{L}.png', bbox_inches='tight')
+        plt.savefig(Path(pathname_plots/'MC')/f"Energy_Temperature_{L}_{M}_{M_sampling}.pdf" , bbox_inches='tight') # for Anna
         plt.show()
 
         # plot t_0s 
@@ -449,7 +488,12 @@ if __name__ == '__main__':
         ax.legend(title='Parameter $q$', labels=qs)
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Time $t_0$')
-        tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
-        tikzplotlib.save(pathname_plots/f't0_T_q_L{L}.pgf')
-        ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png')
+        ax.axvline(1.13, color='cornflowerblue', alpha = 0.75)
+        ax.axvline(0.701, color='orange', alpha = 0.75)
+        ax.text(1.15, 3E5, r"$T_c^{q = 2} = 1.13$")    #y - high possibly has to be addapted
+        ax.text(0.71, 3E5,  r"$T_c^{q = 10} = 0.701$")
+        #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
+        #tikzplotlib.save(pathname_plots/f't0_T_q_L{L}.pgf')
+        #ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png',  bbox_inches='tight')
+        plt.savefig(Path(pathname_plots/'MC')/f"Time_Temperature_{L}_{M}_{M_sampling}_{q}_.pdf", bbox_inches='tight') # for ANna
         plt.show()
