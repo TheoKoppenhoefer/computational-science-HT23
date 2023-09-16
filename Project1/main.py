@@ -476,7 +476,7 @@ if __name__ == '__main__':
         #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
         #tikzplotlib.save(pathname_plots/f'energies_T_q_L{L}.pgf')
         ax.figure.savefig(pathname_plots/f'energies_T_q_L{L}.png', bbox_inches='tight')
-        plt.savefig(Path(pathname_plots/'MC')/f"Energy_Temperature_{L}_{M}_{M_sampling}.pdf" , bbox_inches='tight') # for Anna
+        #plt.savefig(Path(pathname_plots/'MC')/f"Energy_Temperature_{L}_{M}_{M_sampling}.pdf" , bbox_inches='tight') # for Anna
         plt.show()
 
         # plot t_0s 
@@ -494,6 +494,6 @@ if __name__ == '__main__':
         ax.text(0.71, 3E5,  r"$T_c^{q = 10} = 0.701$")
         #tikzplotlib_fix_ncols(plt.gcf()) # workaround for bug in tikzplotlib
         #tikzplotlib.save(pathname_plots/f't0_T_q_L{L}.pgf')
-        #ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png',  bbox_inches='tight')
-        plt.savefig(Path(pathname_plots/'MC')/f"Time_Temperature_{L}_{M}_{M_sampling}_{q}_.pdf", bbox_inches='tight') # for ANna
+        ax.figure.savefig(pathname_plots/f't0_T_q_L{L}.png',  bbox_inches='tight')
+        #plt.savefig(Path(pathname_plots/'MC')/f"Time_Temperature_{L}_{M}_{M_sampling}_{q}_.pdf", bbox_inches='tight') # for ANna
         plt.show()
