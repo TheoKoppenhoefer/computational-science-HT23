@@ -45,10 +45,12 @@
 \section{Introduction}
 
 The following report is part of the first project of the Modelling in Computational Science course at Lund University, HT2023.
-In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model.
-The report and the Python implementation can be found online under \cite{Repository}
+In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model. In the first part of this report we will describe the Potts model, the Monte-Carlo algorithms and some technicalities regarding the implementation. In the second part we will describe several experiments we did and the results they yielded.
+The report and the Python implementation can be found online under \cite{Repository}.
 
-\section{The Potts model}
+\section{The setup}
+
+\subsection{The Potts model}
 
 The following is a brief introduction to the potts model from statistical mechanics.
 A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping
@@ -61,7 +63,7 @@ One assigns this state an energy via
 \end{align*}
 where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. As given in the problem setting we assume periodic boundary conditions on the grid.
 
-\section{The algorithms}
+\subsection{The Monte-Carlo algorithms}
 
 To model the statistical behaviour of the model we use Monte-Carlo simulations. 
 The first method we implemented was the Metropolis algorithm.
@@ -111,7 +113,7 @@ Analogously to the Metropolis algorithm the steps of the heat-bath algorithm are
 \end{algorithm}
 \end{figure}
 
-\section{Some implementation details}
+\subsection{Some implementation details}
 
 \subsubsection{Determining when the Energy has plateaued}
 
@@ -140,14 +142,32 @@ In the experiments we also preferred to use the Metropolis algorithm because our
 
 In order to check that our code was indeed doing what it was supposed to we designed some sanity checks. 
 The energy during the simulation is updated with the calculated value for $\Delta E$.
-Hence we checked with the function \pyth{test_energies} if the energy of the end state of the simulation is the same as the energy calculated during the simulation.
+Hence we checked with the function \pyth{test_energies} if the energy of the end state of the simulation is the same as the energy calculated during the simulation. Indeed, the last time I checked this was the case.
 
-We also ran the simulation
+We also ran the simulation for both the Metropolis and the heat-bath algorithms and for a hot start and a cold start and compared the results. In the hot start the state $s$ is randomly initialised and in the cold start $s$ is initialised to have a constant value. We set the parameter $q=2$ and the gridsize to $L=100$. In a first experiment the temperature was set to $T=100$. The result for the energies is plotted in figure \ref{pl:HC_test_warm}. One can see that for both initialisations and for both algorithms the energy converges to a fixed value. Since the temperature is relatively `hot' the hot start reaches equilibrium faster. In a second experiment the temperature was set to $T=0.1$ and the result can be seen in figure \ref{pl:HC_test_cold}. Here too the energies are starting to converge to a fixed lower value but for the hot starts this process takes far longer. As expected the energy the system tends to is far lower than for the test with higher temperatures. 
 
 
+\begin{figure}
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\input{../../Plots/Hot-cold-starts_100.0_2.pgf}
+\vspace*{-0.5cm}
+\caption{Energy evolution for the temperature $T=100$}
+\label{pl:HC_test_warm}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
+\centering
+\input{../../Plots/Hot-cold-starts_0.1_2.pgf}
+\vspace*{-0.5cm}
+\caption{Energy evolution for the temperature $T=0.1$}
+\label{pl:HC_test_cold}
+\end{minipage}
+\end{figure}
 
 \subsection{State plots}
 
+We also plotted the state of the system for a system size $L=20$ with parameter $q=5$ after $M=10^4$ steps for different temperatures.
 In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that as the temperature increases the state of the system becomes more chaotic. For low temperatures there are larger patches of the same state which corresponds to a lower energy configuration. In the implementation one can see an animated version of the evolution of the system state.
 
 \begin{figure}
@@ -310,10 +330,9 @@ Correspondingly for the slightly higher temperature $T=0.698$ we see in figure \
 \newpage
 TODO:
 \begin{itemize}
-\item sanity test hot vs. cold start
-\item energy evolution for maxwell-distribution test
 \item phase transition test -> E-T plots and t0 plot
 \item distribution based on energy
+\item proof-read
 \item spell-check
 \end{itemize}
 
