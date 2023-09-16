@@ -329,7 +329,7 @@ if __name__ == '__main__':
     
     #hot start vs cold start    
     # TODO: fix the plot (energies inverted order?)
-    if True: 
+    if False: 
         M = int(1E5)
         methods = [MC_step_fast, Gibbs_step]
         cs = 2
