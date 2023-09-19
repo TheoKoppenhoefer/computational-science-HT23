@@ -8,7 +8,7 @@
 \title{ Report for the Course Modelling in Computational Science, HT23 \\[1ex]
 	  \large Project 1: The Potts model}
 %\subtitle{}
-\author{Theo Koppenhöfer}
+\author{Theo Koppenhöfer \\[1ex] Group 4 (Anna Rockstroh, Carmen Lopez)}
 \date{Lund \\[1ex] \today}
 
 \addbibresource{bibliography.bib}
@@ -24,7 +24,7 @@
         axis x line=bottom,
         scale only axis,
 %    	max space between ticks=25pt,
-        width=\textwidth,
+        width=0.7\textwidth,
         scaled ticks=true,
         axis line style={thick,-,>=latex, shorten >=-.4cm},
     		x tick label style={
@@ -45,17 +45,17 @@
 \section{Introduction}
 
 The following report is part of the first project of the Modelling in Computational Science course at Lund University, HT2023.
-In the first project we implemented a Monte-Carlo simulation of the $q$-state Potts model. In the first part of this report we will describe the Potts model, the Monte-Carlo algorithms and some technicalities regarding the implementation. In the second part we will describe several experiments and the results they yielded.
+In this project we implemented a Monte-Carlo simulation of the $q$-state Potts model. In the first part of this report we will describe the Potts model, the Monte-Carlo algorithms and some technicalities regarding the implementation. In the second part we will describe several experiments and the results they yielded. The main source for the report were \cite{AndersIrsb} and  \cite{AndersIrsb2}.
 The report and the Python implementation can be found online under \cite{Repository}.
 
 \section{The setup}
 
 \subsection{The Potts model}
 
-The following is a brief introduction to the potts model from statistical mechanics which describes the spin of a particle on a grid.
-A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping
+The following is a brief introduction to the Potts model from statistical mechanics which describes the spin of a particle on a grid.
+A state of the $q$-state Potts model of a $L\times L$ flat grid is given by a mapping from the grid points to the spin states
 \begin{align*}
-	s\colon \brk[c]{1,\dots,L}\times\brk[c]{1,\dots,L}\to\brk[c]{1,\dots,L}\,.
+	s\colon \brk[c]{1,\dots,L}\times\brk[c]{1,\dots,L}\to\brk[c]{1,\dots,q}\,.
 \end{align*}
 One assigns this state an energy via
 \begin{align*}
@@ -67,15 +67,15 @@ where $\delta$ denotes the Kronecker-delta and $J=1$ is the coupling strength. A
 \end{align}
 Here $p$ is the density corresponding to the Boltzmann distribution, i.e.\
 \begin{align*}
-	p(s) = \exp\brk*{-E(s)/T}/Z
+	p(s) = \frac{\exp\brk*{-E(s)/T}}{Z}
 \end{align*}
-with $Z$ a normalisation constant. To evaluate the integral in \eqref{eq:integralAim} we will use random sampling of $E$ with the samples distributed according to the Boltzmann distribution. In other words, we will use a Monte-Carlo simulation.
+with $Z$ a normalisation constant and $T$ the temperature. To evaluate the integral in \eqref{eq:integralAim} we will use random sampling of $s$ with the samples distributed according to the Boltzmann distribution. In other words, we will use a Monte-Carlo simulation.
 
 \subsection{The Monte-Carlo algorithms}
 
-To model the statistical behaviour of the model we use Monte-Carlo simulations. 
+To determine the statistical behaviour of the Potts model we use Monte-Carlo simulations. 
 The first method we implemented was the Metropolis algorithm.
-The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}. A single iteration of this algorithm is performed by the function \pyth{MC_step_fast} in the implementation. In the implementation we used the pseudo-random number generators from \pyth{numpy.random} for the proposed spins, spin states and for determining if the choice should be accepted.
+The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}. A single iteration of this algorithm is performed by the function \pyth{MC_step_fast} in the implementation. In the implementation we used the pseudo-random number generators from \pyth{numpy.random} for the proposed spins, spin states and for determining if the choice should be accepted. For more information on the Metropolis Monte-Carlo simulation and the Potts model see \cite{AndersIrsb}.
 
 \begin{figure}
 \centering
@@ -98,7 +98,7 @@ The steps for the Metropolis algorithm are given in figure \ref{alg:Metropolis}.
 \end{algorithm}
 \end{figure}
 
-Analogously to the Metropolis algorithm the steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. it differs from the Metropolis algorithm only after a point on the grid was randomly chosen. In the implementation a single iteration is performed by the function \pyth{Gibbs_step}. In the implementation for this algorithm we also used the \pyth{numpy.random} functions.
+Analogously to the Metropolis algorithm the steps of the heat-bath algorithm are given in figure \ref{alg:heat-bath}. Its step differs from the Metropolis algorithm only after a point on the grid was randomly chosen. In the implementation a single iteration is performed by the function \pyth{Gibbs_step}. In the implementation for this algorithm we also used the \pyth{numpy.random} functions. For more details on the heat-bath algorithm see e.g.\  \cite{AndersIrsb2}.
 
 \begin{figure}
 \centering
@@ -141,7 +141,7 @@ to determine $t_0$. If on the other hand we start in cold state the energy will 
 
 \subsubsection{Improving performance}
 
-While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of \pyth{numpy}. We resolved this issue with the help of \pyth{numba} which precompiled functions and thus increased performance substantially. The downside is that the code becomes quite unaestetic because \pyth{numba} does not support all \pyth{python} and \pyth{numpy} features. In hindsight it would probably been better to have written the iteration in a language other than python.
+While simulating we run into performance issues due to the fact that Python is in general rather slow even with heavy use of \pyth{numpy}. We resolved this issue with the help of \pyth{numba} which precompiles functions and thus increased performance substantially. The downside is that the code becomes quite unaesthetic because \pyth{numba} does not support all \pyth{python} and \pyth{numpy} features. In hindsight it would probably been better to have written the iteration in a language other than python.
 In the experiments we also preferred to use the Metropolis algorithm because our implementation of this algorithm ran faster than the heat-bath algorithm.
 
 \section{The experiments}
@@ -152,22 +152,27 @@ In order to check that our code was indeed doing what it was supposed to we desi
 The energy during the simulation is updated with the calculated value for $\Delta E$.
 Hence we checked with the function \pyth{test_energies} if the energy of the end state of the simulation is the same as the energy calculated during the simulation. Indeed, the last time I checked this was the case.
 
-We also ran the simulation for both the Metropolis and the heat-bath algorithms and for a hot start and a cold start and compared the results. In the hot start the state $s$ is randomly initialised and in the cold start $s$ is initialised to have a constant value. We set the parameter $q=2$ and the gridsize to $L=100$. In a first experiment the temperature was set to $T=100$. The result for the energies is plotted in figure \ref{pl:HC_test_warm}. One can see that for both initialisations and for both algorithms the energy converges to a fixed value. Since the temperature is relatively `hot' the hot start reaches equilibrium faster. In a second experiment the temperature was set to $T=0.1$ and the result can be seen in figure \ref{pl:HC_test_cold}. Here too the energies are starting to converge to a fixed lower value but for the hot starts this process takes far longer. As expected the energy the system tends to is far lower than for the test with higher temperatures. 
+We also ran the simulation for both the Metropolis and the heat-bath algorithms and for a hot start and a cold start and compared the results. In the hot start the state $s$ is randomly initialised and in the cold start $s$ is initialised to have a constant value. We set the parameter $q=2$ and the grid size to $L=100$. In a first experiment the temperature was set to $T=100$. The result for the energies per spin is plotted in figure \ref{pl:HC_test_warm}. One can see that for both initialisations and for both algorithms the energy converges to a fixed value close to $-1$. Since the temperature is relatively `hot' the hot start reaches equilibrium faster than the cold start. The energy per spin value of almost $-1$ means that two neighbouring points will almost surely differ in their spin as would be expected for hot temperatures.
+In a second experiment the temperature was set to $T=0.1$ and the result can be seen in figure \ref{pl:HC_test_cold}. Here too the energies per spin start to converge to a fixed lower value close to $-2$ but for the hot starts this process takes far longer. The energy per spin value of almost $-2$ means that two given neighbouring points will almost surely agree in their spins. This should be expected for cold temperatures.
 
 
 \begin{figure}
-\begin{minipage}[b]{0.4\textwidth}
 \centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
 \input{../../Plots/Hot-cold-starts_100.0_2.pgf}
-\vspace*{-0.5cm}
 \caption{Energy evolution for the temperature $T=100$}
 \label{pl:HC_test_warm}
 \end{minipage}
-\hfill
-\begin{minipage}[b]{0.4\textwidth}
+\end{figure}
+
+\begin{figure}
 \centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
 \input{../../Plots/Hot-cold-starts_0.1_2.pgf}
-\vspace*{-0.5cm}
 \caption{Energy evolution for the temperature $T=0.1$}
 \label{pl:HC_test_cold}
 \end{minipage}
@@ -175,19 +180,19 @@ We also ran the simulation for both the Metropolis and the heat-bath algorithms 
 
 \subsection{State plots}
 
-We also plotted the state of the system for a system size $L=20$ with parameter $q=5$ after $M=10^4$ steps for different temperatures.
-In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that as the temperature increases the state of the system becomes more chaotic. For low temperatures there are larger patches of the same state which corresponds to a lower energy configuration. In the implementation one can see an animated version of the evolution of the system state.
+We also plotted the state of the system for a system size $L=20$ with parameter $q=5$ after $M=10^4$ iterations for the temperatures $T=0.1$, $T=1$ and $T=100$. Figure  \ref{fi:Low_temp_state} shows the state for the low temperature, figure  \ref{fi:Medium_temp_state} for the medium temperature and figure \ref{fi:High_temp_state} for the high temperature.
+We can see that as the temperature increases the state of the system gradually becomes more chaotic. For low temperatures there are larger patches of the same state. This corresponds to a lower energy configuration. In the implementation one can also see an animated version of the evolution of the system state for the different temperatures.
 
 \begin{figure}
-\begin{minipage}{0.25\textwidth}
+\begin{minipage}{0.3\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/High_temp_state_10000.pgf}
+\input{../../Plots/Low_temp_state_10000.pgf}
 \caption{State for temperature $T=0.1$.}
-\label{fi:High_temp_state}
+\label{fi:Low_temp_state}
 \end{minipage}
 \hfill
-\begin{minipage}{0.25\textwidth}
+\begin{minipage}{0.3\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
 \input{../../Plots/Medium_temp_state_10000.pgf}
@@ -195,12 +200,12 @@ In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that a
 \label{fi:Medium_temp_state}
 \end{minipage}
 \hfill
-\begin{minipage}{0.25\textwidth}
+\begin{minipage}{0.3\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/Low_temp_state_10000.pgf}
+\input{../../Plots/High_temp_state_10000.pgf}
 \caption{State for temperature $T=100$.}
-\label{fi:Low_temp_state}
+\label{fi:High_temp_state}
 \end{minipage}
 \end{figure}
 
@@ -208,37 +213,34 @@ In figures \ref{fi:Low_temp_state} to \ref{fi:High_temp_state} we can see that a
 
 \subsection{Distribution of energies in equilibrium}
 
-In the following numerical experiment we set the grid size to $L=50$, the spin states to $q=10$ and the temperature to $T=1$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ of the simulation and plotted the distribution of energies. The results can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches the Maxwell-Boltzmann distribution.
+In the following numerical experiment we set the grid size to $L=50$, the number of spin states to $q=10$ and the temperature to $T=1$. We then run the simulation until the system reached equilibrium. After that we varied the number of steps $M$ to be $10^5$, $10^6$, $4\cdot 10^6$ and $10^7$.
+The distribution of the energies can be seen in figures \ref{pl:Maxwell_distribution_0} to \ref{pl:Maxwell_distribution_3}. One sees that as $M$ increases the distribution approaches a distribution which looks similar to the Maxwell-Boltzmann distribution with a peak at an energy per spin of $E\approx-0.49$.
 
 \begin{figure}
-\begin{minipage}[b]{0.4\textwidth}
+\begin{minipage}[b]{0.45\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_0.pgf}
-\vspace*{-0.5cm}
 \caption{For $M=10^5$}
 \label{pl:Maxwell_distribution_0}
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.4\textwidth}
+\begin{minipage}[b]{0.45\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_1.pgf}
-\vspace*{-0.5cm}
 \caption{For $M=10^6$}
 \label{pl:Maxwell_distribution_1}
 \end{minipage}
-\begin{minipage}[b]{0.4\textwidth}
+\begin{minipage}[b]{0.45\textwidth}
 \vspace*{1cm}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_2.pgf}
-\vspace*{-0.5cm}
 \caption{For $M=4\cdot10^6$}
 \label{pl:Maxwell_distribution_2}
 \end{minipage}
 \hfill
-\begin{minipage}[b]{0.4\textwidth}
+\begin{minipage}[b]{0.45\textwidth}
 \centering
 \input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T1_3.pgf}
-\vspace*{-0.5cm}
 \caption{For $M=10^7$}
 \label{pl:Maxwell_distribution_3}
 \end{minipage}
@@ -246,8 +248,12 @@ In the following numerical experiment we set the grid size to $L=50$, the spin s
 
 \subsection*{Energies in dependence of the temperature}
 
-In this experiment we plotted the energies in dependence of the temperature for a system with parameters $q=2$ and $q=10$. Our aim was to see the critical temperature $T_c=1/(\ln(1+\sqrt{q})$. For this we wanted to simulate a system of maximal size. Since a sampling size beyond $10^7$ seemed unreasonable and the temperature would be in the region of $T\approx1$ the previous experiment suggested a maximal system size of $L=50$. For larger systems the distribution plot shown in figure \ref{pl:Maxwell_distribution_3} would become degenerate.
-So we run the experiment with a sampling size of \pyth{M_sampling=10E7} and chose the parameter $n$ for the moving averages to be $10^6$. The results of the experiment are shown in plot. The error bars in the plot are the standard deviation of the energies.
+In the main experiment we plotted the energies in dependence of the temperature for a system with parameters $q=2$ and $q=10$. The aim was to observe how the energy depended on the temperature around the Curie temperature 
+\begin{align*}
+	T_c = \frac{1}{\ln\brk*{1+\sqrt{q}}}\,.
+\end{align*}
+For $q=2$ we have a Curie temperature of $T_c\approx 1.13$ and for $q=10$ a Curie temperature of $T_c\approx0.701$. Thus we decided to plot the energies for $40$ different temperatures in the range $0.1\leq T\leq 2$. We also wanted to simulate a system of maximal size. Since a sampling size beyond $10^7$ was computationally unreasonable and the temperature would be in the region of $T\approx1$ the previous experiment suggested a maximal system size of $L=50$. For larger systems the distribution plot shown in figure \ref{pl:Maxwell_distribution_3} would become degenerate.
+So we run the experiment with a sampling size of \pyth{M_sampling=10E7} and chose the parameter $n$ for the moving averages to be $10^6$. The results of the experiment are shown in figure \ref{fi:energies_T_q_L50}. The error bars in the plot are the standard deviation of the energies per spin. One can see that for the $q=2$ case the energy gradually increases as the temperature increases around $T_c$. For $q=10$ on the other hand the energy dramatically increases around $T_c$. We also observe that the standard deviation becomes large at the simulation with the value of $T$ closest to $T_c$. This is consistent with the fact that the phase transition for $q=10$ on infinite lattice size is discontinuous at $T_c$.
 
 \begin{figure}
 \centering
@@ -260,7 +266,8 @@ So we run the experiment with a sampling size of \pyth{M_sampling=10E7} and chos
 \end{minipage}
 \end{figure}
 
-We can see from figure \ref{fi:t0_T_q_L50} that it takes the simulation in most cases roughly $0.25\cdot 10^7$ steps to reach an equilibrium. For cold temperatures with $q=10$ this takes however far longer since the system starts in the 'hot' state.
+In figure \ref{fi:t0_T_q_L50} one sees the number of iterations $t_0$ it took the simulation to reach an equilibrium.
+For this it takes the simulation in most cases roughly $0.25\cdot 10^7$ steps. However, for cold temperatures with $q=10$ this takes far longer since the system starts in the `hot' state similar to the state previously depicted in figure \ref{fi:High_temp_state} and must first reach the `cold' state.
 
 \begin{figure}
 \centering
@@ -273,7 +280,8 @@ We can see from figure \ref{fi:t0_T_q_L50} that it takes the simulation in most 
 \end{minipage}
 \end{figure}
 
-In another series of experiments we would like to see how this plot depends on the system size $L$. The results can be seen in plots for system sizes $L=10$ and $L=30$. One can notice that as the state size $L$ becomes decreases the standard deviation for the energies per spin increases. It is also noticable that the curve for the parameter $q=10$ smoothens out.
+In another series of experiments we wanted to see how the energy dependence of the temperature depends on the system size $L$. The results are shown in figures \ref{fi:energies_T_q_L5} and \ref{fi:energies_T_q_L10} for system sizes $L=5$ and $L=10$ respectively. Both look quite similar to the case $L=50$. One notices that as the state size $L$ decreases the standard deviation for the energies per spin increases. This is probably due to the fact that in a smaller system a change of some spins and thus a change of energy is has a greater impact in relation to the total energy of the system.
+It is also noticeable that the curve for the parameter $q=10$ smooths out as the system size decreases.
 
 \begin{figure}
 \centering
@@ -298,59 +306,86 @@ In another series of experiments we would like to see how this plot depends on t
 \end{figure}
 
 
-\subsection{Plotting the energy distribution around the critical temperature}
+\subsection{Plotting the energy distribution around the Curie temperature}
 
-In a final experiment we plotted the distribution of energies around the critical temperature for a grid size of $L=50$ and parameter $q=10$. The number of sampling steps was taken to be $M_sampling=10^8$. In figure \ref{fi:T0697} we see that the distribution of energies splits up at the temperature $T=0.697$. In figure \ref{fi:T0696} the distribution has shifted to the left for the slightly lower temperature $T=0.696$. 
-Correspondingly for the slightly higher temperature $T=0.698$ we see in figure \ref{fi:T0698} that the distribution has shifted to the right.
+In a final experiment we plotted the distribution of energies around the Curie temperature for a grid size of $L=50$ and parameter $q=10$. The number of sampling steps was chosen as \pyth{M_sampling=10E7}. In figure \ref{fi:T0697} we see that the distribution of energies splits up at the temperature $T=0.697$. In figures \ref{fi:T0696} and \ref{fi:T0698} the distribution lies around the energy $-1$ for the slightly different temperatures $T=0.696$ and $T=0.698$. For the slightly lower temperature $T=0.695$ in \ref{fi:T0695} the distribution hovers around the significantly lower energy value of $-1.7$.
+This is characteristic behaviour for the instability of the system around the Curie temperature. 
 
-\begin{figure}
-\centering
-\begin{minipage}{0.7\textwidth}
-\centering
-\graphicspath{{../../Plots/}}
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.697_4.pgf}
-\caption{Distribution of energies for the temperature $T=0.697$.}
-\label{fi:T0697}
-\end{minipage}
-\end{figure}
+%\begin{figure}
+%\centering
+%\begin{minipage}{0.7\textwidth}
+%\centering
+%\graphicspath{{../../Plots/}}
+%\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.697_3.pgf}
+%\caption{Distribution of energies for the temperature $T=0.697$.}
+%\label{fi:T0697}
+%\end{minipage}
+%\end{figure}
+
+%\begin{figure}
+%\centering
+%\begin{minipage}{0.7\textwidth}
+%\centering
+%\graphicspath{{../../Plots/}}
+%\input{../../Plots/Energies_evolution_MC_step_fast_T0.697_M100000000.pgf}
+%\caption{Energy evolution of energies for the temperature $T=0.698$.}
+%\label{fi:T0697}
+%\end{minipage}
+%\end{figure}
 
 \begin{figure}
 \centering
 \begin{minipage}[b]{0.45\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.696_4.pgf}
-\caption{Distribution of energies for the temperature  $T=0.696$.}
-\label{fi:T0696}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.695_3.pgf}
+\caption{Distribution of energies for the temperature  $T=0.695$.}
+\label{fi:T0695}
 \end{minipage}
 \hfill
 \begin{minipage}[b]{0.45\textwidth}
 \centering
 \graphicspath{{../../Plots/}}
-\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.698_4.pgf}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.696_3.pgf}
+\caption{Distribution of energies for the temperature  $T=0.696$.}
+\label{fi:T0696}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.697_3.pgf}
+\caption{Distribution of energies for the temperature  $T=0.697$.}
+\label{fi:T0697}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.45\textwidth}
+\centering
+\graphicspath{{../../Plots/}}
+\input{../../Plots/Energies_maxwell_distribution_MC_step_fast_T0.698_3.pgf}
 \caption{Distribution of energies for the temperature  $T=0.698$.}
 \label{fi:T0698}
 \end{minipage}
 \end{figure}
 
+\section{Conclusion}
 
 
-\newpage
-TODO:
-\begin{itemize}
-\item distribution based on energy
-\item explain why it approaches the maxwell-boltzmann distribution
-\item proof-read
-\item spell-check
-\end{itemize}
-
+We have seen that one can use the Metropolis Monte-Carlo and the heat-bath algorithm to effectively simulate the Potts model. Both algorithms yield consistent results for different initial values and 
+the distribution of energy approximates a distribution similar to the Maxwell-Boltzmann distribution. 
+We also saw that the energy for the parameter $q=10$ jumped around the Curie temperature. This jump became more pronounced for increased system size. We also saw this jump when plotting the distribution of the energy for a temperature around the Curie temperature. In the case of $q=2$ the energy on the other hand increased gradually with increasing temperature.
+We have seen in the project that the number of steps a simulation is able to run for is critical for the ability to produce meaningful results. Here we discovered the efficiency of the code played a crucial role.
 
 \newpage
 \section*{Bibliography}
-%\nocite{*}
+\nocite{*}
 %Main source
 %\printbibliography[heading=none, keyword={main}]
 %\noindent Other sources
 \printbibliography[heading=none, keyword={secondary}]
+
 
 \end{document}

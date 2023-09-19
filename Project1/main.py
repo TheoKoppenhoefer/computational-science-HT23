@@ -120,7 +120,7 @@ class Potts:
             self.s = np.random.randint(1, q+1, (L,L))
         
         # list of total energies of the system
-        self.E = np.empty(int(1E8)) # allocate a huge amount of virtual memory for the energies
+        self.E = np.empty(int(1E9)) # allocate a huge amount of virtual memory for the energies
         self.i = 0 # the current step
         # calculate the total energy
         self.E[0] = get_E(self.s, J)
@@ -269,11 +269,11 @@ def plot_energies(filename, show_plt=True): #dont understand the ax thing in plo
     
     ax.figure.savefig(filename[0:-3] + 'png', bbox_inches='tight')
 
-def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False):
+def plot_energies_distr(E, show_plt=True, filename=None, fit_maxwell=False, bins=150):
     # plot a distribution of the energies in E
     plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
-    ax.hist(E, bins=150, density=True, label='Data')
+    ax.hist(E, bins=bins, density=True, label='Data')
     ax.set_xlabel('Energy $E$ per spin')
     ax.set_ylabel('Share of states')
     if fit_maxwell:
@@ -292,7 +292,7 @@ def plot_energies_t0(E, t_0=None, show_plt=True, filename=None):
     # plot the energies with the time t_0
     plt.style.use(pathname_gen/'rc.mplstyle')
     fig, ax = plt.subplots()
-    ax.plot(E)
+    ax.plot(range(0, len(E), len(E)//1000), E[::(len(E)//1000)])
     if t_0: ax.axvline(t_0, label='$t_0$')
     ax.set_xlabel('Iteration $i$')
     ax.set_ylabel('Energy $E$ per spin')
@@ -351,12 +351,12 @@ if __name__ == '__main__':
             for i, method in enumerate(methods):
                 hot = Potts(100, q=2, T=T)
                 hot.run_simulation(M, M_sampling, method=method)
-                ax.plot(hot.E[:hot.i:(hot.i//1000)]/N, label= str(methodsstring[i]) + ', hot ', linewidth=2)
+                ax.plot(range(0, hot.i, hot.i//1000), hot.E[:hot.i:(hot.i//1000)]/N, label= str(methodsstring[i]) + ', hot ', linewidth=2)
                 
                 
                 cold = Potts(100, q=2, T=T, cs = cs)
                 cold.run_simulation(M, M_sampling, method=method)
-                ax.plot(cold.E[:cold.i:(cold.i//1000)]/N, label= str(methodsstring[i]) + ', cs ', linewidth=2)
+                ax.plot(range(0, hot.i, hot.i//1000), cold.E[:cold.i:(cold.i//1000)]/N, label= str(methodsstring[i]) + ', cs ', linewidth=2)
                 
                 print(str(method), 'hot start final total energy: ', hot.e, 'cold start ', cs, ': ', cold.e) 
             
@@ -376,31 +376,31 @@ if __name__ == '__main__':
         model.test_energies()
             
     # Create a time series of the temperature with Bolzmann
-    if False:
-        Ts = [1, 0.696, 0.697, 0.698]
+    if True:
+        Ts = [1, 0.695, 0.696, 0.697, 0.698]
+        bins = [50, 150, 150, 150, 150]
         M_tots = np.array([1E5, 1E6, 4E6, 1E7, 1E8])
         Ms = M_tots.copy()
         Ms[1:] -= M_tots[:-1]
 
         methods = [MC_step_fast]
-        n_runs = 4
         for method in methods:
-            model = Potts(300, q=10, T=1E2)
-            model.run_simulation(-5000, 0, method=method)
-            t_0 = model.i
-            for i, M in enumerate(Ms):
-                M_tot = int(M_tots[i])
-                # run the simulation
-                pf = time.perf_counter()
-                model.run_simulation(M, method=method)
-                print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
-                model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', t_0=t_0)
-                # and plot the results
-                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{M_tot}.csv', delimiter=',')
-                plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_{i}', show_plt=True)
-            E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_M{int(M_tots[-1])}.csv', delimiter=',')
-            plot_energies_t0(E, filename=pathname/f'Energies_evolution_{method.__name__}_M{int(M_tots[-1])}')
-
+            for j, T in enumerate(Ts):
+                model = Potts(50, q=10, T=T)
+                model.run_simulation(-int(1E7), 0, method=method)
+                t_0 = model.i
+                for i, M in enumerate(Ms):
+                    M_tot = int(M_tots[i])
+                    # run the simulation
+                    pf = time.perf_counter()
+                    model.run_simulation(M, method=method)
+                    print(f'The simulation with method {method.__name__} took {time.perf_counter()-pf} seconds.')
+                    model.write_E(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', t_0=t_0)
+                    # and plot the results
+                    E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{M_tot}.csv', delimiter=',')
+                    plot_energies_distr(E, filename=pathname_plots/f'Energies_maxwell_distribution_{method.__name__}_T{T}_{i}', show_plt=False, bins=bins[j])
+                E = np.loadtxt(pathname/f'Energies_maxwell_distribution_{method.__name__}_T{T}_M{int(M_tots[-1])}.csv', delimiter=',')
+                plot_energies_t0(E, filename=pathname_plots/f'Energies_evolution_{method.__name__}_T{T}_M{int(M_tots[-1])}', show_plt=False)
     # TODO: This should work but doesn't
     # plot_energies(pathname/f'Energies_maxwell_distribution_MC_step_fast_M10000000.csv')
 
@@ -445,7 +445,7 @@ if __name__ == '__main__':
     stddev = pd.DataFrame(columns=Ts, index=qs)
     t_0s = pd.DataFrame(columns=Ts, index=qs) # time it takes to reach equilibrium
 
-    if True:
+    if False:
         # Run the simulation for various T and q
         for q in qs:
             for T in Ts:
@@ -461,7 +461,7 @@ if __name__ == '__main__':
         stddev.to_pickle(pathname/f'stddev_L{L}.pkl')
         t_0s.to_pickle(pathname/f't0s_L{L}.pkl')
     
-    if True:
+    if False:
 
         plt.style.use(pathname_gen/'rc.mplstyle')
         # plot standard deviation and means
@@ -471,7 +471,7 @@ if __name__ == '__main__':
         for q in qs:
             # plot the values in dependence of the temperature
             ax.errorbar(Ts, means.loc[q], yerr=stddev.loc[q], label=f'{q}')
-        ax.legend(title='Parameter $q$', labels=qs)
+        ax.legend(title='Parameter $q$', labels=[f'q={q}' for q in qs])
         ax.set_xlabel('Temperature $T$')
         ax.set_ylabel('Energy $E$ per spin')
         ax.axvline(1.13, color='cornflowerblue', alpha = 0.75)

@@ -69,7 +69,7 @@ table {%
 1.95128205128205 2335051
 2 3012301
 };
-\addlegendentry{2}
+\addlegendentry{$q=2$}
 \addplot [salmon]
 table {%
 0.1 15324519
@@ -113,17 +113,8 @@ table {%
 1.95128205128205 2005701
 2 2800493
 };
-\addlegendentry{10}
-\addplot [orange, opacity=0.75, forget plot]
-table {%
-1.13 1210481
-1.13 18579921
-};
-\addplot [cornflowerblue, opacity=0.75, forget plot]
-table {%
-0.701 1210481
-0.701 18579921
-};
+\addlegendentry{$q=10$}
+
 \end{axis}
 
 \end{tikzpicture}

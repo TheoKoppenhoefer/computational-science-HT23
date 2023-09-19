@@ -404,7 +404,7 @@ table {%
 1.95128205128205 -1.28657370584
 2 -1.2788804088
 };
-\addlegendentry{10}
+\addlegendentry{$q=2$}
 \addplot [salmon]
 table {%
 0.1 -1.8468729788
@@ -448,19 +448,19 @@ table {%
 1.95128205128205 -0.3140814826
 2 -0.31095392628
 };
-\addlegendentry{10}
+\addlegendentry{$q=10$}
 \draw (axis cs:1.15,-1.1) node[
-  scale=0.5,
+  scale=1,
   anchor=base west,
   text=black,
   rotate=0.0
-]{$T_c^{q = 2} = 1.13$};
+]{$T_c^{q = 2} \!\approx 1.13$};
 \draw (axis cs:0.71,-1.5) node[
-  scale=0.5,
+  scale=1,
   anchor=base west,
   text=black,
   rotate=0.0
-]{$T_c^{q = 10} = 0.701$};
+]{$T_c^{q = 10}\!\approx 0.701$};
 \end{axis}
 
 \end{tikzpicture}
