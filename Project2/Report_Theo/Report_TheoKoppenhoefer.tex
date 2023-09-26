@@ -1,0 +1,95 @@
+
+
+\input{../Latex_Templates/Preamble_Report}
+
+%%%%% TITLE PAGE
+
+%\subject{, VT23}
+\title{ Report for the Course Modelling in Computational Science, HT23 \\[1ex]
+	  \large Project 2: Cell reprogramming}
+%\subtitle{}
+\author{Theo Koppenhöfer \\[1ex] (with Jimmy Gunnarson)}
+\date{Lund \\[1ex] \today}
+
+\addbibresource{bibliography.bib}
+
+\usepackage{pythonhighlight}
+\usepackage{pgfplots}
+\graphicspath{{../Plots/}}
+
+\pgfplotsset{
+	compat=newest,
+    every axis/.append style={
+        axis y line=left,
+        axis x line=bottom,
+        scale only axis,
+%    	max space between ticks=25pt,
+        width=0.7\textwidth,
+        scaled ticks=true,
+        axis line style={thick,-,>=latex, shorten >=-.4cm},
+    		x tick label style={
+		    /pgf/number format/precision=3
+		}
+    },
+    every axis plot/.append style={thick},
+    tick style={black, thick}
+}
+
+%%%%% The content starts here %%%%%%%%%%%%%
+
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\section{The setup}
+
+\section{The experiments}
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/Oct4.pgf}
+\caption{Oct4}
+\label{pl:Oct4}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/Nanog.pgf}
+\caption{Nanog}
+\label{pl:Nanog}
+\end{minipage}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{minipage}{0.7\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/Tet1.pgf}
+\caption{Tet1}
+\label{pl:Tet1}
+\end{minipage}
+\end{figure}
+
+\section{Conclusion}
+
+\newpage
+\section*{Bibliography}
+\nocite{*}
+%Main source
+%\printbibliography[heading=none, keyword={main}]
+%\noindent Other sources
+\printbibliography[heading=none, keyword={secondary}]
+
+
+\end{document}

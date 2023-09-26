@@ -3,6 +3,7 @@ import scipy as sc
 import numpy as np
 import matplotlib.pyplot as pl
 import tikzplotlib
+from pgf_plot_fix import tikzplotlib_fix_ncols
 
 # the following parameters were taken from Table 1
 
@@ -70,10 +71,16 @@ if __name__ == '__main__':
                    [params_Mef, params_N, params_Mef],
                    [params_Mef, params_T, params_default]]
     for j, param_list in enumerate(param_lists):
+        fig, ax = pl.subplots()
         t, y = run_experiment_series(param_list)
         for i, label in enumerate(NOT_labels):
             pl.plot(t, y[i,:], label=label)
         pl.legend()
+        tikzplotlib_fix_ncols(fig)
+        ax.axvline(1.13, color='orange', alpha = 0.75)
+        ax.set_xlabel('Temperature $T$')
+        ax.set_ylabel('Time $t_0$')
+        pl.show()
         tikzplotlib.save(f'Plots/{Experiment_labels[j]}.pgf')
     
     # pl.show()
