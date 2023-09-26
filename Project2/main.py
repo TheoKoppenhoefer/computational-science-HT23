@@ -2,10 +2,11 @@
 import scipy as sc
 import numpy as np
 import matplotlib.pyplot as pl
+import tikzplotlib
 
 # the following parameters were taken from Table 1
 
-default_params = {
+params_Mef = {
     'N_over':0,
     'O_over':0,
     'T_over':0.05,
@@ -19,16 +20,19 @@ default_params = {
     'n':2
 }
 
-params_N = default_params.copy()
+params_default = params_Mef.copy()
+params_default['LIF'] = 0.06
+
+params_N = params_default.copy()
 params_N['N_over'] = 0.3
 
-params_O = default_params.copy()
+params_O = params_default.copy()
 params_O['O_over'] = 0.3
 
-params_T = default_params.copy()
+params_T = params_default.copy()
 params_T['T_over'] = 0.3
 
-def rhs(y, params=default_params):
+def rhs(y, params=params_Mef):
     # y is of the form (N, O, T)
     # params id of the form of default_params
     N = np.take(y,0)
@@ -58,15 +62,18 @@ def run_experiment_series(param_list):
 
 if __name__ == '__main__':
     NOT_labels = ['Nanog', 'Oct4', 'Tet1']
+    Experiment_labels = ['Oct4', 'Nanog', 'Tet1']
 
     # run simulation for over expression of O
     # experiment series
-    param_lists = [[default_params, params_O, default_params],
-                   [default_params, params_N, default_params],
-                   [default_params, params_T, default_params]]
-    for param_list in param_lists:
+    param_lists = [[params_Mef, params_O, params_default],
+                   [params_Mef, params_N, params_Mef],
+                   [params_Mef, params_T, params_default]]
+    for j, param_list in enumerate(param_lists):
         t, y = run_experiment_series(param_list)
         for i, label in enumerate(NOT_labels):
             pl.plot(t, y[i,:], label=label)
         pl.legend()
-        pl.show()
+        tikzplotlib.save(f'Plots/{Experiment_labels[j]}.pgf')
+    
+    # pl.show()
