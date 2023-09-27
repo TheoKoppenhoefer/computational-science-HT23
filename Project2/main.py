@@ -5,6 +5,12 @@ import matplotlib.pyplot as pl
 import tikzplotlib
 from pgf_plot_fix import tikzplotlib_fix_ncols
 
+import matplotlib.ticker as ticker
+
+# TODO:
+# - implement backgrounds on graphs
+# - implement the other graphs
+
 # the following parameters were taken from Table 1
 
 params_Mef = {
@@ -21,17 +27,36 @@ params_Mef = {
     'n':2
 }
 
+# initialise experiments
 params_default = params_Mef.copy()
 params_default['LIF'] = 0.06
+over_expressions = [0.1, 0.13, 0.2, 0.3]
+expressions = ['N','O','T']
 
-params_N = params_default.copy()
-params_N['N_over'] = 0.3
+Experiment_labels = [f'{expr}_{over_expression}' 
+                        for expr in expressions for over_expression in over_expressions]
+LIF_expression = {f'{exp_label}':False for exp_label in Experiment_labels}
 
-params_O = params_default.copy()
-params_O['O_over'] = 0.3
+params = {exp_label:params_Mef.copy() 
+          for exp_label in Experiment_labels}
 
-params_T = params_default.copy()
-params_T['T_over'] = 0.3
+# initialise values for experiments
+for expr in expressions:
+    for over_expression in over_expressions:
+        exp_label = f'{expr}_{over_expression}'
+        if expr != 'N' and over_expression >= 0.13:
+            LIF_expression[exp_label] = True
+            params[f'{expr}_{over_expression}']['LIF'] = 0.6
+        params[exp_label][f'{expr}_over'] = over_expression
+
+# experiment series
+param_lists = {f'{exp_label}':[params_Mef, params[exp_label], params_default if LIF_expression[exp_label] else params_Mef]
+                for exp_label in Experiment_labels}
+
+# To make the plots look nice
+NOT_labels = {'N':'Nanog', 'O':'Oct4', 'T':'Tet1'}
+colors = {'N':'blue', 'O':'green', 'T':'orange'}
+
 
 def rhs(y, params=params_Mef):
     # y is of the form (N, O, T)
@@ -47,6 +72,7 @@ def rhs(y, params=params_Mef):
                   params['O_over']+params['LIF']+params['p_O']*NT_KNT2/(1+NT_KNT2)*O_KO/(1+O_KO)-O,
                   params['T_over']+params['p_T']*NT_KNT2/(1+NT_KNT2)*O_KO/(1+O_KO)-T])
 
+running_time = 30
 
 def run_experiment_series(param_list):
     t = np.empty(0)
@@ -54,7 +80,7 @@ def run_experiment_series(param_list):
     for param in param_list:
         y0 = np.zeros(3) if not y.shape[1] else y[:,-1]
         t0 = 0 if not len(t) else t[-1]
-        soln = sc.integrate.solve_ivp(lambda t,y: rhs(y, param), (t0,t0+30), y0, vectorised=True, max_step=0.1)
+        soln = sc.integrate.solve_ivp(lambda t,y: rhs(y, param), (t0,t0+running_time), y0, vectorised=True, max_step=0.1)
         t = np.append(t, soln.t)
         y = np.append(y, soln.y, axis=1)
     return t, y
@@ -62,25 +88,30 @@ def run_experiment_series(param_list):
 
 
 if __name__ == '__main__':
-    NOT_labels = ['Nanog', 'Oct4', 'Tet1']
-    Experiment_labels = ['Oct4', 'Nanog', 'Tet1']
 
-    # run simulation for over expression of O
-    # experiment series
-    param_lists = [[params_Mef, params_O, params_default],
-                   [params_Mef, params_N, params_Mef],
-                   [params_Mef, params_T, params_default]]
-    for j, param_list in enumerate(param_lists):
+    for j, exp_label in enumerate(Experiment_labels):
         fig, ax = pl.subplots()
-        t, y = run_experiment_series(param_list)
-        for i, label in enumerate(NOT_labels):
-            pl.plot(t, y[i,:], label=label)
+        ax.set_xlim((0,3*running_time))
+        ax.set_ylim(0,1)
+        ax.set_yticks([0,1])
+        ax.set_xticks([i*running_time for i in range(4)], labels=['' for i in range(4)])
+        t, y = run_experiment_series(param_lists[exp_label])
+        for i, expr in enumerate(expressions):
+            pl.plot(t, y[i,:], label=NOT_labels[f'{expr}'], color=colors[f'{expr}'])
+
         pl.legend()
         tikzplotlib_fix_ncols(fig)
-        ax.axvline(1.13, color='orange', alpha = 0.75)
-        ax.set_xlabel('Temperature $T$')
-        ax.set_ylabel('Time $t_0$')
-        pl.show()
-        tikzplotlib.save(f'Plots/{Experiment_labels[j]}.pgf')
+
+        ax.set_xlabel('Time')
+        ax.set_ylabel('Expression level')
+        ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'${exp_label[0]}_{{over}}=0$', f'${exp_label[0]}_{{over}}={exp_label[2:]}$', f'${exp_label[0]}_{{over}}=0$'], minor=True)
+        # add background for experiment
+        ax.axvspan(running_time, 2*running_time, alpha=0.2, color=colors[exp_label[0]], label=f'{NOT_labels[exp_label[0]]} overexpressed')
+        if LIF_expression[exp_label]:
+            ax.axvspan(running_time, 3*running_time, alpha=0.2, color='gray', label='LIF active')
+            ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'{exp_label[0]}=0, LIF=0', f'{exp_label[0]}={exp_label[2:]}, LIF=0.06', f'{exp_label[0]}=0, LIF=0.06'], minor=True)
+        
+
+        tikzplotlib.save(f'Plots/{exp_label}.pgf')
     
-    # pl.show()
+    pl.show()
