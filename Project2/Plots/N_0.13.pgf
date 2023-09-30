@@ -1,5 +1,5 @@
 % This file was created with tikzplotlib v0.10.1.
-\begin{tikzpicture}
+\begin{tikzpicture}[baseline]
 
 \definecolor{darkgray176}{RGB}{176,176,176}
 \definecolor{green}{RGB}{0,128,0}
@@ -7,23 +7,29 @@
 \definecolor{orange}{RGB}{255,165,0}
 
 \begin{axis}[
+ ytick={0,0.2,0.4,0.6,0.8,1},
+ x tick label style = {rotate=70},
+ y post scale=3, 
+ transpose legend,
 legend cell align={left},
-legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=lightgray204},
-minor xtick={15,45,75},
-minor xticklabels={
-  \(\displaystyle N_{over}=0\),
-  \(\displaystyle N_{over}=0.13\),
-  \(\displaystyle N_{over}=0\)
-},
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=lightgray204, anchor=south west,
+    legend columns=4,
+    /tikz/every even column/.append style={column sep=1.0cm},, at={(axis cs:5,1.1)}},
 tick align=outside,
 tick pos=left,
 x grid style={darkgray176},
 xlabel={Time},
-xmin=-4.5, xmax=94.5,
+xmin=0, xmax=90,
 xtick style={color=black},
+xtick={15,45,75},
+xticklabels={
+  \(\displaystyle N_\text{over}\!=0\),
+  \(\displaystyle N_\text{over}\!=0.13\),
+  \(\displaystyle N_\text{over}\!=0\)
+},
 y grid style={darkgray176},
 ylabel={Expression level},
-ymin=0, ymax=1,
+ymin=0, ymax=1.05,
 ytick style={color=black}
 ]
 \path [draw=blue, fill=blue, opacity=0.2]
@@ -32,7 +38,18 @@ ytick style={color=black}
 --(axis cs:60,1)
 --(axis cs:60,0)
 --cycle;
-\addplot [semithick, blue]
+\addlegendimage{area legend, draw=blue, fill=blue, opacity=0.2}
+\addlegendentry{Nanog overexpressed}
+\addlegendimage{area legend, draw=green, fill=blue, opacity=0.2}
+\addlegendentry{Oct4 overexpressed}
+
+\addlegendimage{area legend, draw=orange, fill=blue, opacity=0.2}
+\addlegendentry{Tet1 overexpressed}
+
+\addlegendimage{area legend, draw=gray, fill=blue, opacity=0.2}
+\addlegendentry{LIF active}
+
+\addplot [thick, blue]
 table {%
 0 0
 0.0001 0
@@ -945,7 +962,7 @@ table {%
 90 1.21649110588862e-14
 };
 \addlegendentry{Nanog}
-\addplot [semithick, green]
+\addplot [thick, green]
 table {%
 0 0
 0.0001 0
@@ -1858,7 +1875,7 @@ table {%
 90 0
 };
 \addlegendentry{Oct4}
-\addplot [semithick, orange]
+\addplot [thick, orange]
 table {%
 0 0
 0.0001 4.99975000833312e-06

@@ -1,4 +1,6 @@
 
+% Indicate to rubber that there are external files
+% rubber: shell_escape
 
 \input{../Latex_Templates/Preamble_Report}
 
@@ -48,38 +50,133 @@
 
 \section{The experiments}
 
+%\begin{figure}
+%\begin{minipage}[t]{0.3\textwidth}
+%\centering
+%\graphicspath{{../Plots/}}
+%\input{../Plots/generic_legend.pgf}
+%\caption{Varying Oct4.}
+%\label{pl:Oct4}
+%\end{minipage}
+%\end{figure}
+
+
 \begin{figure}
+\begin{minipage}{\textwidth}
 \centering
-\begin{minipage}{0.7\textwidth}
+\begin{minipage}[t]{0.3\textwidth}
 \centering
 \graphicspath{{../Plots/}}
-\input{../Plots/Oct4.pgf}
-\caption{Oct4}
-\label{pl:Oct4}
+\input{../Plots/N_0.3.pgf}
+\caption{Varying Nanog.}
+\label{pl:N_0.3}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/O_0.3.pgf}
+\caption{Varying Oct4.}
+\label{pl:O_0.3}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/T_0.3.pgf}
+\caption{Varying Tet1.}
+\label{pl:T_0.3}
+\end{minipage}
 \end{minipage}
 \end{figure}
 
 \begin{figure}
+\begin{minipage}{\textwidth}
 \centering
-\begin{minipage}{0.7\textwidth}
+\begin{minipage}[t]{0.3\textwidth}
 \centering
 \graphicspath{{../Plots/}}
-\input{../Plots/Nanog.pgf}
-\caption{Nanog}
-\label{pl:Nanog}
+\input{../Plots/N_0.2.pgf}
+\caption{Varying Nanog.}
+\label{pl:N_0.2}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/O_0.2.pgf}
+\caption{Varying Oct4.}
+\label{pl:O_0.2}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/T_0.2.pgf}
+\caption{Varying Tet1.}
+\label{pl:T_0.2}
+\end{minipage}
 \end{minipage}
 \end{figure}
 
 \begin{figure}
+\begin{minipage}{\textwidth}
 \centering
-\begin{minipage}{0.7\textwidth}
+\begin{minipage}[t]{0.3\textwidth}
 \centering
 \graphicspath{{../Plots/}}
-\input{../Plots/Tet1.pgf}
-\caption{Tet1}
-\label{pl:Tet1}
+\input{../Plots/N_0.13.pgf}
+\caption{Varying Nanog.}
+\label{pl:N_0.13}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/O_0.13.pgf}
+\caption{Varying Oct4.}
+\label{pl:O_0.13}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/T_0.13.pgf}
+\caption{Varying Tet1.}
+\label{pl:T_0.13}
+\end{minipage}
 \end{minipage}
 \end{figure}
+
+\begin{figure}
+\begin{minipage}{\textwidth}
+\centering
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/N_0.1.pgf}
+\caption{Varying Nanog.}
+\label{pl:N_0.1}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/O_0.1.pgf}
+\caption{Varying Oct4.}
+\label{pl:O_0.1}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/T_0.1.pgf}
+\caption{Varying Tet1.}
+\label{pl:T_0.1}
+\end{minipage}
+\end{minipage}
+\end{figure}
+
 
 \section{Conclusion}
 

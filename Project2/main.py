@@ -8,8 +8,9 @@ from pgf_plot_fix import tikzplotlib_fix_ncols
 import matplotlib.ticker as ticker
 
 # TODO:
-# - implement backgrounds on graphs
+# - add background to graphs to legend
 # - implement the other graphs
+# - fix issue with >= 1
 
 # the following parameters were taken from Table 1
 
@@ -46,7 +47,7 @@ for expr in expressions:
         exp_label = f'{expr}_{over_expression}'
         if expr != 'N' and over_expression >= 0.13:
             LIF_expression[exp_label] = True
-            params[f'{expr}_{over_expression}']['LIF'] = 0.6
+            params[f'{expr}_{over_expression}']['LIF'] = 0.06
         params[exp_label][f'{expr}_over'] = over_expression
 
 # experiment series
@@ -92,26 +93,30 @@ if __name__ == '__main__':
     for j, exp_label in enumerate(Experiment_labels):
         fig, ax = pl.subplots()
         ax.set_xlim((0,3*running_time))
-        ax.set_ylim(0,1)
+        ax.set_ylim(0,1.05)
+        # ax.axes.set_aspect(3)
         ax.set_yticks([0,1])
-        ax.set_xticks([i*running_time for i in range(4)], labels=['' for i in range(4)])
+        ax.set_xticks([i*running_time for i in range(4)], labels=['' for i in range(4)], minor=True)
+        ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'${exp_label[0]}_\\text{{over}}\!=0$', f'${exp_label[0]}_\\text{{over}}\!={exp_label[2:]}$', f'${exp_label[0]}_\\text{{over}}\!=0$'])
         t, y = run_experiment_series(param_lists[exp_label])
         for i, expr in enumerate(expressions):
-            pl.plot(t, y[i,:], label=NOT_labels[f'{expr}'], color=colors[f'{expr}'])
+            pl.plot(t[::(1000//len(t))], y[i,::(1000//len(t))], label=NOT_labels[f'{expr}'], color=colors[f'{expr}'], linewidth=2)
 
-        pl.legend()
-        tikzplotlib_fix_ncols(fig)
 
         ax.set_xlabel('Time')
         ax.set_ylabel('Expression level')
-        ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'${exp_label[0]}_{{over}}=0$', f'${exp_label[0]}_{{over}}={exp_label[2:]}$', f'${exp_label[0]}_{{over}}=0$'], minor=True)
         # add background for experiment
         ax.axvspan(running_time, 2*running_time, alpha=0.2, color=colors[exp_label[0]], label=f'{NOT_labels[exp_label[0]]} overexpressed')
         if LIF_expression[exp_label]:
-            ax.axvspan(running_time, 3*running_time, alpha=0.2, color='gray', label='LIF active')
-            ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'{exp_label[0]}=0, LIF=0', f'{exp_label[0]}={exp_label[2:]}, LIF=0.06', f'{exp_label[0]}=0, LIF=0.06'], minor=True)
-        
+            ax.axvspan(running_time, 3*running_time, alpha=0.2, color='gray', label='LIF active')  
+            ax.set_xticks([(i+0.5)*running_time for i in range(3)], labels=[f'${exp_label[0]}_\\text{{over}}\!=0$, $\\text{{LIF}}=0$', f'${exp_label[0]}_\\text{{over}}\!={exp_label[2:]}$, $\\text{{LIF}}=0.06$', f'${exp_label[0]}_\\text{{over}}\!=0$, $\\text{{LIF}}=0.06$'])      
+
+        # Add a legend
+        pl.legend()
+        tikzplotlib_fix_ncols(fig)
 
         tikzplotlib.save(f'Plots/{exp_label}.pgf')
+        
+
     
-    pl.show()
+    #pl.show()
