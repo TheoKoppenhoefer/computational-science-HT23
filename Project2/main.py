@@ -14,7 +14,7 @@ import matplotlib.ticker as ticker
 
 # the following parameters were taken from Table 1
 
-params_Mef = {
+params_MEF = {
     'N_over':0,
     'O_over':0,
     'T_over':0.05,
@@ -29,8 +29,8 @@ params_Mef = {
 }
 
 # initialise experiments
-params_default = params_Mef.copy()
-params_default['LIF'] = 0.06
+params_LIF = params_MEF.copy()
+params_LIF['LIF'] = 0.06
 over_expressions = [0.1, 0.13, 0.2, 0.3]
 expressions = ['N','O','T']
 
@@ -40,7 +40,7 @@ Experiment_labels = [f'{expr}_{over_expression}'
 Experiment_labels += ['NO_0.1']
 LIF_expression = {f'{exp_label}':False for exp_label in Experiment_labels}
 
-params = {exp_label:params_Mef.copy() 
+params = {exp_label:params_MEF.copy() 
           for exp_label in Experiment_labels}
 
 # initialise values for experiments
@@ -58,7 +58,7 @@ params['NO_0.1']['N_over'] = 0.3
 LIF_expression['NO_0.1'] = True
 
 # experiment series
-param_lists = {f'{exp_label}':[params_Mef, params[exp_label], params_default if LIF_expression[exp_label] else params_Mef]
+param_lists = {f'{exp_label}':[params_MEF, params[exp_label], params_LIF if LIF_expression[exp_label] else params_MEF]
                 for exp_label in Experiment_labels}
 
 # To make the plots look nice
@@ -67,9 +67,14 @@ colors = {'N':'blue', 'O':'green', 'T':'orange'}
 
 # Add the LIF withdrawal experiment (plot c)
 Experiment_labels += ['LIF_withdrawal']
-param_lists['LIF_withdrawal'] = [params_default, params_Mef]
+param_lists['LIF_withdrawal'] = [params_LIF, params_MEF]
 
-def rhs(y, params=params_Mef):
+Experiment_labels += ['LIF_withdrawal_0']
+params_zero = params_MEF.copy()
+params_zero['T_over'] = 0
+param_lists['LIF_withdrawal_0'] = [params_LIF, params_zero]
+
+def rhs(y, params=params_MEF):
     # y is of the form (N, O, T)
     # params id of the form of default_params
     N = np.take(y,0)
@@ -98,6 +103,7 @@ def run_experiment_series(param_list, y = np.zeros(shape=(3,1))):
 
 
 if __name__ == '__main__':
+    show_plots=False
 
     for j, exp_label in enumerate(Experiment_labels):
         run_length = len(param_lists[exp_label])
@@ -109,24 +115,30 @@ if __name__ == '__main__':
         ax.set_xticks([i*running_time for i in range(run_length+1)], labels=['' for i in range(run_length+1)], minor=True)
         # set x tick labels
         if exp_label == 'LIF_withdrawal':
-            xlabels = ['$LIF=0.06$','$LIF=0$']
+            xlabels = ['$\\text{{LIF}}=0.06$','$\\text{{LIF}}=0$']
+        elif exp_label == 'LIF_withdrawal_0':
+            xlabels = ['$\\text{{LIF}}=0.06$, $T_\\text{{over}}\!=0.05$','$\\text{{LIF}}=0$, $T_\\text{{over}}\!=0$']
+        elif exp_label == 'NO_0.1':
+            xlabels = ['$N_\\text{{over}}\!=0$, $O_\\text{{over}}\!=0$, $\\text{{LIF}}=0$', '$N_\\text{{over}}\!=0.3$, $O_\\text{{over}}\!=0.1$, ${{LIF}}=0.06$', '$N_\\text{{over}}\!=0$, $O_\\text{{over}}\!=0$, $\\text{{LIF}}=0.06$']
         else:
             xlabels = [f'${exp_label[0]}_\\text{{over}}\!=0$, $\\text{{LIF}}=0$', f'${exp_label[0]}_\\text{{over}}\!={exp_label[2:]}$, $\\text{{LIF}}=0.06$', f'${exp_label[0]}_\\text{{over}}\!=0$, $\\text{{LIF}}=0.06$'] \
                             if LIF_expression[exp_label] else [f'${exp_label[0]}_\\text{{over}}\!=0$', f'${exp_label[0]}_\\text{{over}}\!={exp_label[2:]}$', f'${exp_label[0]}_\\text{{over}}\!=0$']
-
+        
+        if show_plots:
+            xlabels = [label.replace(r'\text','') for label in xlabels]
 
         ax.set_xticks([(i+0.5)*running_time for i in range(run_length)], labels=xlabels)
-        y0 = 0.7*np.ones((3,1)) if exp_label == 'LIF_withdrawal' else np.zeros((3,1))
+        y0 = 0.7*np.ones((3,1)) if exp_label[:14] == 'LIF_withdrawal' else np.zeros((3,1))
         t, y = run_experiment_series(param_lists[exp_label], y0)
 
         for i, expr in enumerate(expressions):
-            pl.plot(t[::(1000//len(t)+1)], y[i,::(1000//len(t)+1)], label=NOT_labels[f'{expr}'], color=colors[f'{expr}'], linewidth=2)
+            ax.plot(t[::(1000//len(t)+1)], y[i,::(1000//len(t)+1)], label=NOT_labels[f'{expr}'], color=colors[f'{expr}'], linewidth=2)
 
 
         ax.set_xlabel('Time')
         ax.set_ylabel('Expression level')
         # add background for experiment
-        if exp_label == 'LIF_withdrawal':
+        if exp_label[:14] == 'LIF_withdrawal':
             ax.axvspan(0, running_time, alpha=0.2, color='gray', label='LIF active')  
         else:
             ax.axvspan(running_time, 2*running_time, alpha=0.2, color=colors[exp_label[0]], label=f'{NOT_labels[exp_label[0]]} overexpressed')
@@ -138,7 +150,7 @@ if __name__ == '__main__':
         tikzplotlib_fix_ncols(fig)
 
         tikzplotlib.save(f'Plots/{exp_label}.pgf')
-        
 
+    if show_plots: pl.show()
+        
     
-    #pl.show()
