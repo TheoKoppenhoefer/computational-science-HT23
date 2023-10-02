@@ -12,7 +12,10 @@ all: $(ALLTEX) $(ALLCACHE) ## Build full thesis (LaTeX + figures)
 	biber $(MAIN:.tex=)			 # bibliography
 	$(LATEX) $(MAIN)				# incremental run
 	evince $(MAIN:.tex=).pdf               # show result
-    
+   
+../Figures/FlowchartTranscriptionFactors.tex : ../Figures/FlowchartTranscriptionFactors.dia
+	dia --export=FlowchartTranscriptionFactors.tex FlowchartTranscriptionFactors.dia
+	bash ../Figures/modify_diagrams.sh
 
 clean:  ## Clean LaTeX and output figure files
 	rubber --clean $(MAIN)
