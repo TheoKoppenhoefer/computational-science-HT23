@@ -41,9 +41,10 @@
 \newcommand{\Nover}{N_\text{over}}
 \newcommand{\Oover}{O_\text{over}}
 \newcommand{\Tover}{T_\text{over}}
-\newcommand{\Ntotal}{N_\text{total}}
-\newcommand{\Ototal}{O_\text{total}}
-\newcommand{\Ttotal}{T_\text{total}}
+\newcommand{\Ntotal}{\text{N}}
+\newcommand{\Ototal}{\text{O}}
+\newcommand{\Ttotal}{\text{T}}
+\newcommand{\NT}{\text{N-T}}
 \newcommand{\LIF}{\text{LIF}}
 
 
@@ -55,15 +56,31 @@
 \maketitle
 
 \section{Introduction}
+The following report is part of the second project of the course Modelling in Computational Science, BERN01, taken at Lund university.
+In this project we model the interplay of three transcription factors which are relevant for mouse embryonic stem cells to reach induced
+pluripotency.
+For this we will discuss the setup of the model in the first part of the report and then reproduce the results from~\cite{Olariu2016} in the second part.
+The code to the project was implemented in \pyth{python}.
+The project report and code can be found online under~\cite{repository}.
 
 \section{The setup}
+According to~\cite{Olariu2016} the transcription factors Nanog and Oct4 are crucial in establishing pluripotency of a cell.
+In our simplified model the dependence of the transcription factors Nanog, Oct4 and Tet1 is given by figure~\ref{fi:flowchartTranscription}.
 \begin{figure}
   \centering
   \input{../Figures/FlowchartTranscriptionFactors.tex}
   \caption{A flowchart showing the dependence of the transcription factors.}
   \label{fi:flowchartTranscription}
 \end{figure}
-The default parameters are given by
+Here Nanog and Tet1 form a complex Nanog-Tet1 together and the \& symbol denotes that two transcription factors are required for activation.
+Using the Michaelis-Menten model one obtains the ordinary differential equation
+\begin{align}
+  \vect{\Ntotal  \\[1ex] \Ototal  \\[1ex] \Ttotal }' &= \vect{\Nover+\LIF+p_N\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}-\Ntotal  \\[1ex]
+         \Oover+\LIF+p_O\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n},\Ototal)-\Ototal  \\[1ex]
+         \Tover+p_T\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ttotal }\,.\label{eq:basic_system}
+\end{align}
+Here $\Ntotal$, $\Ototal$, $\Ttotal$ and $\NT $ denote the concentration in the cell of Nanog, Oct4, Tet1 and Nanog-Tet1 respectively\footnote{Here we deviate from the notation in~\cite{Olariu2016} by ommitting the concentration brackets and subscript.}.
+The other parameters are given for mouse embryonic fibroplast steady state (MEF) by table~\ref{tb:params}.
 \begin{table}[h!]
   \centering
    \begin{tabular}{l  l} 
@@ -82,26 +99,36 @@ The default parameters are given by
    Dissociation constant $K_O$ & 0.3 \\
    Dissociation constant $K_{NT}$ & 0.2 \\
    \end{tabular}
-   \caption{Default parameter choices}
+   \caption{Default parameter choices. Taken from~\cite{Olariu2016}}
    \label{tb:params}
 \end{table}
-We implemented the model as given in~\cite{Olariu2016}. One can obtain the differential equations
-\begin{align*}
-  \partial_t\brk[s]{\Ntotal} &= \Nover+\LIF+p_N\cdot\frac{\frac{\brk[s]{\Ototal}}{K_O}}{1+\frac{\brk[s]{\Ototal}}{K_O}}-\brk[s]{\Ntotal} \\
-  \partial_t\brk[s]{\Ototal} &= \Oover+\LIF+p_O\cdot\frac{\frac{\brk[s]{\Ototal}}{K_O}}{1+\frac{\brk[s]{\Ototal}}{K_O}}\cdot A(\brk[s]{NT},\Ototal)-\brk[s]{\Ototal} \\
-  \partial_t\brk[s]{\Ttotal} &= \Tover+p_T\cdot\frac{\frac{\brk[s]{\Ototal}}{K_O}}{1+\frac{\brk[s]{\Ototal}}{K_O}}\cdot A(\brk[s]{NT},\Ttotal)-\brk[s]{\Ttotal}
-\end{align*}
-where
-\begin{align*}
-  A(\brk[s]{NT},\Ototal) = A(\brk[s]{\Ttotal}) = \frac{\brk*{\frac{\brk[s]{NT}}{K_{NT}}^n}}{1+\brk*{\frac{\brk[s]{NT}}{K_{NT}}^n}}\,.
-\end{align*}
+We note that parameter $\LIF$ models the effect of the leukemia inhibiting factor in promoting 
+the differentiation of the cells. The parameters $\Nover$, $\Oover$ and $\Tover$ describe how much
+Nanog, Oct4 and Tet1 are overexpressed in the cell.
+We also note that the system~\ref{eq:basic_system} has two equilibrium configurations.
+One where $\Ntotal$, $\Ototal$ and $\Ttotal$ are all $>0.5$ one where all are small. We will inspect
+this behaviour more closely in our simulation experiments.
 
 \section{The experiments}
+
+In the following part of the report we will discuss our reproduction of some figures given in~\cite{Olariu2016}.
+To solve the system~\ref{eq:basic_system} we used the built-in solver from \pyth{scipy} with default parameters since this yielded satisfactory results.
 
 \subsection{Variying Nanog, Oct4 and Tet1 seperately}
 
 Our first experiment series was taken from~\cite{Olariu2016}.
-In the 
+The results can be seen in figure~\cite{fi:NOT_0.3}. This figure consists of 3 subplots 
+for each of which the $x$-axis represents time and the $y$-axis represents the concentration of the 
+corresponding parameter $\Oover$, $\Nover$ and $\Tover$. Each simulation in the 3 subplots consists of 
+3 parts in which the parameters given in table~\ref{tb:params} are varied. The parameters which deviate are
+given on the $x$-axis. In the first part of each simulation the cell is allowed to reach the MEF steady state. 
+In the second part one of the transcription factors is overexpressed.
+In the third part the simulation returns to the MEF state or the MEF state with $\LIF$ set to $0.06$
+depending on whether the cell succeeded in reaching a pluripotent state.
+In the first subplot one sees that setting $\Nover$ alone to $0.3$ is insufficient to reach pluripotency.
+In the second and third subplots one sees that setting $\Oover$ and $\Tover$ respectively to $0.3$ is sufficient
+to reach pluripotency. Thus in these cases $\LIF$ is activated.
+All of this agrees with what we expect from the diagram and laboratory experiments (see~\cite{Olariu2016} for more).
 
 \begin{figure}
 \centering
@@ -126,6 +153,16 @@ In the
 \label{pl:NOT_0.3}
 \end{figure}
 
+The second experiment is analogous to the first with the difference that we now set
+$\Nover$, $\Oover$ and $\Tover$ to $0.2$ in the respective experiments. Figure~\ref{fi:NOT_0.2} 
+shows the results. Once again we see that
+for Oct4 and Tet1 the state reaches pluripotency whilst it fails to reach pluripotency for Nanog.
+If we compare figure~\ref{fi:NOT_0.2} with figure~\ref{fi:NOT_0.3} we see that the concentrations
+during the overexpression phase of the experiment are lower than for the previous experiment.
+This is to be expected since there are no repressors in this particular model.
+Also as expected the steady states in the first and third part of each simulation is identical to
+the previous experiment.
+
 \begin{figure}
 \centering
 \begin{minipage}[t]{0.3\textwidth}
@@ -148,6 +185,9 @@ In the
 \caption{Overexpression of $0.2$.}
 \label{pl:NOT_0.2}
 \end{figure}
+
+Figure~\ref{fi:NOT_0.13} gives the results with an overexpression of $0.13$ and yields the same result as the previous
+experiment. Once again the concentration levels are reduced for the overexpression phase.
 
 \begin{figure}
 \centering
@@ -172,6 +212,10 @@ In the
 \label{pl:NOT_0.13}
 \end{figure}
 
+In a final experiment of this series the overexpression was set to $0.1$. Figure~\ref{fi:NOT_0.1} shows 
+the results. We see here that in all cases the cells fail to reach pluripotency as the 
+concentrations of Nanog, Oct4 and Tet1 fail to meet the threshold.
+
 \begin{figure}
 \centering
 \begin{minipage}[t]{0.3\textwidth}
@@ -195,7 +239,15 @@ In the
 \label{pl:NOT_0.1}
 \end{figure}
 
+We note that our figures differ a little from~\cite{Olariu2016} in that we let the simulation run
+for longer to reach the steady state. This explains why our charts are not exactly clones.
 
+\subsection{Inducing Pluripotency with Nanog and Oct4}
+
+Our next experiment deals with the fact that according to~\cite{Olariu2016} Nanog and low levels
+of Oct4 are sufficient to reach pluripotency even though the same levels of Nanog and of Oct4 seperately
+are insufficient. For this we set $\Oover$ to $0.1$ and $\Nover$ to $0.4$. The results are shown in
+figure~\ref{fi:NO}.
 
 \begin{figure}
 \centering
@@ -214,6 +266,10 @@ In the
 \label{pl:NO}
 \end{figure}
 
+\subsection{Withdrawing LIF}
+
+In a final experiment we simulated how a cell in pluripotent state reacts under withdrawal of LIF.
+Our first 
 
 \begin{figure}
   \centering
@@ -222,7 +278,6 @@ In the
   \caption{Withdrawing LIF.}
   \label{pl:LIF_withdrawal}
 \end{figure}
-
 
 \begin{figure}
   \centering
@@ -233,6 +288,7 @@ In the
 \end{figure}
     
 \section{Conclusion}
+% discuss shortcomings of models
 
 \newpage
 \section*{Bibliography}
