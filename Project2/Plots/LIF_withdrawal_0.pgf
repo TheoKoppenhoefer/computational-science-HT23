@@ -32,7 +32,7 @@ ytick style={color=black}
 \addlegendimage{area legend, draw=gray, fill=gray, opacity=0.2}
 \addlegendentry{LIF active}
 
-\addplot [thick, blue]
+\addplot [ultra thick, blue]
 table {%
 0 0.7
 0.2 0.71064370104892
@@ -438,7 +438,7 @@ table {%
 80 2.40436439063043e-06
 };
 \addlegendentry{Nanog}
-\addplot [thick, green]
+\addplot [ultra thick, green]
 table {%
 0 0.7
 0.2 0.691965561463531
@@ -844,7 +844,7 @@ table {%
 80 4.74280016058462e-08
 };
 \addlegendentry{Oct4}
-\addplot [thick, orange]
+\addplot [ultra thick, orange]
 table {%
 0 0.7
 0.2 0.690152868999692

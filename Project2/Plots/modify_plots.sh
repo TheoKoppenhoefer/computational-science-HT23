@@ -4,11 +4,11 @@
 # sed -i 's/addplot graphics.\{0,300\}] {\.\.\/\.\.\/Plots\//addplot graphics$1] {/' *temp_state_10000.pgf
 # sed -i 's/addplot graphics.\{0,300\}] {/&\.\.\/\.\.\/Plots\//' *temp_state_10000.pgf
 
-ALLPLOTS=$(ls {N,O,T,NO}_*.pgf LIF_withdrawal.pgf)
-RIGHTPLOTS=$(ls {O,T,NO}_*.pgf)
+ALLPLOTS=$(ls {N,O,T,NO}_*.pgf repressed_*.pgf)
+RIGHTPLOTS=$(ls {O,T,NO}_*.pgf repressed_{0.1,0.3,0.8}.pgf)
 
 # general style
-sed -i 's/\\begin{axis}\[/\\begin{axis}\[\n ytick={0,0.2,0.4,0.6,0.8,1},\n x tick label style = {rotate=70},\n y post scale=3, \n transpose legend,/' $ALLPLOTS
+sed -i 's/\\begin{axis}\[/\\begin{axis}\[\n ytick={0,0.2,0.4,0.6,0.8,1},\n x tick label style = {rotate=90},\n y post scale=3, \n transpose legend,/' $ALLPLOTS
 sed -i 's/legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=lightgray204},/legend style={fill opacity=0.8, draw opacity=1, text opacity=1, draw=lightgray204, anchor=south east, at={(0.97,0.03)}},/' $ALLPLOTS
 sed -i 's/at={(0.97,0.03)}/at={(axis cs:5,1.1)}/' $ALLPLOTS
 perl -i -pe 's/anchor=south east/anchor=south west,
@@ -37,5 +37,8 @@ sed -i '/xlabel={Time},/d' $RIGHTPLOTS
 sed -i '/\\addlegend/d' $RIGHTPLOTS
 
 # fix the style for the LIF_withdrawal
-sed -i '/y post scale=3,/d' LIF_withdrawal.pgf
+# sed -i '/y post scale=3,/d' LIF_withdrawal.pgf
+
+# modify the plot thickness
+sed -i 's/\\addplot \[thick,/\\addplot \[ultra thick,/' *.pgf
 

@@ -8,7 +8,7 @@
 
 \begin{axis}[
  ytick={0,0.2,0.4,0.6,0.8,1},
- x tick label style = {rotate=70},
+ x tick label style = {rotate=90},
  y post scale=3, 
  transpose legend,
 legend cell align={left},
@@ -33,7 +33,7 @@ ytick style={color=black}
 --(axis cs:80,0)
 --cycle;
 
-\addplot [thick, blue]
+\addplot [ultra thick, blue]
 table {%
 0 0
 0.0001 0
@@ -1244,7 +1244,7 @@ table {%
 119.999999999998 8.18976180631989e-17
 120 8.18976180630173e-17
 };
-\addplot [thick, green]
+\addplot [ultra thick, green]
 table {%
 0 0
 0.0001 0
@@ -2455,7 +2455,7 @@ table {%
 119.999999999998 6.1532452955621e-19
 120 6.15324529554811e-19
 };
-\addplot [thick, orange]
+\addplot [ultra thick, orange]
 table {%
 0 0
 0.0001 4.99975000833312e-06

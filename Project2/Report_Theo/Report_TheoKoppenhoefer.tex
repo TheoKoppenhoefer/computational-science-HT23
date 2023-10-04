@@ -2,6 +2,13 @@
 % Indicate to rubber that there are external files
 % rubber: shell_escape
 
+% TODO:
+% - add derivation of N-T
+% - write Conclusion
+% - proofread
+% - referred to every plot?
+% - remove unecessary plots
+
 \input{../Latex_Templates/Preamble_Report}
 
 %%%%% TITLE PAGE
@@ -25,17 +32,17 @@
         axis y line=left,
         axis x line=bottom,
         scale only axis,
-        line width=2pt,
+        % line width=2pt,
 %    	max space between ticks=25pt,
         width=0.7\textwidth,
         scaled ticks=true,
         axis line style={thick,-,>=latex, shorten >=-.4cm},
     		x tick label style={
 		    /pgf/number format/precision=3
-		}
+		    }
     },
-    every axis plot/.append style={thick},
-    tick style={black, thick}
+    every axis plot/.append style={very thick},
+    tick style={black, thick},    
 }
 
 \newcommand{\Nover}{N_\text{over}}
@@ -61,7 +68,7 @@ In this project we model the interplay of three transcription factors which are 
 pluripotency.
 For this we will discuss the setup of the model in the first part of the report and then reproduce the results from~\cite{Olariu2016} in the second part.
 The code to the project was implemented in \pyth{python}.
-The project report and code can be found online under~\cite{repository}.
+The project report and code can be found online under~\cite{Repository}.
 
 \section{The setup}
 According to~\cite{Olariu2016} the transcription factors Nanog and Oct4 are crucial in establishing pluripotency of a cell.
@@ -72,11 +79,11 @@ In our simplified model the dependence of the transcription factors Nanog, Oct4 
   \caption{A flowchart showing the dependence of the transcription factors.}
   \label{fi:flowchartTranscription}
 \end{figure}
-Here Nanog and Tet1 form a complex Nanog-Tet1 together and the \& symbol denotes that two transcription factors are required for activation.
+Note that Nanog and Tet1 form a complex Nanog-Tet1 together and the \& symbol denotes that two transcription factors are required for activation.
 Using the Michaelis-Menten model one obtains the ordinary differential equation
 \begin{align}
   \vect{\Ntotal  \\[1ex] \Ototal  \\[1ex] \Ttotal }' &= \vect{\Nover+\LIF+p_N\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}-\Ntotal  \\[1ex]
-         \Oover+\LIF+p_O\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n},\Ototal)-\Ototal  \\[1ex]
+         \Oover+\LIF+p_O\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ototal  \\[1ex]
          \Tover+p_T\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ttotal }\,.\label{eq:basic_system}
 \end{align}
 Here $\Ntotal$, $\Ototal$, $\Ttotal$ and $\NT $ denote the concentration in the cell of Nanog, Oct4, Tet1 and Nanog-Tet1 respectively\footnote{Here we deviate from the notation in~\cite{Olariu2016} by ommitting the concentration brackets and subscript.}.
@@ -97,7 +104,7 @@ The other parameters are given for mouse embryonic fibroplast steady state (MEF)
    Leukemia inhibiting factor $\LIF$ & 0 \\
    Dissociation constant $K_d$ & 0.1 \\
    Dissociation constant $K_O$ & 0.3 \\
-   Dissociation constant $K_{NT}$ & 0.2 \\
+   Dissociation constant $K_{NT}$ & 0.2
    \end{tabular}
    \caption{Default parameter choices. Taken from~\cite{Olariu2016}}
    \label{tb:params}
@@ -105,19 +112,19 @@ The other parameters are given for mouse embryonic fibroplast steady state (MEF)
 We note that parameter $\LIF$ models the effect of the leukemia inhibiting factor in promoting 
 the differentiation of the cells. The parameters $\Nover$, $\Oover$ and $\Tover$ describe how much
 Nanog, Oct4 and Tet1 are overexpressed in the cell.
-We also note that the system~\ref{eq:basic_system} has two equilibrium configurations.
+We also note that the system~\eqref{eq:basic_system} has two equilibrium configurations.
 One where $\Ntotal$, $\Ototal$ and $\Ttotal$ are all $>0.5$ one where all are small. We will inspect
 this behaviour more closely in our simulation experiments.
 
 \section{The experiments}
 
 In the following part of the report we will discuss our reproduction of some figures given in~\cite{Olariu2016}.
-To solve the system~\ref{eq:basic_system} we used the built-in solver from \pyth{scipy} with default parameters since this yielded satisfactory results.
+To solve the system~\eqref{eq:basic_system} we used the built-in solver from \pyth{scipy} with default parameters since this yielded satisfactory results.
 
 \subsection{Variying Nanog, Oct4 and Tet1 seperately}
 
 Our first experiment series was taken from~\cite{Olariu2016}.
-The results can be seen in figure~\cite{fi:NOT_0.3}. This figure consists of 3 subplots 
+The results can be seen in figure~\cite{pl:NOT_0.3}. This figure consists of 3 subplots 
 for each of which the $x$-axis represents time and the $y$-axis represents the concentration of the 
 corresponding parameter $\Oover$, $\Nover$ and $\Tover$. Each simulation in the 3 subplots consists of 
 3 parts in which the parameters given in table~\ref{tb:params} are varied. The parameters which deviate are
@@ -254,9 +261,16 @@ figure~\ref{fi:NO}.
 \begin{minipage}[t]{0.3\textwidth}
 \centering
 \graphicspath{{../Plots/}}
-\input{../Plots/N_0.1.pgf}
+\input{../Plots/N_0.2.pgf}
 \end{minipage}
-\hspace*{0.5cm}
+\hfill
+\centering
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/O_0.1.pgf}
+\end{minipage}
+\hspace*{0.2cm}
 \begin{minipage}[t]{0.3\textwidth}
 \centering
 \graphicspath{{../Plots/}}
@@ -269,7 +283,11 @@ figure~\ref{fi:NO}.
 \subsection{Withdrawing LIF}
 
 In a final experiment we simulated how a cell in pluripotent state reacts under withdrawal of LIF.
-Our first 
+For this $\Ntotal$, $\Ototal$ and $\Ttotal$ are initialised at $0.7$ and allowed to reach equilibrium.
+After that LIF is turned off and the result is shown in figure~\ref{pl:LIF_withdrawal}.
+The cell is still pluripotent.
+To obtain the figure given in~\cite{Olariu2016} we had to additionally set $\Tover$ to $0$
+when we removed $\LIF$. Then indeed the cell becomes somatic again.
 
 \begin{figure}
   \centering
@@ -284,11 +302,89 @@ Our first
   \graphicspath{{../Plots/}}
   \includegraphics{../Plots/LIF_withdrawal_0.pgf}
   \caption{Withdrawing LIF.}
-  \label{pl:LIF_withdrawal}
+  \label{pl:LIF_withdrawal_proper}
 \end{figure}
-    
-\section{Conclusion}
+
+\subsection{Modifying the model}
+
+In the final part of the project we modified the diagram to allow take into the account that
+if one adds too much Oct4 to the cells they fail to reach pluripotency. In other words the
+parameter $\Oover$ has a Goldilock zone. Since the cell only reaches
+pluripotency if Nanog and Oct4 are expressed above a certain threshold and Oct4 is increased we
+must have that the concentration of Nanog is small if Oct4 is large. Thus we have to have some
+kind of repressor present in the network. Our final solution is depicted in figure~\ref{fi:flowchartTranscription_modified}.
+Here the `n' stands for negation or repression.
+\begin{figure}
+  \centering
+  \input{../Figures/FlowchartTranscriptionFactors_modified.tex}
+  \caption{A flowchart showing the dependence of the transcription factors.}
+  \label{fi:flowchartTranscription_modified}
+\end{figure}
+Corresponding to this flowchart we obtain the equation system
+\begin{align}
+  \vect{\Ntotal  \\[1ex] \Ototal  \\[1ex] \Ttotal \\[1ex] ?\\[1ex] ??}'
+  &= \vect{\Nover+\LIF+p_N\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot\frac{1}{1+? /{K_?}}\cdot\frac{1}{1+??/{K_{??}}}-\Ntotal  \\[1ex]
+         \Oover+\LIF+p_O\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ototal  \\[1ex]
+         \Tover+p_T\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ttotal \\[1ex] 
+         p_{?}\cdot\frac{\Ototal /{K_{O,?}}}{1+\Ototal /{K_{O,?}}}-?\ \\[1ex] 
+         p_{??}\cdot\frac{\Ototal /{K_{O,??}}}{1+\Ototal /{K_{O,??}}}-??}\,.\label{eq:modified_system}
+\end{align}
+where we used once again the Michaelis-Menten approach according to \cite{Olariu1} and set the decay rate of the system to be
+$1$ for both `?' and `??'.
+Analogously to the previous model we chose the new parameters according to table~\ref{tb:params_modified}.
+\begin{table}[h!]
+  \centering
+   \begin{tabular}{l  l} 
+   \hline
+   Parameter & value \\ [0.5ex] 
+   \hline\hline
+   Probability $p_?$ & 1 \\
+   Probability $p_{??}$ & 1 \\
+   Probability $p_N$ & 5 \\
+   Dissociation constant $K_?$ & 0.2 \\
+   Dissociation constant $K_{??}$ & 0.2 \\
+   Dissociation constant $K_{O,?}$ & 0.3 \\
+   Dissociation constant $K_{O,??}$ & 0.3
+   \end{tabular}
+   \caption{Default parameter choices for the extension of the model.}
+   \label{tb:params_modified}
+\end{table}
+We set the parameter $p_N$ to $5$ so that we would not have to rescale the plot in the following experiment but the result is 
+similar for $p_N$ equal to $1$. The other parameters
+are in the range of the previous experiment.
+In a final experiment we wanted to highlight that this modified model indeed gives the 
+desired results.
+For this we plotted the evolution of the system for $\Oover$ equal to $0.01$, $0.1$ and $0.8$.
+Indeed, one can see in figure~\ref{pl:repressed} that the concentration of Nanog is small if 
+Oct4 is too large or too small.
+
+\begin{figure}
+\centering
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/repressed_0.01.pgf}
+\end{minipage}
+\hfill
+\centering
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/repressed_0.1.pgf}
+\end{minipage}
+\hspace*{0.2cm}
+\begin{minipage}[t]{0.3\textwidth}
+\centering
+\graphicspath{{../Plots/}}
+\input{../Plots/repressed_0.8.pgf}
+\end{minipage}
+\caption{Nanog and Oct4 active.}
+\label{pl:repressed}
+\end{figure}
+
 % discuss shortcomings of models
+\section{Conclusion}
+We have seen that one can successfully model ...
 
 \newpage
 \section*{Bibliography}

@@ -8,7 +8,7 @@
 
 \begin{axis}[
  ytick={0,0.2,0.4,0.6,0.8,1},
- x tick label style = {rotate=70},
+ x tick label style = {rotate=90},
  y post scale=3, 
  transpose legend,
 legend cell align={left},
@@ -45,7 +45,7 @@ ytick style={color=black}
 \addlegendimage{area legend, draw=gray, fill=gray, opacity=0.2}
 \addlegendentry{LIF active}
 
-\addplot [thick, blue]
+\addplot [ultra thick, blue]
 table {%
 0 0
 0.0001 0
@@ -1258,7 +1258,7 @@ table {%
 120 1.27450644413348e-18
 };
 \addlegendentry{Nanog}
-\addplot [thick, green]
+\addplot [ultra thick, green]
 table {%
 0 0
 0.0001 0
@@ -2471,7 +2471,7 @@ table {%
 120 0
 };
 \addlegendentry{Oct4}
-\addplot [thick, orange]
+\addplot [ultra thick, orange]
 table {%
 0 0
 0.0001 4.99975000833312e-06

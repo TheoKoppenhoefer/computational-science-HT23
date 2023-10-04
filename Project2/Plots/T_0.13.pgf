@@ -9,7 +9,7 @@
 
 \begin{axis}[
  ytick={0,0.2,0.4,0.6,0.8,1},
- x tick label style = {rotate=70},
+ x tick label style = {rotate=90},
  y post scale=3, 
  transpose legend,
 legend cell align={left},
@@ -17,10 +17,8 @@ legend style={
   fill opacity=0.8,
   draw opacity=1,
   text opacity=1,
-  at={(axis cs:5,1.1)},
-  anchor=south west,
-    legend columns=4,
-    /tikz/every even column/.append style={column sep=1.0cm},,
+  at={(0.03,0.97)},
+  anchor=north west,
   draw=lightgray204
 },
 tick align=outside,
@@ -38,6 +36,13 @@ y grid style={darkgray176},
 ymin=0, ymax=1.05,
 ytick style={color=black}
 ]
+\path [draw=gray, fill=gray, opacity=0.2]
+(axis cs:40,0)
+--(axis cs:40,1)
+--(axis cs:80,1)
+--(axis cs:80,0)
+--cycle;
+
 \path [draw=orange, fill=orange, opacity=0.2]
 (axis cs:40,0)
 --(axis cs:40,1)
@@ -46,13 +51,13 @@ ytick style={color=black}
 --cycle;
 
 \path [draw=gray, fill=gray, opacity=0.2]
-(axis cs:40,0)
---(axis cs:40,1)
+(axis cs:80,0)
+--(axis cs:80,1)
 --(axis cs:120,1)
 --(axis cs:120,0)
 --cycle;
 
-\addplot [thick, blue]
+\addplot [ultra thick, blue]
 table {%
 0 0
 0.0001 0
@@ -1263,7 +1268,7 @@ table {%
 119.999999999998 0.736309244697775
 120 0.736309244697775
 };
-\addplot [thick, green]
+\addplot [ultra thick, green]
 table {%
 0 0
 0.0001 0
@@ -2474,7 +2479,7 @@ table {%
 119.999999999998 0.626810527141059
 120 0.626810527141059
 };
-\addplot [thick, orange]
+\addplot [ultra thick, orange]
 table {%
 0 0
 0.0001 4.99975000833312e-06
