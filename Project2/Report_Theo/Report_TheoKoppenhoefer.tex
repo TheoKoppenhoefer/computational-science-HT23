@@ -17,13 +17,14 @@
 \title{ Report for the Course Modelling in Computational Science, HT23 \\[1ex]
 	  \large Project 2: Cell reprogramming}
 %\subtitle{}
-\author{Theo Koppenhöfer \\[1ex] (with Jimmy Gunnarson)}
+\author{Theo Koppenhöfer \\[1ex] (with Jimmy Gunnarsson)}
 \date{Lund \\[1ex] \today}
 
 \addbibresource{bibliography.bib}
 
 \usepackage{pythonhighlight}
 \usepackage{pgfplots}
+\usepackage{caption}
 \graphicspath{{../Plots/}}
 
 \pgfplotsset{
@@ -79,16 +80,23 @@ In our simplified model the dependence of the transcription factors Nanog, Oct4 
   \caption{A flowchart showing the dependence of the transcription factors.}
   \label{fi:flowchartTranscription}
 \end{figure}
-Note that Nanog and Tet1 form a complex Nanog-Tet1 together and the \& symbol denotes that two transcription factors are required for activation.
-Using the Michaelis-Menten model one obtains the ordinary differential equation
+Note that Nanog and Tet1 form a complex Nanog-Tet1 together and the \& symbol denotes that two transcription factors are required for activation. The concentration of
+the Nanog-Tet1 complex depends on the concentrations of Nanog and Tet1. By~\cite{Olariu2016} it can be 
+given explicitly by the formula
+\begin{align}
+  \NT = \frac{K_d+\Ntotal+\Ttotal}{2}-\sqrt{\brk*{\frac{K_d+\Ntotal+\Ttotal}{2}}^2-\Ntotal\cdot\Ttotal}
+\end{align}
+where the dimerisation constant $K_d$ is given in table~\ref{tb:params}. 
+Here $\Ntotal$, $\Ttotal$ and $\NT $ denote the concentration in the cell of Nanog, Tet1 and Nanog-Tet1 respectively\footnote{Here we deviate from the notation in~\cite{Olariu2016} by omitting the concentration brackets and subscript.}.
+With the Michaelis-Menten model one obtains the ordinary differential equation
 \begin{align}
   \vect{\Ntotal  \\[1ex] \Ototal  \\[1ex] \Ttotal }' &= \vect{\Nover+\LIF+p_N\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}-\Ntotal  \\[1ex]
          \Oover+\LIF+p_O\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ototal  \\[1ex]
          \Tover+p_T\cdot\frac{\Ototal /{K_O}}{1+\Ototal /{K_O}}\cdot \frac{\brk*{\NT /{K_{NT}}}^n}{1+\brk*{\NT /{K_{NT}}}^n}-\Ttotal }\,.\label{eq:basic_system}
 \end{align}
-Here $\Ntotal$, $\Ototal$, $\Ttotal$ and $\NT $ denote the concentration in the cell of Nanog, Oct4, Tet1 and Nanog-Tet1 respectively\footnote{Here we deviate from the notation in~\cite{Olariu2016} by ommitting the concentration brackets and subscript.}.
-The other parameters are given for mouse embryonic fibroplast steady state (MEF) by table~\ref{tb:params}.
-\begin{table}[h!]
+In this equation $\Ototal$ stands for the Oct4 concentration.
+The other parameters are given for mouse embryonic fibroblast steady state (MEF) by table~\ref{tb:params}.
+\begin{table}
   \centering
    \begin{tabular}{l  l} 
    \hline
@@ -100,42 +108,46 @@ The other parameters are given for mouse embryonic fibroplast steady state (MEF)
    Probability $p_N$ & 1 \\
    Probability $p_O$ & 1 \\
    Probability $p_T$ & 1 \\
-   Hill coefficient $K_{NT}$ & 0.2 \\
-   Leukemia inhibiting factor $\LIF$ & 0 \\
-   Dissociation constant $K_d$ & 0.1 \\
+   Hill coefficient $n$ & 2 \\
+   Leukaemia inhibiting factor $\LIF$ & 0 \\
+   Dimerisation constant $K_d$ & 0.1 \\
+   Dissociation constant $K_{NT}$ & 0.2 \\
    Dissociation constant $K_O$ & 0.3 \\
    Dissociation constant $K_{NT}$ & 0.2
    \end{tabular}
    \caption{Default parameter choices. Taken from~\cite{Olariu2016}}
    \label{tb:params}
 \end{table}
-We note that parameter $\LIF$ models the effect of the leukemia inhibiting factor in promoting 
+We note that parameter $\LIF$ models the effect of the leukaemia inhibiting factor in promoting 
 the differentiation of the cells. The parameters $\Nover$, $\Oover$ and $\Tover$ describe how much
-Nanog, Oct4 and Tet1 are overexpressed in the cell.
+Nanog, Oct4 and Tet1 are over-expressed in the cell.
 We also note that the system~\eqref{eq:basic_system} has two equilibrium configurations.
-One where $\Ntotal$, $\Ototal$ and $\Ttotal$ are all $>0.5$ one where all are small. We will inspect
+One where $\Ntotal$, $\Ototal$ and $\Ttotal$ are all greater than $0.5$ one where all are small. 
+In the former state the cell reaches pluripotency while in the latter it fails. We will inspect
 this behaviour more closely in our simulation experiments.
 
 \section{The experiments}
 
 In the following part of the report we will discuss our reproduction of some figures given in~\cite{Olariu2016}.
-To solve the system~\eqref{eq:basic_system} we used the built-in solver from \pyth{scipy} with default parameters since this yielded satisfactory results.
+To solve the system~\eqref{eq:basic_system} we used the built-in solver from \pyth{Scipy} with default parameters since this yielded satisfactory results.
+We note that our figures differ a little from~\cite{Olariu2016} in that we let the simulation run
+for longer to reach the steady state. This explains why our charts are not exact clones.
 
-\subsection{Variying Nanog, Oct4 and Tet1 seperately}
+\subsection{Varying Nanog, Oct4 and Tet1 separately}
 
 Our first experiment series was taken from~\cite{Olariu2016}.
-The results can be seen in figure~\cite{pl:NOT_0.3}. This figure consists of 3 subplots 
+The results can be seen in figure~2. This figure consists of 3 subplots 
 for each of which the $x$-axis represents time and the $y$-axis represents the concentration of the 
 corresponding parameter $\Oover$, $\Nover$ and $\Tover$. Each simulation in the 3 subplots consists of 
-3 parts in which the parameters given in table~\ref{tb:params} are varied. The parameters which deviate are
+3 parts in which the parameters given in table~\ref{tb:params} are varied. The parameters which deviate from this standard choice are
 given on the $x$-axis. In the first part of each simulation the cell is allowed to reach the MEF steady state. 
-In the second part one of the transcription factors is overexpressed.
-In the third part the simulation returns to the MEF state or the MEF state with $\LIF$ set to $0.06$
-depending on whether the cell succeeded in reaching a pluripotent state.
+In the second part one of the transcription factors is over-expressed.
+In the third part the simulation returns to the MEF steady state or the pluripotent state which corresponds to the MEF steady state with $\LIF$ set to $0.06$.
+The choice of the final state depends on whether the cell succeeded in reaching a pluripotent state.
 In the first subplot one sees that setting $\Nover$ alone to $0.3$ is insufficient to reach pluripotency.
 In the second and third subplots one sees that setting $\Oover$ and $\Tover$ respectively to $0.3$ is sufficient
 to reach pluripotency. Thus in these cases $\LIF$ is activated.
-All of this agrees with what we expect from the diagram and laboratory experiments (see~\cite{Olariu2016} for more).
+All of this agrees with what we expect from the diagram and --- according to~\cite{Olariu2016} --- laboratory experiments.
 
 \begin{figure}
 \centering
@@ -156,18 +168,17 @@ All of this agrees with what we expect from the diagram and laboratory experimen
 \graphicspath{{../Plots/}}
 \input{../Plots/T_0.3.pgf}
 \end{minipage}
-\caption{Overexpression of $0.3$.}
-\label{pl:NOT_0.3}
+\caption{Over-expression of $0.3$.}
 \end{figure}
 
 The second experiment is analogous to the first with the difference that we now set
-$\Nover$, $\Oover$ and $\Tover$ to $0.2$ in the respective experiments. Figure~\ref{fi:NOT_0.2} 
+$\Nover$, $\Oover$ and $\Tover$ to $0.2$ in the respective experiments. Figure~3 
 shows the results. Once again we see that
-for Oct4 and Tet1 the state reaches pluripotency whilst it fails to reach pluripotency for Nanog.
-If we compare figure~\ref{fi:NOT_0.2} with figure~\ref{fi:NOT_0.3} we see that the concentrations
-during the overexpression phase of the experiment are lower than for the previous experiment.
+for Oct4 and Tet1 the cells reach pluripotency whilst it fails to do so for Nanog.
+If we compare figure~3 with figure~2 we see that the concentrations
+during the over-expression phase of the experiment are lower than for the previous experiment.
 This is to be expected since there are no repressors in this particular model.
-Also as expected the steady states in the first and third part of each simulation is identical to
+Also as expected the steady states in the first and third part of each simulation are identical to
 the previous experiment.
 
 \begin{figure}
@@ -189,12 +200,12 @@ the previous experiment.
 \graphicspath{{../Plots/}}
 \input{../Plots/T_0.2.pgf}
 \end{minipage}
-\caption{Overexpression of $0.2$.}
+\caption{Over-expression of $0.2$.}
 \label{pl:NOT_0.2}
 \end{figure}
 
-Figure~\ref{fi:NOT_0.13} gives the results with an overexpression of $0.13$ and yields the same result as the previous
-experiment. Once again the concentration levels are reduced for the overexpression phase.
+Figure~4 gives the results with an over-expression of $0.13$ and yields the same result as the previous
+experiment. Once again the concentration levels are reduced for the over-expression phase.
 
 \begin{figure}
 \centering
@@ -215,11 +226,11 @@ experiment. Once again the concentration levels are reduced for the overexpressi
 \graphicspath{{../Plots/}}
 \input{../Plots/T_0.13.pgf}
 \end{minipage}
-\caption{Overexpression of $0.13$.}
+\caption{Over-expression of $0.13$.}
 \label{pl:NOT_0.13}
 \end{figure}
 
-In a final experiment of this series the overexpression was set to $0.1$. Figure~\ref{fi:NOT_0.1} shows 
+In a final experiment of this series the over-expression was set to $0.1$. Figure~5 shows 
 the results. We see here that in all cases the cells fail to reach pluripotency as the 
 concentrations of Nanog, Oct4 and Tet1 fail to meet the threshold.
 
@@ -242,19 +253,19 @@ concentrations of Nanog, Oct4 and Tet1 fail to meet the threshold.
 \graphicspath{{../Plots/}}
 \input{../Plots/T_0.1.pgf}
 \end{minipage}
-\caption{Overexpression of $0.1$.}
+\caption{Over-expression of $0.1$.}
 \label{pl:NOT_0.1}
 \end{figure}
-
-We note that our figures differ a little from~\cite{Olariu2016} in that we let the simulation run
-for longer to reach the steady state. This explains why our charts are not exactly clones.
 
 \subsection{Inducing Pluripotency with Nanog and Oct4}
 
 Our next experiment deals with the fact that according to~\cite{Olariu2016} Nanog and low levels
-of Oct4 are sufficient to reach pluripotency even though the same levels of Nanog and of Oct4 seperately
-are insufficient. For this we set $\Oover$ to $0.1$ and $\Nover$ to $0.4$. The results are shown in
-figure~\ref{fi:NO}.
+of Oct4 are sufficient to reach pluripotency even though the same levels of Nanog and of Oct4 separately
+are insufficient. For this we set $\Oover$ to $0.1$ and $\Nover$ to $0.2$. The results are shown in
+figure~6. The first two subplots show that the cells fail to reach pluripotency if either Oct4 or Nanog is overexpressed.
+In the third plot we see that over-expressing Oct4 and Nanog simultaniously yields a pluripotent cell
+as would be expected from the diagram~\ref{fi:flowchartTranscription}.
+
 
 \begin{figure}
 \centering
@@ -280,14 +291,17 @@ figure~\ref{fi:NO}.
 \label{pl:NO}
 \end{figure}
 
+
+\newpage
+
 \subsection{Withdrawing LIF}
 
 In a final experiment we simulated how a cell in pluripotent state reacts under withdrawal of LIF.
-For this $\Ntotal$, $\Ototal$ and $\Ttotal$ are initialised at $0.7$ and allowed to reach equilibrium.
-After that LIF is turned off and the result is shown in figure~\ref{pl:LIF_withdrawal}.
-The cell is still pluripotent.
+For this $\Ntotal$, $\Ototal$ and $\Ttotal$ are initialised at $0.7$ and the cells are allowed to reach an equilibrium.
+In the second phase of the experiment LIF is turned off. The result is shown in figure~\ref{pl:LIF_withdrawal}.
+The cell remains pluripotent contrary to labatory evidence.
 To obtain the figure given in~\cite{Olariu2016} we had to additionally set $\Tover$ to $0$
-when we removed $\LIF$. Then indeed the cell becomes somatic again.
+in the second part. Then indeed the cell becomes somatic.
 
 \begin{figure}
   \centering
@@ -309,11 +323,13 @@ when we removed $\LIF$. Then indeed the cell becomes somatic again.
 
 In the final part of the project we modified the diagram to allow take into the account that
 if one adds too much Oct4 to the cells they fail to reach pluripotency. In other words the
-parameter $\Oover$ has a Goldilock zone. Since the cell only reaches
+parameter $\Oover$ has a Goldilocks zone. Since the cell only reaches
 pluripotency if Nanog and Oct4 are expressed above a certain threshold and Oct4 is increased we
 must have that the concentration of Nanog is small if Oct4 is large. Thus we have to have some
 kind of repressor present in the network. Our final solution is depicted in figure~\ref{fi:flowchartTranscription_modified}.
-Here the `n' stands for negation or repression.
+Here the `n' stands for negation or repression. The reason for introducing two additional new factors
+rather than only one lies in the fact that the desired effect in the simulation is larger if we have two rather
+than only one factor.
 \begin{figure}
   \centering
   \input{../Figures/FlowchartTranscriptionFactors_modified.tex}
@@ -330,9 +346,9 @@ Corresponding to this flowchart we obtain the equation system
          p_{??}\cdot\frac{\Ototal /{K_{O,??}}}{1+\Ototal /{K_{O,??}}}-??}\,.\label{eq:modified_system}
 \end{align}
 where we used once again the Michaelis-Menten approach according to \cite{Olariu1} and set the decay rate of the system to be
-$1$ for both `?' and `??'.
+$1$ for both factors `?' and `??'.
 Analogously to the previous model we chose the new parameters according to table~\ref{tb:params_modified}.
-\begin{table}[h!]
+\begin{table}
   \centering
    \begin{tabular}{l  l} 
    \hline
@@ -350,13 +366,19 @@ Analogously to the previous model we chose the new parameters according to table
    \label{tb:params_modified}
 \end{table}
 We set the parameter $p_N$ to $5$ so that we would not have to rescale the plot in the following experiment but the result is 
-similar for $p_N$ equal to $1$. The other parameters
+qualitatively similar for $p_N$ equal to $1$. The other parameters
 are in the range of the previous experiment.
+
 In a final experiment we wanted to highlight that this modified model indeed gives the 
 desired results.
-For this we plotted the evolution of the system for $\Oover$ equal to $0.01$, $0.1$ and $0.8$.
-Indeed, one can see in figure~\ref{pl:repressed} that the concentration of Nanog is small if 
-Oct4 is too large or too small.
+For this we plotted the evolution of the system for $\Oover$ equal to $0.01$, $0.1$ and $0.8$ in the
+over-expression phase.
+Indeed, one can see in figure~\ref{pl:repressed} that the concentration of Nanog is small for 
+$\Oover$ equal to $0.01$ or $0.8$. We also see that it is larger for $\Oover$ equal to $0.1$.
+As desired the Oct4 concentration has a Goldilocks zone with regard to the Nanog concentration.
+Figure~\ref{pl:repressed} also shows that the Nanog concentration initially overshoots its
+equilibrium state as it takes a while for the concentrations of the repressors `?' and `??' to rise
+in the simulation of the equations~\eqref{eq:modified_system}.
 
 \begin{figure}
 \centering
@@ -383,10 +405,18 @@ Oct4 is too large or too small.
 \end{figure}
 
 % discuss shortcomings of models
-\section{Conclusion}
-We have seen that one can successfully model ...
-
 \newpage
+\section{Conclusion}
+We have seen that the simple model involving the transcription factors Tet1, Nanog, Oct4 and Nanog-Tet1 can be used to simulate
+some elementary processes involved for the cell to reach pluripotency. 
+We have seen that in the model the cells reach pluripotency if Oct4 levels or Tet1 levels are higher than a certain threshold.
+We have also seen that the cell obtains pluripotency if Nanog and Oct4 are combined although they might fail if Nanog and Oct4 are added seperately.
+We have seen that under the removal of LIF and Oct4 the cell becomes somatic.
+The additional part of the project made us aware of how fiddly choosing the different parameters in a model can be.
+This type of model without any finetuning of the parameters gives the desired qualitative behaviour.
+The quantitative predictions however are very limited in scope. It also made us aware of how important the assumptions are that one makes when setting
+up the model and how relatively unimportent the actual implementation and the numerical optimisation are for the results.
+
 \section*{Bibliography}
 \nocite{*}
 %Main source

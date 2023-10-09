@@ -11,7 +11,7 @@ all: $(ALLTEX) $(ALLCACHE) ../Figures/FlowchartTranscriptionFactors_modified.tex
 	rubber --pdf --unsafe $(MAIN)				# main run
 	biber $(MAIN:.tex=)			 # bibliography
 	$(LATEX) $(MAIN)				# incremental run
-	evince $(MAIN:.tex=).pdf               # show result
+	evince $(MAIN:.tex=).pdf 2>&1 &               # show result
    
 ../Figures/FlowchartTranscriptionFactors_modified.tex : ../Figures/FlowchartTranscriptionFactors_modified.dia
 	cd ../Figures; dia --export=FlowchartTranscriptionFactors_modified.tex FlowchartTranscriptionFactors_modified.dia; ./modify_diagrams.sh
