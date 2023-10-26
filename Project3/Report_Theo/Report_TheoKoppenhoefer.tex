@@ -1,0 +1,110 @@
+
+% Indicate to rubber that there are external files
+% rubber: shell_escape
+
+
+\input{../Latex_Templates/Preamble_Report}
+
+%%%%% TITLE PAGE
+
+%\subject{, VT23}
+\title{ Report for the Course Modelling in Computational Science, HT23 \\[1ex]
+	  \large Project 3: Biome classification}
+%\subtitle{}
+\author{Theo Koppenhöfer \\[1ex] (with Anna and Carmen, Group 4)}
+\date{Lund \\[1ex] \today}
+
+\addbibresource{bibliography.bib}
+
+\graphicspath{{../Plots/}}
+
+\pgfplotsset{
+	compat=newest,
+    every axis/.append style={
+        axis y line=left,
+        axis x line=bottom,
+        scale only axis,
+        % line width=2pt,
+%    	max space between ticks=25pt,
+        width=0.7\textwidth,
+        scaled ticks=true,
+        axis line style={thick,-,>=latex, shorten >=-.4cm},
+    		x tick label style={
+		    /pgf/number format/precision=3
+		    }
+    },
+    every axis plot/.append style={very thick},
+    tick style={black, thick},    
+}
+
+
+%%%%% The content starts here %%%%%%%%%%%%%
+
+\usepackage{pythonhighlight}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+The following report is part of the second project of the course Modelling in Computational Science, BERN01, taken at Lund university.
+In this project we will use machine learning to classify biomes based on climate and soil data. We will test the performance of our machine
+learning model in binary classification and in distinguishing multiple biomes for different regions. We will also compare our model with LPG\_guess output
+and modify our model to predict continuous variables of LPG\_guess.
+For this we will discuss the choice of regions and biomes, the setup of our model, give some interesting results, discuss these and finally give a conclusion.
+The code to the project was implemented in \pyth{python}.
+The project report and code can be found online under~\cite{Repository}.
+
+\section{Methods}
+
+To test our first binary classification model we chose the biomes `arid shrub' and `desert'. For the choice of regions
+we had to choose two countries which contained sufficient amount of both regions. A plot of regions with sufficient amounts
+of both biomes can be seen in figure 
+\begin{figure}
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \missingfigure[figwidth=\textwidth]{}
+    \caption{Data points with `desert' and `arid shrub' in selected countries.}
+    \label{pl:}
+  \end{minipage}
+\end{figure}
+Our initial choice was Egypt and China.
+It turned out however that when we took out soil data our model could not handle the classification well since 
+the deserts in both countries have very different climates. Thus we decided for Egypt for the training and Libya for the testing.
+
+For the classification of multiple biomes we initially chose Africa and China but this quickly turned out to be a poor choice as
+both regions have very different climate data. Thus we switched to the regions to Russia for training and Canada for testing.
+
+For the regression model chose Canada to train and Russia to test the model. The reason for this switch of roles lies in the performance
+of the training.
+
+If not otherwise stated we use as training parameters all the parameters of the file \pyth{data_index_2.csv} excluding
+\begin{python}
+  ['MaxBiomeLAI','Biome_obs','Biome_LAI','Biome_Cmax',
+                       'Lon','Lat','Pan_2007','ISO3','UN','MaxBiomeCmax',
+                       'NPP','VegC','SoilC','LitterC','SoilR']
+\end{python}
+
+\section{Results}
+
+\subsection{Binary classification}
+
+
+
+\section{Discussion}
+
+% discuss shortcomings of models
+\newpage
+\section{Conclusion}
+
+
+\section*{Bibliography}
+\nocite{*}
+%Main source
+%\printbibliography[heading=none, keyword={main}]
+%\noindent Other sources
+\printbibliography[heading=none, keyword={secondary}]
+
+
+\end{document}

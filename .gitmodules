@@ -4,3 +4,9 @@
 [submodule "Project2/latex-templates"]
 	path = Project2/Latex_Templates
 	url = https://github.com/TheoKoppenhoefer/latex-templates.git
+[submodule "Project3/Project3RandomForestML"]
+	path = Project3/Project3RandomForestML
+	url = https://github.com/adEseH/Project3RandomForestML.git
+[submodule "Project3/Latex_Templates"]
+	path = Project3/Latex_Templates
+	url = https://github.com/TheoKoppenhoefer/latex-templates.git

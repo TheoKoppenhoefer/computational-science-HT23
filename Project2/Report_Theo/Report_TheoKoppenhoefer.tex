@@ -52,7 +52,7 @@
 \newcommand{\Ntotal}{\text{N}}
 \newcommand{\Ototal}{\text{O}}
 \newcommand{\Ttotal}{\text{T}}
-\newcommand{\NT}{\text{N-T}}
+\newcommand{\NT}{\text{NT}}
 \newcommand{\LIF}{\text{LIF}}
 
 
@@ -262,8 +262,8 @@ concentrations of Nanog, Oct4 and Tet1 fail to meet the threshold.
 Our next experiment deals with the fact that according to~\cite{Olariu2016} Nanog and low levels
 of Oct4 are sufficient to reach pluripotency even though the same levels of Nanog and of Oct4 separately
 are insufficient. For this we set $\Oover$ to $0.1$ and $\Nover$ to $0.2$. The results are shown in
-figure~6. The first two subplots show that the cells fail to reach pluripotency if either Oct4 or Nanog is overexpressed.
-In the third plot we see that over-expressing Oct4 and Nanog simultaniously yields a pluripotent cell
+figure~6. The first two subplots show that the cells fail to reach pluripotency if either Oct4 or Nanog is over-expressed.
+In the third plot we see that over-expressing Oct4 and Nanog simultaneously yields a pluripotent cell
 as would be expected from the diagram~\ref{fi:flowchartTranscription}.
 
 
@@ -299,7 +299,7 @@ as would be expected from the diagram~\ref{fi:flowchartTranscription}.
 In a final experiment we simulated how a cell in pluripotent state reacts under withdrawal of LIF.
 For this $\Ntotal$, $\Ototal$ and $\Ttotal$ are initialised at $0.7$ and the cells are allowed to reach an equilibrium.
 In the second phase of the experiment LIF is turned off. The result is shown in figure~\ref{pl:LIF_withdrawal}.
-The cell remains pluripotent contrary to labatory evidence.
+The cell remains pluripotent contrary to laboratory evidence.
 To obtain the figure given in~\cite{Olariu2016} we had to additionally set $\Tover$ to $0$
 in the second part. Then indeed the cell becomes somatic.
 
@@ -410,12 +410,12 @@ in the simulation of the equations~\eqref{eq:modified_system}.
 We have seen that the simple model involving the transcription factors Tet1, Nanog, Oct4 and Nanog-Tet1 can be used to simulate
 some elementary processes involved for the cell to reach pluripotency. 
 We have seen that in the model the cells reach pluripotency if Oct4 levels or Tet1 levels are higher than a certain threshold.
-We have also seen that the cell obtains pluripotency if Nanog and Oct4 are combined although they might fail if Nanog and Oct4 are added seperately.
+We have also seen that the cell obtains pluripotency if Nanog and Oct4 are combined although they might fail if Nanog and Oct4 are added separately.
 We have seen that under the removal of LIF and Oct4 the cell becomes somatic.
 The additional part of the project made us aware of how fiddly choosing the different parameters in a model can be.
-This type of model without any finetuning of the parameters gives the desired qualitative behaviour.
+This type of model without any fine-tuning of the parameters gives the desired qualitative behaviour.
 The quantitative predictions however are very limited in scope. It also made us aware of how important the assumptions are that one makes when setting
-up the model and how relatively unimportent the actual implementation and the numerical optimisation are for the results.
+up the model and how relatively unimportant the actual implementation and the numerical optimisation are for the results.
 
 \section*{Bibliography}
 \nocite{*}
