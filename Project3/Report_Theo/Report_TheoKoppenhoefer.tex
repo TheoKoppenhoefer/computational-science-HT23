@@ -16,7 +16,7 @@
 
 \addbibresource{bibliography.bib}
 
-\graphicspath{{../Plots/}}
+\graphicspath{{../Project3RandomForestML/plots/}}
 
 \pgfplotsset{
 	compat=newest,
@@ -55,6 +55,9 @@ For this we will discuss the choice of regions and biomes, the setup of our mode
 The code to the project was implemented in \pyth{python}.
 The project report and code can be found online under~\cite{Repository}.
 
+
+`net primary productivity' (\emph{NPP}) and `vegetation carbon pool' (\emph{VegC})
+
 \section{Methods}
 
 To test our first binary classification model we chose the biomes `arid shrub' and `desert'. For the choice of regions
@@ -65,7 +68,7 @@ of both biomes can be seen in figure
   \begin{minipage}{0.45\textwidth}
     \centering
     \missingfigure[figwidth=\textwidth]{}
-    \caption{Data points with `desert' and `arid shrub' in selected countries.}
+    \caption{Number of data points with `desert' and `arid shrub' in selected countries.}
     \label{pl:}
   \end{minipage}
 \end{figure}
@@ -76,20 +79,214 @@ the deserts in both countries have very different climates. Thus we decided for 
 For the classification of multiple biomes we initially chose Africa and China but this quickly turned out to be a poor choice as
 both regions have very different climate data. Thus we switched to the regions to Russia for training and Canada for testing.
 
+In the regression part we used \pyth{pythons} \pyth{randomForestRegressor} to predict the continuous parameters 
+
 For the regression model chose Canada to train and Russia to test the model. The reason for this switch of roles lies in the performance
 of the training.
 
 If not otherwise stated we use as training parameters all the parameters of the file \pyth{data_index_2.csv} excluding
-\begin{python}
-  ['MaxBiomeLAI','Biome_obs','Biome_LAI','Biome_Cmax',
-                       'Lon','Lat','Pan_2007','ISO3','UN','MaxBiomeCmax',
-                       'NPP','VegC','SoilC','LitterC','SoilR']
-\end{python}
+% \begin{python}
+%   ['MaxBiomeLAI','Biome_obs','Biome_LAI','Biome_Cmax',
+%     'Lon','Lat','Pan_2007','ISO3','UN','MaxBiomeCmax',
+%     'NPP','VegC','SoilC','LitterC','SoilR']
+% \end{python}
+
 
 \section{Results}
 
+In this section we will first discuss our results for the binary classification, then for the multiclass classification
+and finally the regression problem.
+
 \subsection{Binary classification}
 
+We start by giving some statistics on the desert and arid shrub landscape in egypt and libya.
+In figure \ref{pl:climate:egypt:aridShrub} and figure \ref{pl:climate:egypt:aridShrub}
+we see a plot of the precipitation and daily mean temperature in the egyptian shrub and desert landscapes.
+One can see in both climates that the most rain falls in the summer and that the mean daily temperature also peaks in the summer.
+It is apparent from the plots that the precipitation level is a little lower in the desert.
+One can also see that the standard deviation of the temperature is higher for the shrubs and that the
+temperature is slightly lower for the shrub biome in the winter months.
+From this we can expect that the mean temperature in the winter will play a greater role in the classification
+than the mean temperature in the summer. We can also assume that the variance of the temperature will play a greater role.
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{climate_egypt_aridShrub.pdf}
+    \caption{Average Temperature (red) and Precipitation (blue) in egyptian shrubs.}
+    \label{pl:climate:egypt:aridShrub}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{climate_egypt_desert.pdf}
+    \caption{Average Temperature (red) and Precipitation (blue) in egyptian deserts.}
+    \label{pl:climate:egypt:aridShrub}
+  \end{minipage}
+\end{figure}
+Although not shown here the climate plots for libya are quite similar.
+
+\ruggedtodo[inline]{some more statistics}
+
+
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s3_basic_confTable.tex}
+  \caption{Confusion matrix.}
+\end{table}
+
+
+We then analysed the importance of features for the binary classification.
+In a crude analysis we simply dropped the meadians, all weather features, the different seasons,
+the different climate data categories and 
+the non-climate features. We then collected the error rates and the balanced error rates. \ruggedtodo[]{This belongs into methods}
+The results for the error rate be seen in figure \ref{pl:s3_simulationComparisons_errorRate}.
+Here the abbreviations `pre', `tmp$|$tmin$|$tmax' and `tswrf' stand for the parameters representing
+precipitation, temperatures and radiation respectively.
+Since we have a large imbalance in the number of biomes present in the training and test data it makes more sense to 
+look at the balanced error rate in figure \ref{pl:s3_simulationComparisons_balancedErrorRate}.
+For one, one sees that the 
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s3_simulationComparisons_errorRate.pdf}
+    \caption{Error rates for various experiments.}
+    \label{pl:s3_simulationComparisons_errorRate}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s3_simulationComparisons_balancedErrorRate.pdf}
+    \caption{Balanced error rates for various experiments.}
+    \label{pl:s3_simulationComparisons_balancedErrorRate}
+  \end{minipage}
+\end{figure}
+
+
+\subsection{Multiclass classification}
+
+
+
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s4_basic_classreport.tex}
+  \caption{Class report}
+  \label{tb:s4_basic_classreport}
+\end{table}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \missingfigure[figwidth=\textwidth]{}
+    % \includegraphics[width=\textwidth]{s4_simulationComparisons_errorRate.pdf}
+    \caption{Error rates for various experiments.}
+    \label{pl:s4_simulationComparisons_errorRate}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \missingfigure[figwidth=\textwidth]{}
+    % \includegraphics[width=\textwidth]{s4_simulationComparisons_balancedErrorRate.pdf}
+    \caption{Balanced error rates for various experiments.}
+    \label{pl:s4_simulationComparisons_balancedErrorRate}
+  \end{minipage}
+\end{figure}
+
+\pagebreak
+\subsection{Regression}
+
+Since the 
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{histogramm_data_NPP.pdf}
+    \caption{Distribution of the NPP values.}
+    \label{pl:s5:npp:basic:regressionPlot}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{histogramm_data_VegC.pdf}
+    \caption{Distribution of the VegC values.}
+    \label{pl:s5:npp:basic:residualDistr}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_npp_basic_regressionPlot.pdf}
+    \caption{Predicted versus true values for the parameter NPP.}
+    \label{pl:s5:npp:basic:regressionPlot}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_npp_basic_residualDistr.pdf}
+    \caption{Distribution of the residues for the parameter NPP.}
+    \label{pl:s5:npp:basic:residualDistr}
+  \end{minipage}
+\end{figure}
+
+
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_vegc_basic_regressionPlot.pdf}
+    \caption{Predicted versus true values for the parameter VegC.}
+    \label{pl:s5:npp:basic:regressionPlot}
+  \end{minipage}
+  \hfill 
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_vegc_basic_residualDistr.pdf}
+    \caption{Distribution of the residuals for the parameter VegC.}
+    \label{pl:s5:npp:basic:residualDistr}
+  \end{minipage}
+\end{figure}
+
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_simulationComparisons_1_R2score.pdf}
+    \caption{Error rates for various experiments.}
+    \label{pl:s5_simulationComparisons_1_R2score}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_simulationComparisons_MSE.pdf}
+    \caption{Balanced error rates for various experiments.}
+    \label{pl:s5_simulationComparisons_MSE}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_simulationComparisons_1_R2score.pdf}
+    \caption{Error rates for various experiments.}
+    \label{pl:s5_simulationComparisons_1_R2score}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s5_simulationComparisons_MSE.pdf}
+    \caption{Balanced error rates for various experiments.}
+    \label{pl:s5_simulationComparisons_MSE}
+  \end{minipage}
+\end{figure}
 
 
 \section{Discussion}
