@@ -52,7 +52,7 @@ In this project we will use machine learning to classify biomes based on climate
 learning model in binary classification and in distinguishing multiple biomes for different regions. We will also compare our model with LPG\_guess output
 and modify our model to predict continuous variables of LPG\_guess.
 For this we will discuss the choice of regions and biomes, the setup of our model, give some interesting results, discuss these and finally give a conclusion.
-The code to the project was implemented in \pyth{python}.
+The code to the project was implemented in a \pyth{jupyter} notebook.
 The project report and code can be found online under~\cite{Repository}.
 
 
@@ -79,17 +79,18 @@ the deserts in both countries have very different climates. Thus we decided for 
 For the classification of multiple biomes we initially chose Africa and China but this quickly turned out to be a poor choice as
 both regions have very different climate data. Thus we switched to the regions to Russia for training and Canada for testing.
 
-In the regression part we used \pyth{pythons} \pyth{randomForestRegressor} to predict the continuous parameters 
-
 For the regression model chose Canada to train and Russia to test the model. The reason for this switch of roles lies in the performance
 of the training.
 
-If not otherwise stated we use as training parameters all the parameters of the file \pyth{data_index_2.csv} excluding
-% \begin{python}
-%   ['MaxBiomeLAI','Biome_obs','Biome_LAI','Biome_Cmax',
-%     'Lon','Lat','Pan_2007','ISO3','UN','MaxBiomeCmax',
-%     'NPP','VegC','SoilC','LitterC','SoilR']
-% \end{python}
+If not otherwise stated we used as training parameters all climate data in the file \pyth{'data_index_2.csv'} together the soil parameters `clay', `silt', `sand' and `orgC'.
+
+For the implementation we made heavy use of the \pyth{sklearn} library. We implemented the classification model with \pyth{RandomForestClassifier}.
+We analysed the permutation importance with the function \pyth{permutation_importance}.
+The hyperparameter tuning was initially implemented with \pyth{GridSearchCV} and after some bad initial results we switched to \pyth{HalvingGridSearchCV}.
+The regression model was implemented using \pyth{RandomForestRegressor}.
+
+For analysing the importance of features we also implemented a routine which runs the model whilst dropping some features
+and then plots the results for each run.
 
 
 \section{Results}
@@ -99,63 +100,94 @@ and finally the regression problem.
 
 \subsection{Binary classification}
 
-We start by giving some statistics on the desert and arid shrub landscape in egypt and libya.
-In figure \ref{pl:climate:egypt:aridShrub} and figure \ref{pl:climate:egypt:aridShrub}
-we see a plot of the precipitation and daily mean temperature in the egyptian shrub and desert landscapes.
-One can see in both climates that the most rain falls in the summer and that the mean daily temperature also peaks in the summer.
-It is apparent from the plots that the precipitation level is a little lower in the desert.
-One can also see that the standard deviation of the temperature is higher for the shrubs and that the
-temperature is slightly lower for the shrub biome in the winter months.
-From this we can expect that the mean temperature in the winter will play a greater role in the classification
-than the mean temperature in the summer. We can also assume that the variance of the temperature will play a greater role.
+\ruggedtodo[inline]{Insert the maps}
+
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{climate_egypt_aridShrub.pdf}
-    \caption{Average Temperature (red) and Precipitation (blue) in egyptian shrubs.}
+    \caption{Mean temperature, precipitation and radiation in egyptian shrubs.}
     \label{pl:climate:egypt:aridShrub}
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{climate_egypt_desert.pdf}
-    \caption{Average Temperature (red) and Precipitation (blue) in egyptian deserts.}
+    \caption{Mean temperature, precipitation and radiation in egyptian deserts.}
     \label{pl:climate:egypt:aridShrub}
   \end{minipage}
 \end{figure}
+We start by giving some statistics on the desert and arid shrub landscape in egypt and libya.
+In figures \ref{pl:climate:egypt:aridShrub} and \ref{pl:climate:egypt:aridShrub}
+we see a plot of the temperature, precipitation and radiation\ruggedtodo[]{more precise} 
+in the egyptian shrub and desert landscapes.
+One can see in both climates that the temperature, precipitation and radiation peak around the summer.
+We hypothesis that in machine learning model the features that differ between these two plots will be more important
+and all others are of lesser importance so we procede in highlighting the differences and similarities.
+Regarding temperature it is notable that the summer temperatures are quite similar whereas the winter temperatures differ.
+The variation in temperature seems to be also far greater for egyptian shrubs.
+Though the standard deviation in the figure is between the respective biomes in egypt, it is reasonable to assume that
+the standard variation in the corresponding regions is correlated the parameters \pyth{tmp_SummerStd} and \pyth{tmp_WinterStd} where the
+temperature plateaus.
+
+It is apparent from the plots that the precipitation level is a little higher in the desert in winter though its variance seems roughly identical
+in the winter and summer months.
+Similarly we see that the radiation levels in both biomes behave almost identically though in the shrubs it varies more. 
 Although not shown here the climate plots for libya are quite similar.
 
-\ruggedtodo[inline]{some more statistics}
+We also plotted the distribution of the various soil features in figure \ref{pl:egypt_shrub_desert_soil}.
+One can see that the soil features do not differ much between the egyptian desert and shrub. Thus they will
+probably not play much of a role.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{egypt_shrub_desert_soil.pdf}
+  \caption{Distribution of the various soil features for the egyptian desert and shrub.}
+  \label{pl:egypt_shrub_desert_soil}
+\end{figure}
 
-
+When we tested our trained model on libya we got the results depicted in the cocnfusion table 
+\ref{tb:s3_basic_confTable}. The accuracy of our model was approximately 0.96 which is reasonably good. However since there is inherently a
+large imbalance in our dataset the balanced accuracy is a better measure here. This is with approximately 0.85 only slightly more modest.
 \begin{table}[h]
   \centering
   \input{../Project3RandomForestML/table/s3_basic_confTable.tex}
-  \caption{Confusion matrix.}
+  \caption{Confusion table.}
+  \label{tb:s3_basic_confTable}
 \end{table}
 
+Now we analyse the importance of features for the binary classification.
+In figure \ref{pl:histogramm_feature_imps3_basic} we can see 
+from the mdi\_importances \ruggedtodo[]{look this up} that indeed as hypothesised previously
+the precipitation levels play an important role and the soil plays an insignificant role. Since there is a lot of
+colinearity between many parameters the permutation importance is a better measure in this case.
+Here again at least `clay' plays an insignificant role. As predicted the temperature and its variation in the
+summer months play a large role. The third plot shows how good a predictor the various features are at predicting the
+biome in libya. Here we see that the radiation in the libyan climate the desert and shrub landscapes 
+seem to differ significantly from the egyptian. 
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{histogramm_feature_imps3_basic.pdf}
+  \caption{The five most and least important features.}
+  \label{pl:histogramm_feature_imps3_basic}
+\end{figure}
+\ruggedtodo[]{insert titles for the plots}
 
-We then analysed the importance of features for the binary classification.
-In a crude analysis we simply dropped the meadians, all weather features, the different seasons,
-the different climate data categories and 
-the non-climate features. We then collected the error rates and the balanced error rates. \ruggedtodo[]{This belongs into methods}
-The results for the error rate be seen in figure \ref{pl:s3_simulationComparisons_errorRate}.
+We also created a dendogramm which for space reasons has to be admired in the appendix.
+Unsurprisingly we found that the medians and means were strongly correlated. One could also see that the 
+soil data was relatively independent from the rest of the data.\ruggedtodo[]{A little more interpretation here}
+
+The results for the error rate be seen in figure \ref{pl:s3_simulationComparisons_balancedErrorRate}.
 Here the abbreviations `pre', `tmp$|$tmin$|$tmax' and `tswrf' stand for the parameters representing
 precipitation, temperatures and radiation respectively.
-Since we have a large imbalance in the number of biomes present in the training and test data it makes more sense to 
-look at the balanced error rate in figure \ref{pl:s3_simulationComparisons_balancedErrorRate}.
-For one, one sees that the 
+Since we have a large imbalance in the sample sizes of the biomes we look at the balanced error.
+For one, one sees that most modifications have very little impact.
+When we drop all the climate data and only train our model on the soil data it performs very badly
+as we previously hypothesised. Surprisingly dropping the spring, temperature or radiation data
+significantly improves the performance of our model. This indicates that these parameters differ significantly
+for deserts and shrubs in egypt and libya.
 
 \begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{s3_simulationComparisons_errorRate.pdf}
-    \caption{Error rates for various experiments.}
-    \label{pl:s3_simulationComparisons_errorRate}
-  \end{minipage}
-  \hfill
   \begin{minipage}{0.45\textwidth}
     \centering
     \includegraphics[width=\textwidth]{s3_simulationComparisons_balancedErrorRate.pdf}
@@ -167,6 +199,12 @@ For one, one sees that the
 
 \subsection{Multiclass classification}
 
+For the multiclass classification the error rates were significantly higher
+than for the binary classification.
+
+We start by interpreting the importance of the various features.
+
+
 
 
 \begin{table}[h]
@@ -176,47 +214,48 @@ For one, one sees that the
   \label{tb:s4_basic_classreport}
 \end{table}
 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps5_npp_basic.pdf}
+  \caption{The five most and least important features.}
+  \label{pl:histogramm_feature_imps5_npp_basic}
+\end{figure}
+
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
     \centering
-    \missingfigure[figwidth=\textwidth]{}
-    % \includegraphics[width=\textwidth]{s4_simulationComparisons_errorRate.pdf}
+    \includegraphics[width=\textwidth]{s4_simulationComparisons_errorRate.pdf}
     \caption{Error rates for various experiments.}
     \label{pl:s4_simulationComparisons_errorRate}
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
     \centering
-    \missingfigure[figwidth=\textwidth]{}
-    % \includegraphics[width=\textwidth]{s4_simulationComparisons_balancedErrorRate.pdf}
+    \includegraphics[width=\textwidth]{s4_simulationComparisons_balancedErrorRate.pdf}
     \caption{Balanced error rates for various experiments.}
     \label{pl:s4_simulationComparisons_balancedErrorRate}
   \end{minipage}
 \end{figure}
 
+
 \pagebreak
 \subsection{Regression}
 
-Since the 
-
+We begin by plotting the distribution of the parameters NPP and VegC in both Canada and Russia. The results can be
+seen in figure \ref{pl:npp_vegc_distribution}. We see that VegC has a lot of values close to 0 whereas NPP is more spread out
+in both domains. We also note that the values for VegC are about an order of magnitude larger than those of NPP.
 \begin{figure}[h]
   \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{histogramm_data_NPP.pdf}
-    \caption{Distribution of the NPP values.}
-    \label{pl:s5:npp:basic:regressionPlot}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{histogramm_data_VegC.pdf}
-    \caption{Distribution of the VegC values.}
-    \label{pl:s5:npp:basic:residualDistr}
-  \end{minipage}
+  \includegraphics[width=0.8\textwidth]{npp_vegc_distribution.pdf}
+  \caption{Distribution of NPP and VegC in Canada and Russia.}
+  \label{pl:npp_vegc_distribution}
 \end{figure}
 
+We first trained the model for NPP and tested it on russia. The results of this test
+can be seen in the scatterplot \ref{pl:s5:npp:basic:regressionPlot}. It can also be seen in the distribution
+plot of the residues in figure \ref{pl:s5:npp:basic:residualDistr}.
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -234,8 +273,11 @@ Since the
   \end{minipage}
 \end{figure}
 
-
-
+After this we trained the model for VegC. The results of this can analogously be seen in figures
+\ref{pl:s5:npp:basic:regressionPlot} and \ref{pl:s5:npp:basic:residualDistr}. We see that the residual for 
+VegC has a more pronounced spike at the origin. Comparing with \ref{pl:s5:npp:basic:residualDistr} we see
+ after taking into account that VegC is about
+an order of magnitude larger than NPP that there also seem to be more outliers in the prediction.
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -253,41 +295,38 @@ Since the
   \end{minipage}
 \end{figure}
 
+We will proceed in taking a closer look at the model predicting NPP.
+From the permutation feature importance plot for the training data in figure \ref{pl:histogramm_feature_imps5_npp_basic}
+we see that the temperature in the summer and fall and the spring precipitation were the most important factors for
+predicting NPP. These factors with the exception of the spring precipitation also show up as the most sensitive
+factors for the test set.
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps5_npp_basic.pdf}
+  \caption{The five most and least important features.}
+  \label{pl:histogramm_feature_imps5_npp_basic}
+\end{figure}
+\ruggedtodo[]{insert titles for the plots}
 
+In our own set of experiments the results can be seen in figure \ref{pl:s5_simulationComparisons_MSE} where the mean square error
+is shown. We created the same chart also for the $R^2$ error, the mean absolute error and the maximal error but the qualitative behaviour
+for these different error metrics was the same.
+Once again we remark on the outliers. Unsurprisingly the experiment dropping all the climate data performs terribly.
+More surprising is the fact that dropping the temperatures decreases accuracy significantly. This
+indicates that the temperature data indeed was a good choice of predictor for the test set. That it was important
+we could already see in the previous analysis. Similarly,
+though not as pronounced the data for the fall also seemed to be a good choice of predictor.
+When dropping the data for the summer on the other hand the error decreased. This indicates that the choice of parameters
+regarding the summer was poor and that the relation between the summer data and the NPP differs between Canada and Russia.
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{s5_simulationComparisons_1_R2score.pdf}
-    \caption{Error rates for various experiments.}
-    \label{pl:s5_simulationComparisons_1_R2score}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.45\textwidth}
-    \centering
     \includegraphics[width=\textwidth]{s5_simulationComparisons_MSE.pdf}
-    \caption{Balanced error rates for various experiments.}
+    \caption{Mean square error for various experiments.}
     \label{pl:s5_simulationComparisons_MSE}
   \end{minipage}
 \end{figure}
-
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{s5_simulationComparisons_1_R2score.pdf}
-    \caption{Error rates for various experiments.}
-    \label{pl:s5_simulationComparisons_1_R2score}
-  \end{minipage}
-  \hfill
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{s5_simulationComparisons_MSE.pdf}
-    \caption{Balanced error rates for various experiments.}
-    \label{pl:s5_simulationComparisons_MSE}
-  \end{minipage}
-\end{figure}
-
 
 \section{Discussion}
 
@@ -303,5 +342,13 @@ Since the
 %\noindent Other sources
 \printbibliography[heading=none, keyword={secondary}]
 
+\pagebreak
+\chapter*{Appendix}
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{dendogramm_feature_imps3_basic.pdf}
+  \caption{Dendogramm to the binary classification.}
+  \label{pl:dendogramm_feature_imps3_basic}
+\end{figure}
 
 \end{document}
