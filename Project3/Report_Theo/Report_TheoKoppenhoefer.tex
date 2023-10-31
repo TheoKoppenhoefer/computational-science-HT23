@@ -7,6 +7,8 @@
 
 %%%%% TITLE PAGE
 
+\usepackage[margin=1.3in]{geometry}
+
 %\subject{, VT23}
 \title{ Report for the Course Modelling in Computational Science, HT23 \\[1ex]
 	  \large Project 3: Biome classification}
@@ -49,8 +51,8 @@
 \section{Introduction}
 The following report is part of the third project of the course Modelling in Computational Science, BERN01, taken at Lund university.
 In this project we will use machine learning to classify biomes based on climate and soil data. We will test the performance of our machine
-learning model in binary and multiclass classification. We will also compare our model with LPG\_guess output
-and modify our model to predict continuous outputs of LPG\_guess.
+learning model in binary and multiclass classification. We will also compare our model with LPG GUESS output
+and modify our model to predict continuous outputs of LPG GUESS.
 For this we will discuss the choice of regions and biomes, the setup of our model, give some interesting results, discuss these and finally give a conclusion.
 The code to the project was implemented in a \pyth{jupyter notebook}.
 The project report and code can be found online under~\cite{Repository}.
@@ -60,39 +62,41 @@ The project report and code can be found online under~\cite{Repository}.
 
 \section{Methods}
 
-To test our first binary classification model we chose the biomes `arid shrub' and `desert'. For the choice of regions
-we had to choose two countries which contained sufficient amount of both regions. A plot of regions with sufficient amounts
-of both biomes can be seen in figure \ref{}.
-\begin{figure}
+For the binary classification model we chose the biomes `arid shrub' and `desert'. For the choice of regions for training and testing
+we  choose two countries which contained sufficient samples of both biomes.
+In figure \ref{pl:shrub_desert_country_list} we plot the amount of shrub and desert data points in countries with at least
+30 samples of each biome.
+\begin{wrapfigure}{r}{0.5\textwidth}
   \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \missingfigure[figwidth=\textwidth]{}
-    \caption{Number of data points with `desert' and `arid shrub' in selected countries.}
-    \label{pl:}
-  \end{minipage}
-\end{figure}
-Our initial choice of regions was Egypt and China.
+  \includegraphics[width=0.5\textwidth]{shrub_desert_country_list.pdf}
+  \caption{Amount of shrub and desert landscape in selected countries.}
+  \label{pl:shrub_desert_country_list}
+\end{wrapfigure}
+Our initial choice of regions was Egypt (EGY) and China (CHN).
 It turned out however that when we took out the LPG GUESS output from the training data, our model could not handle the classification well.
-The reason is that deserts in these countries have very different climates. Thus we chose Egypt for the training and Libya for the testing.
-The variable we trained for was \pyth{Biome_obs}.
+The reason is that deserts in these countries have very different climates. Thus we chose Egypt for training and Libya (LBY) for testing.
+The variable we trained for was the observed biome \pyth{Biome_obs} which was determined with the help of satellite data.
 
 For the multiclass classification we initially chose Africa and China but that too turned out to be a poor choice.
 Thus we switched to the regions to Russia for training and Canada for testing. We trained and tested for both
-\pyth{Biome_obs} and the LPG GUESS output \pyth{Biome_cmax}.
+\pyth{Biome_obs} and the LPG GUESS biome classification \pyth{Biome_cmax}.
 
 For the regression model we chose Canada to train and Russia to test the model. The reason for this switch of roles lies in the performance
-of the training. The LPG GUESS output we trained the model for were \pyth{NPP} (net primary productivity) and \pyth{VegC} (vegetation carbon pool).
+of the training. The LPG GUESS outputs we trained the model for were \pyth{NPP} (net primary productivity) and \pyth{VegC} (vegetation carbon pool).
 
 If not otherwise stated we used as training data all climate data in the file \pyth{'data_index_2.csv'} together the soil data \pyth{clay}, \pyth{silt}, \pyth{sand} and \pyth{orgC}.
+The climate data includes the standard deviation, mean and median over the four seasons for radiation,
+precipitation and minimum, maximum and mean temperature measurements over the years 1961-1990.
 
-For the implementation we made extensive use of the \pyth{sklearn} library. We implemented the classification model with \pyth{RandomForestClassifier}.
-We analysed the permutation importance with the function \pyth{permutation_importance}.
+For the implementation we made extensive use of the \pyth{sklearn} library. We implemented the classification model with \pyth{RandomForestClassifier} and
+analysed the permutation importance with \pyth{permutation-_importance}.
 The hyperparameter tuning was initially implemented with \pyth{GridSearchCV} and after some bad initial results we switched to \pyth{HalvingGridSearchCV}
 (the results did not improve).
+We varied the parameters \pyth{max_depth}, \pyth{n_estimators}
+\pyth{min_samples_leaf} each between 4 reasonably chosen values around their default.
 The regression model was implemented using \pyth{RandomForestRegressor}.
-
-To analyse the importance of features we also implemented a routine which runs the model whilst dropping some features
+The clustering was performed according to \cite{Clustering}.
+To analyse the importance of features we also implemented a crude routine which runs the model whilst dropping some features
 and then plots the results for each run.
 
 
@@ -103,8 +107,8 @@ and finally the regression problem.
 
 \subsection{Binary classification}
 
-In figure \ref{pl:egypt_libya_map} one can see the geographical distribution of the biomes in Egypt and 
-in Libya. As expected the desert is inland whereas the dry shrub is closer to the sea.
+In figure \ref{pl:egypt_libya_map} one can see the geographical distribution of the biomes in Egypt and
+ Libya. As expected the desert is inland whereas the dry shrub is closer to the sea.
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.5\textwidth}
@@ -139,20 +143,18 @@ in Libya. As expected the desert is inland whereas the dry shrub is closer to th
   \end{minipage}
 \end{figure}
 In figures \ref{pl:climate:egypt:aridShrub} and \ref{pl:climate:egypt:desert}
-we see a plot of the temperature, precipitation and radiation\ruggedtodo[]{more precise} 
-in the Egyptian shrub and desert landscapes.
+we see the time evolution of the mean temperature, precipitation and radiation
+in the Egyptian shrub and desert landscapes over a year.
 In both climates the temperature, precipitation and radiation peak around the summer.
-The summer temperatures are quite similar whereas the winter temperatures differ. The variation in temperature
-seems to be far greater for the shrub. For the desert the winter precipitation and standard deviation is slightly higher than for the
-arid shrub. Similarly the radiation levels in both biomes behave almost identically though it varies more in the shrub.
-
+At closer inspection one can spot subtle differences between the diagrams for the different
+variables. We note however that the mean radiation levels look almost identical.
 Although not shown here the climate plots for Libya are quite similar.
 
 We also plotted the distribution of the various soil features in figure \ref{pl:egypt_shrub_desert_soil}.
 One can see that the soil features do not differ much between the Egyptian desert and shrub.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.7\textwidth]{egypt_shrub_desert_soil.pdf}
+  \includegraphics[width=0.6\textwidth]{egypt_shrub_desert_soil.pdf}
   \caption{Distribution of the various soil features for the Egyptian desert and shrub.}
   \label{pl:egypt_shrub_desert_soil}
 \end{figure}
@@ -161,58 +163,64 @@ When we tested our trained model on Libya we got the results depicted in the con
 \ref{tb:s3_basic_confTable}. The accuracy of our model was approximately 0.96 which is reasonably good. The balanced accuracy is with
 approximately 0.85 slightly more modest.
 The reason for this lies in the bad recall rate for the arid shrub biome.
-\begin{table}[h]
+In the map \ref{pl:s3_basic_error_map} one can see that all misclassified regions lie at the boundary of
+the desert and shrub biomes.
+\begin{wraptable}{r}{0.37\textwidth}
+  \centering
+  \begin{tabular}{rrrrr}
+    \toprule
+    Truth & arid shrub & desert \\
+    Predicted & & \\
+    \midrule
+    arid shrub & 46 & 0 \\
+    desert & 20 & 443 \\
+    \bottomrule
+  \end{tabular}
+  \caption{Confusion table.}
+  \label{tb:s3_basic_confTable}
+\end{wraptable}
+
+Now we analyse the importance of features for the binary classification.
+In figure \ref{pl:histogramm_feature_imps3_basic} 
+the MDI (random forest feature importance) shows that
+the precipitation levels played an important role in training and the soil played an insignificant role.
+Note also that the decrease in accuracy score for all features in the permutation importance is insignificant.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps3_basic.pdf}
+  \caption{The five most and least important features.}
+  \label{pl:histogramm_feature_imps3_basic}
+\end{figure}
+\begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
-    \begin{tabular}{rrrrr}
-      \toprule
-      Truth & arid shrub & desert \\
-      Predicted & & \\
-      \midrule
-      arid shrub & 46 & 0 \\
-      desert & 20 & 443 \\
-      \bottomrule
-    \end{tabular}
-    \caption{Confusion table.}
-    \label{tb:s3_basic_confTable}
-    
+    \centering
+    \includegraphics[width=0.8\textwidth]{histogramm_feature_imp_clustereds3_basic.pdf}
+    \caption{Feature importance after clustering.}
+    \label{pl:histogramm_feature_imp_clustereds3_basic}
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{s3_simulationComparisons_balancedErrorRate.pdf}
+    \includegraphics[width=0.9\textwidth]{s3_simulationComparisons_balancedErrorRate.pdf}
     \caption{Results for experiment series.}
     \label{pl:s3_simulationComparisons_balancedErrorRate}
   \end{minipage}
-\end{table}
-
-Now we analyse the importance of features for the binary classification.
-In figure \ref{pl:histogramm_feature_imps3_basic} we can see 
-from the MDI (random forest feature importance) that
-the precipitation levels play an important role and the soil plays an insignificant role.
-For the permutation importance on the test set \pyth{clay} and some precipitation data play an insignificant and 
-the temperature and its variation in the
-summer months play a large role. In the permutation performance 
-for the test set the radiation in the summer and spring and the precipitation in the winter and fall
-stick out.
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps3_basic.pdf}
-  \caption{The five lowest and highest values for the permutation importance.}
-  \label{pl:histogramm_feature_imps3_basic}
 \end{figure}
-\ruggedtodo[]{insert titles for the plots}
 
-We also created a dendogramm which for space reasons has to be admired in the appendix.
+We also created a dendogram which for space reasons has to be admired in the appendix.
 Unsurprisingly we found that the medians and means were strongly correlated. One could also see that the 
-soil data was relatively independent from the rest of the data.\ruggedtodo[]{A little more interpretation here}
+soil data was relatively independent from the rest of the data.
+Notably the standard deviation of the temperatures in the summer and fall were also quite independent.
+The results from the following clustering are then shown in figure \ref{pl:histogramm_feature_imp_clustereds3_basic}.
+Here one can notice that the soil features are relatively unimportant as is the cluster including the mean radiation in the summer.
 
 The results of our routine dropping various features can
 be seen in figure \ref{pl:s3_simulationComparisons_balancedErrorRate}.
-On the y-axis we depict the balanced error rate but the qualitative behaviour of the error rate is identical.
+On the y-axis we depict the balanced error rate rather than the classical error rate but the qualitative behaviour is identical.
 The abbreviations `pre', `tmp$|$tmin$|$tmax' and `tswrf' correspond to data representing
 precipitation, temperatures and radiation respectively.
-For one, one sees that most modifications have little impact.
+Firstly one sees that most modifications have little impact.
 When we drop all the climate data and only train our model on the soil data it performs very badly.
 Surprisingly, dropping the spring, temperature or radiation data
 significantly improves the performance of our model.
@@ -223,18 +231,17 @@ significantly improves the performance of our model.
 We start by giving an overview of the biomes which were classified. Figure \ref{pl:Russia_Canada_map}
 shows the geographical distribution of biomes in Russia and Canada. One sees that the order in which the
 biomes appear in Canada as one travels northwards is quite similar to the order in which the biomes appear in
-Russia as one travels northeast.
-\begin{figure}
+Russia as one travels northeast. Although not shown here the climate diagrams for Russia and Canada are quite similar.
+\begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{Russia_Canada_map.pdf}
-  \caption{Overview of the biomes in Egypt and Libya.}
+  \caption{Overview of the biomes \pyth{Biome_obs} in Russia and Canada.}
   \label{pl:Russia_Canada_map}
 \end{figure}
-The results for the multiclass classification are shown in table \ref{tb:s4_precision_recall}.
-\begin{table}
+
+\begin{wraptable}{r}{0.5\textwidth}
+  \vspace*{-0.3cm}
   \centering
-  \begin{minipage}{0.45\textwidth}
-    
   \begin{tabular}{rrrrr}
     \toprule
      & precision & recall \\
@@ -242,37 +249,78 @@ The results for the multiclass classification are shown in table \ref{tb:s4_prec
     macro average & 0.57 & 0.47 \\
     weighted average & 0.85 & 0.85 \\
     \bottomrule
-    \end{tabular}
-    \caption{Average precision and recall for the multiclass classification.}
-    \label{tb:s4_precision_recall}
+  \end{tabular}
+  \caption{Average precision and recall for the multiclass classification.}
+  \label{tb:s4_precision_recall}
+  \vspace*{-1cm}
+\end{wraptable}
+The results for the multiclass classification are shown in table \ref{tb:s4_precision_recall}.
+The accuracy of 0.85 is worse than for the binary classification but not by much.
+The balanced accuracy of about 0.47 is on the other hand significantly worse.
+Once again a map of the misclassified regions can be seen in \ref{pl:s4_basic_error_map} and
+we note that these regions tend to lie between two biomes.
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.47\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{s4_basic_error_map.pdf}
+    \caption{Misclassified regions for \pyth{Biome_obs}.}
+    \label{pl:s4_basic_error_map}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.47\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Basic_with_Biome_Cmax_error_map.pdf}
+    \caption{Misclassified regions for \pyth{Biome_Cmax}.}
+    \label{pl:Basic_with_Biome_Cmax_error_map}
+  \end{minipage}
+\end{figure}
+
+The results regarding MDI and permutation importance are shown in figure \ref{pl:histogramm_feature_imps4_basic}.
+The dendogram once again was banished to the appendix.
+The results of our own set of experiments dropping selected features are shown in figures \ref{pl:s4_simulationComparisons_balancedErrorRate}.
+Here dropping the climate and the temperature has the biggest negative impact.
+Dropping the winter and the soil on the other hand have a mild positive impact.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps4_basic.pdf}
+  \caption{The five most and least important features.}
+  \label{pl:histogramm_feature_imps4_basic}
+\end{figure}
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{histogramm_feature_imp_clustereds4_basic.pdf}
+    \caption{Feature importance after clustering.}
+    \label{pl:histogramm_feature_imp_clustereds4_basic}
   \end{minipage}
   \hfill
   \begin{minipage}{0.45\textwidth}
     \centering
-    \includegraphics[width=\textwidth]{s4_simulationComparisons_balancedErrorRate.pdf}
+    \includegraphics[width=0.9\textwidth]{s4_simulationComparisons_balancedErrorRate.pdf}
     \caption{Results for experiment series.}
     \label{pl:s4_simulationComparisons_balancedErrorRate}
   \end{minipage}
-\end{table}
-The accuracy of 0.85 is worse than for the binary classification but not to much worse.
-On the other hand the balanced accuracy of about 0.47 is significantly worse.
+\end{figure}
 
 Regarding hyper parameter tuning our results were quite mixed.
 When we initially used Africa and China as training and test regions the hyperparameter tuning could
 in certain circumstances improve our model. In most cases it tended to overfit if the ranges for the hyperparameters
 was not chosen carefully. The overfitting was visible in a very high accuracy on the train and a very low accuracy
 on the test set.
-For Russia and Canada the hyperparameter tuning did not improve the performance our model. Here too
-it tended to overfit.
+For Russia and Canada the hyperparameter tuning did not improve the performance our model. 
+Here too it tended to overfit.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.8\textwidth]{histogramm_feature_imps4_basic.pdf}
-  \caption{The five most and least important features.}
-  \label{pl:histogramm_feature_imps4_basic}
-\end{figure}
+We also trained and ran the model to predict the LPG guess output \pyth{Biome_Cmax}. Due to the strict page limit
+the author will have to spare the reader the rather uninteresting details but we note that the accuracy and the 
+weighted accuracy were with 0.72 and 0.57 high. We also give in figure \ref{pl:Basic_with_Biome_Cmax_error_map}
+a map showing the results. One should note here the large difference between the biome types
+to \pyth{Biome_Cmax} in figure \ref{pl:s4_basic_error_map}. 
+More interestingly we tested a model trained on \pyth{Biome_obs} with \pyth{Biome_Cmax} data. Here the accuracy
+plummeted to 0.14 and the balanced accuracy to 0.31.
 
-We compared the output of LPG GUESS with t
+When we tested a model trained on \pyth{Biome_Cmax} on \pyth{Biome_obs} the results were similarly abysmal and will be skipped here.
 
 \subsection{Regression}
 
@@ -281,14 +329,14 @@ seen in figure \ref{pl:npp_vegc_distribution}. We see that \pyth{VegC} has a lot
 in both domains. We also note that the values for \pyth{VegC} are about an order of magnitude larger than those of NPP.
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.8\textwidth]{npp_vegc_distribution.pdf}
+  \includegraphics[width=0.7\textwidth]{npp_vegc_distribution.pdf}
   \caption{Distribution of \pyth{NPP} and \pyth{VegC} in Canada and Russia.}
   \label{pl:npp_vegc_distribution}
 \end{figure}
 
 We first trained the model for \pyth{NPP} and tested it on Russia. The results 
 can be seen in the scatterplot \ref{pl:s5:npp:basic:regressionPlot}. It can also be seen in the distribution
- of the residues in figure \ref{pl:s5:npp:basic:residualDistr}.
+ of the residues $\hat{Y}_\text{test}-Y_\text{test}$ in figure \ref{pl:s5:npp:basic:residualDistr}.
 \begin{figure}[h]
   \centering
   \begin{minipage}{0.45\textwidth}
@@ -305,23 +353,46 @@ can be seen in the scatterplot \ref{pl:s5:npp:basic:regressionPlot}. It can also
     \label{pl:s5:npp:basic:residualDistr}
   \end{minipage}
 \end{figure}
+We also plotted a map of the residues seen in figure \ref{pl:s5_npp_basic_error_map}. From this one sees that the model works best in the north and east of Russia.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.7\textwidth]{s5_npp_basic_error_map.pdf}
+  \caption{Map of the residue.}
+  \label{pl:s5_npp_basic_error_map}
+\end{figure}
 
 After this we trained and tested the model for VegC.
 The plots of the residuals and the predicted versus true values are very similar to \pyth{NPP} which is why
 they will will not be discussed here and the keen reader is referred to the appendix.
 
 We will proceed in taking a closer look at the model predicting NPP.
-From the permutation feature importance plot for the training data in figure \ref{pl:histogramm_feature_imps5_npp_basic}
-we see that the temperature in the summer and fall and the spring precipitation were the most important factors for
-predicting NPP. These factors with the exception of the spring precipitation also show up as the most sensitive
-factors for the test set.
-\begin{figure}
+The feature importance can be seen in figures \ref{pl:histogramm_feature_imps5_npp_basic} and after clustering in
+\ref{pl:histogramm_feature_imp_clustereds5_npp_basic}.
+Note that the temperature in the spring, summer and fall the most important factors for
+for the training data. For the test radiation is the most important factor.
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{histogramm_feature_imps5_npp_basic.pdf}
   \caption{The five most and least important features.}
   \label{pl:histogramm_feature_imps5_npp_basic}
 \end{figure}
-\ruggedtodo[]{insert titles for the plots}
+\begin{figure}[h]
+  \centering
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.8\textwidth]{histogramm_feature_imp_clustereds5_npp_basic.pdf}
+    \caption{Feature importance after clustering.}
+    \label{pl:histogramm_feature_imp_clustereds5_npp_basic}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{s5_simulationComparisons_MSE.pdf}
+    \caption{Results for experiment series.}
+    \label{pl:s5_simulationComparisons_MSE}
+  \end{minipage}
+\end{figure}
+For a dendogram of this experiment we refer to the appendix.
 
 The results of our own set of experiments is shown in figure \ref{pl:s5_simulationComparisons_MSE}. Here we show the mean square error
 on the y-axis. We created the same chart also for the $R^2$ error, the mean absolute error and the maximal error but the qualitative behaviour
@@ -330,31 +401,23 @@ Once again we remark on the outliers.
 Unsurprisingly the experiment dropping all the climate data performs terribly.
 Dropping the temperatures decreases accuracy significantly. Similarly,
 though not as pronounced, dropping the fall data decreases accuracy.
-When dropping the data for the summer on the other hand the error decreased. 
-\begin{figure}[h]
-  \centering
-  \begin{minipage}{0.45\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{s5_simulationComparisons_MSE.pdf}
-    \caption{Results for experiment series.}
-    \label{pl:s5_simulationComparisons_MSE}
-  \end{minipage}
-\end{figure}
+When dropping the data for the summer on the other hand the error decreased.
 
 \section{Discussion}
 
-The discussion follows a similar structure to the presentation of the results.
-
-In the binary classification it became apparent that the machine learning model gives features that differ between the
-categories a higher importance than features that are largely the same.
-Our results show for instance in figure \ref{pl:egypt_shrub_desert_soil} that the soil features in the training set do not differ much and in figure
-\ref{pl:histogramm_feature_imps3_basic} that they have a negligible impact on our model. On the other hand the winter and spring precipitation and the standard deviation of the summer temperature
-and radiation of the training set had a big 
-impact on the model. The analogous parameters were remarked to differ in the description of the
-climate diagrams \ref{pl:climate:egypt:aridShrub} and \ref{pl:climate:egypt:desert}.
-Although the standard deviation in the climate diagrams is between the respective biomes in Egypt, it is reasonable to assume that
-the standard variation in the corresponding months is correlated to the parameters \pyth{tmp_SummerStd} and \pyth{tmp_WinterStd} where the
-temperature plateaus.
+During the project it became apparent that the machine learning model gives features that differ between the
+categories a higher importance than features that are largely identical.
+Here we note that our interpretation was hampered by the strong correlation between features.
+This correlation made itself noticeable in the low decreases in accuracy in the permutation importance plots
+\ref{pl:histogramm_feature_imps3_basic} and \ref{pl:histogramm_feature_imps4_basic}.
+Nonetheless figure \ref{pl:histogramm_feature_imps3_basic} showed that the soil cluster was
+relatively unimportant.
+On the other hand \ref{pl:egypt_shrub_desert_soil} showed that the soil features in the training set did not differ much.
+The unimportance of soil features was a common theme during the project.
+Similarly the cluster of the summer radiation was relatively unimportant.
+Previously we remarked in the description of the climate diagrams
+\ref{pl:climate:egypt:aridShrub} and \ref{pl:climate:egypt:desert}
+that the radiation was quite similar in both biomes.
 
 From the figure \ref{pl:s3_simulationComparisons_balancedErrorRate} produced by our experiment series 
 we can get an idea of some measures that differ between the Egyptian and Libyan biomes. The accuracy 
@@ -363,28 +426,34 @@ We note that according to figure \ref{pl:histogramm_feature_imps3_basic} they al
 
 Regarding the performance of the multiclass classification we note that the large difference in the weighted accuracy and the accuracy
 originates in the large variance of sample sizes for the respective biomes.
+Additionally the small biomes tend to be classified poorly.
 Because the classification problem at hand should treat every biome
 equally the author believes that the balanced accuracy is more appropriate here.
 We also note that the similarity between the countries almost certainly significantly improved the
 performance of the model.
 
-In the regression part we see from the permutation importance plot that our model chose the temperature to be the most important feature to determine the
+Since our model works well for \pyth{Biome_obs} and \pyth{Biome_Cmax} but performs terribly
+if we test a model trained on \pyth{Biome_obs} with  \pyth{Biome_Cmax} we can conclude that the
+\pyth{Biome_Cmax} classification is a bad approximation of \pyth{Biome_obs}. That the  \pyth{Biome_Cmax}
+data is quite different from the  \pyth{Biome_obs} data is however quite apparent from a glimpse at the
+maps \ref{pl:s4_basic_error_map} and \ref{pl:Basic_with_Biome_Cmax_error_map}.
+
+In the regression part we see from the feature importance plot \ref{pl:histogramm_feature_imps5_npp_basic} that our model chose the temperature to be the most important feature to determine the
 \pyth{NPP}. The plot \ref{pl:s5_simulationComparisons_MSE} showing the result for the experiment series on the other hand showed that the temperature is also a very good predictor.
 Together this indicates that the model made a good choice when choosing the temperature to be the most important feature.
 This also intuitively makes sense since temperature is a major factor when it comes to plant growth in the arctic.
 % discuss shortcomings of models
-\ruggedtodo[]{mention the colinearity of parameters as reason to prefer permutation importance. Misclassified regions at the border of biomes}
 
 \section{Conclusion}
 
 We saw that the multiclass classification only performed well as long as the training and
 test regions were
-quite similar. This is a disadvantage of the random forest classifier that it can only
-build on preexisting data and does not generalise well to different regions.
-We also saw that the performance of the model depended a lot more on the
-quality and quantity of the data that it is fed than the hyperparameters.
+quite similar. This is a disadvantage of the random forest classifier since it can only
+build on preexisting data and does not generalise well to new regions.
 In this regard the random forest classifier acts a lot like an interpolator
 and should not be used for extrapolation.
+We also saw that the performance of the model depended a lot more on the
+quality and quantity of the data that it is fed than the hyperparameters.
 An advantage over more extensive models like LPG GUESS is that it is quickly set up.
 It has however the disadvantage that it then is quite cumbersome to understand this model
 and to gain valuable insights for human minds.
@@ -397,13 +466,95 @@ and to gain valuable insights for human minds.
 %\noindent Other sources
 \printbibliography[heading=none, keyword={secondary}]
 
-\pagebreak
-\chapter*{Appendix}
-\begin{figure}
+\clearpage
+\section{Appendix}
+\subsection{General overview}
+
+\begin{figure}[h]
   \centering
-  \includegraphics[width=\textwidth]{dendogramm_feature_imps3_basic.pdf}
-  \caption{Dendogramm to the binary classification.}
+  \includegraphics[width=0.45\textwidth]{climate_libya.pdf}
+  \caption{Climate diagram for Libya.}
+  \label{fi:climate_libya}
+\end{figure}
+
+\begin{figure}[h]
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{climate_canada.pdf}
+    \caption{Climate diagram for Canada.}
+    \label{fi:climate_canada}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{climate_Russia.pdf}
+    \caption{Climate diagram for Russia.}
+    \label{fi:climate_Russia}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\textwidth]{Russia_Canada_cmax_map.pdf}
+  \caption{Map of biomes \pyth{Cmax} in Russia and Canada.}
+  \label{fi:}
+\end{figure}
+
+\clearpage
+
+\subsection{Binary classification}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{dendogramm_feature_imps3_basic.pdf}
+  \caption{Dendogram to the binary classification.}
   \label{pl:dendogramm_feature_imps3_basic}
+\end{figure}
+
+\clearpage
+\subsection{Multiclass classification}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{dendogramm_feature_imps4_basic.pdf}
+  \caption{Dendogram to the multiclass classification.}
+  \label{pl:dendogramm_feature_imps3_basic}
+\end{figure}
+
+
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s4_basic_confTable.tex}
+  \caption{Confusion table for the multiclass classification with \pyth{Biome_obs}.}
+  \label{tb:s4_basic_confTable}
+\end{table}
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s4_basic_classreport.tex}
+  \caption{Classreport for the multiclass classification with \pyth{Biome_obs}.}
+  \label{tb:s4_basic_classreport}
+\end{table}
+
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s4Basic_with_Biome_Cmax_confTable.tex}
+  \caption{Confusion table for the multiclass classification with \pyth{Biome_Cmax}.}
+  \label{tb:s4Basic_with_Biome_Cmax_confTable}
+\end{table}
+\begin{table}[h]
+  \centering
+  \input{../Project3RandomForestML/table/s4Basic_with_Biome_Cmax_classreport.tex}
+  \caption{Classreport for the multiclass classification with \pyth{Biome_Cmax}.}
+  \label{tb:s4Basic_with_Biome_Cmax_classreport}
+\end{table}
+
+
+\clearpage
+\subsection{Regression}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{dendogramm_feature_imps5_npp_basic.pdf}
+  \caption{Dendogram to the regression with \pyth{NPP}.}
+  \label{pl:dendogramm_feature_imps5_npp_basic}
 \end{figure}
 
 \begin{figure}[h]
